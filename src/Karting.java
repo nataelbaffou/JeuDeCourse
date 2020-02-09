@@ -2,33 +2,24 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Voiture{
-
-	// position
-	private int x;
-	private int y;
-
-	// vitesse
-	private double vx;
-	private double vy;
-
-	// direction
-	private double alpha = 0;
+public class Karting extends Vehicule{
 
 	// description
 	
 	// coordonnées de la voiture centrée en (0, 0)
+	// image du karting
 	private int tx[] = {0, 10, 10, -10, -10};
 	private int ty[] = {20, 10, -10, -10, 10};
-	
 	private double normes[];
 	private double angles[];
 	
-
+	
+	// caractéristiques du karting
 	private double dt = 1;
 	private double masse = 10;
+	private double F = 1.25; // force de frottement des roues
 
-	public Voiture(int x, int y){
+	public Karting(int x, int y){
 		this.x = x;
 		this.y = y;
 		this.vx = 0;
@@ -64,8 +55,8 @@ public class Voiture{
 	}
 	
 	public void ralentir(){
-		vx = 0.8*vx;
-		vy = 0.8*vy;
+		vx = vx/F;
+		vy = vy/F;
 		if(Math.abs(vx) < 0.01){ vx = 0; }
 		if(Math.abs(vy) < 0.01){ vy = 0; }
 	}

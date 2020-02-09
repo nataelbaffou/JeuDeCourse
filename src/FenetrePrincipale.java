@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 
 public class FenetrePrincipale extends JFrame implements KeyListener, ActionListener{
 
-	private Voiture V;
+	private Vehicule V;
 	private Timer timer;
 	private static int DELTA_T = 50;
 	// (down, left, up, right)
@@ -16,7 +16,7 @@ public class FenetrePrincipale extends JFrame implements KeyListener, ActionList
 		this.setTitle("Jeu de voiture ULTRA stylé");
 		this.setSize(400, 400);
 
-		V = new Voiture(100, 100);
+		V = new Karting(100, 100);
 
 		this.addKeyListener(this);
 
