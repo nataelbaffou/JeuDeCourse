@@ -92,6 +92,7 @@ public class Karting extends Vehicule{
 	}
 
 	public void dessine(Graphics g){
+		((Graphics2D) g).setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 		roues[0].dessine(g, P, normes[1], angles[1]);
 		roues[1].dessine(g, P, normes[2], angles[2]);
 		roues[2].dessine(g, P, normes[3], angles[3]);

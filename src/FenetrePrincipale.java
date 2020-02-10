@@ -1,60 +1,54 @@
 
+import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
 
-public class FenetrePrincipale extends JFrame implements KeyListener, ActionListener{
+public class FenetrePrincipale extends JFrame implements KeyListener{
 
-	private Joueur J1;
-	private Timer timer;
-	private static int DELTA_T = 50;
-	// (down, left, up, right)
-	private LinkedList<Integer> listeTouches = new LinkedList<>();
+	private CardLayout panelSelection;
+	private MainMenu mainMenu;
+	private GameContent gameContent;
+	private JPanel cardContent;
 
 	public FenetrePrincipale(){
 		this.setTitle("Jeu de voiture ULTRA stylé");
-		this.setSize(400, 400);
 
-		J1 = new Joueur("test");
+		mainMenu = new MainMenu(400);
+		gameContent = new GameContent(400);
+		panelSelection = new CardLayout();
 
-		this.addKeyListener(this);
+		cardContent = new JPanel();
+		cardContent.setLayout(panelSelection);
+		cardContent.add(mainMenu, "menu");
+		cardContent.add(gameContent, "game");
+		setContentPane(cardContent);
 
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setVisible(true);
-		
-		
-		timer = new Timer(DELTA_T, this);
-		timer.start();
+		addKeyListener(this);
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
+		setResizable(false);
+		setVisible(true);
+		setFocusable(true);
+
+		panelSelection.last(cardContent);
+
 	}
 
-	public void paint(Graphics g){
-		g.setColor(Color.blue);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		J1.dessine(g);
+	@Override
+	public void keyTyped(KeyEvent e) {
+
 	}
 
-	public void keyPressed(KeyEvent e){
-		if(!listeTouches.contains(e.getKeyCode())){
-			listeTouches.add(e.getKeyCode());
-		}
-	}
-	
-	public void keyReleased(KeyEvent e){
-		if(listeTouches.contains(e.getKeyCode())){
-			listeTouches.remove((Object)e.getKeyCode());
-		}
-	}
-	
-	public void keyTyped(KeyEvent e){}
-	
-	public void actionPerformed(ActionEvent e){
-		if(e.getSource() == timer){
-			J1.avancer(listeTouches);
-		}
-		repaint();
+	@Override
+	public void keyPressed(KeyEvent e) {
+		gameContent.keyPressed(e);
 	}
 
-	
+	@Override
+	public void keyReleased(KeyEvent e) {
+		gameContent.keyReleased(e);
+	}
 }
