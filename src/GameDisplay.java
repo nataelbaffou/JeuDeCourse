@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 public class GameDisplay extends JPanel implements KeyListener, ActionListener {
     private Joueur J1;
+    private Map map = new Map(400, 400);
     private Timer timer;
     private static int DELTA_T = 50;
     private LinkedList<Integer> listeTouches = new LinkedList<>();
@@ -17,8 +18,7 @@ public class GameDisplay extends JPanel implements KeyListener, ActionListener {
     }
 
     public void paintComponent(Graphics g){
-        g.setColor(Color.blue);
-        g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        map.dessine(g);
         J1.dessine(g);
     }
 

@@ -1,26 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cc697428-0e12-400c-a0c0-66b302d26611" name="Default Changelist" comment="Add class Joueur and modify keyListener structure&#10;&#10;add Joueur with few parameters name/Vehicule/touchesPerso and some functions&#10;modify keyListener structure :&#10;- FenetrePrincipale now send a LinkedList of keys&#10;- Joueur compare to his touchesPerso&#10;- Vehicule use an array of boolean corresponding to useful keys">
-      <change afterPath="$PROJECT_DIR$/src/Joueur.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="cc697428-0e12-400c-a0c0-66b302d26611" name="Default Changelist" comment="Add map feature&#10;&#10;- Creation of classes Map + Texture + Case&#10;- Modification of Position and added width and height&#10;- Now display the default map on the background&#10;&#10;TODO :&#10;- link file names to their number&#10;- module to manage collisions">
+      <change afterPath="$PROJECT_DIR$/res/maps/default" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/textures/grass.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/textures/wall.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Case.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Map.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Texture.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/FenetrePrincipale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FenetrePrincipale.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Karting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Karting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Vehicule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Vehicule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GameDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameDisplay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Position.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Position.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="JeuDeCourse" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="natael &lt;natael.baffou1@gmail.com&gt;" />
         <option value="natael &lt;natael.baffou1@gmail.com&gt;P" />
       </list>
     </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="MERGE" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="hiddenUrls">
+      <set>
+        <option value="https://github.com/nataelbaffou/JeuDeCourse" />
+      </set>
+    </option>
   </component>
   <component name="ProjectId" id="1XaIGzpNNv9gthhJVA4oz41Lczl" />
   <component name="ProjectViewState">
@@ -55,13 +97,34 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1581277686188</updated>
-      <workItem from="1581277687876" duration="18037000" />
+      <workItem from="1581277687876" duration="19776000" />
+      <workItem from="1581365781887" duration="8567000" />
     </task>
+    <task id="LOCAL-00001" summary="Add class Joueur and modify keyListener structure&#10;&#10;add Joueur with few parameters name/Vehicule/touchesPerso and some functions&#10;modify keyListener structure :&#10;- FenetrePrincipale now send a LinkedList of keys&#10;- Joueur compare to his touchesPerso&#10;- Vehicule use an array of boolean corresponding to useful keys">
+      <created>1581329610240</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1581329610240</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add class Joueur and modify keyListener structure&#10;&#10;add Joueur with few parameters name/Vehicule/touchesPerso and some functions&#10;modify keyListener structure :&#10;- FenetrePrincipale now send a LinkedList of keys&#10;- Joueur compare to his touchesPerso&#10;- Vehicule use an array of boolean corresponding to useful keys" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add class Joueur and modify keyListener structure&#10;&#10;add Joueur with few parameters name/Vehicule/touchesPerso and some functions&#10;modify keyListener structure :&#10;- FenetrePrincipale now send a LinkedList of keys&#10;- Joueur compare to his touchesPerso&#10;- Vehicule use an array of boolean corresponding to useful keys" />
+    <MESSAGE value="Add map feature&#10;&#10;- Creation of classes Map + Texture + Case&#10;- Modification of Position and added width and height&#10;- Now display the default map on the background&#10;&#10;TODO :&#10;- link file names to their number&#10;- module to manage collisions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add map feature&#10;&#10;- Creation of classes Map + Texture + Case&#10;- Modification of Position and added width and height&#10;- Now display the default map on the background&#10;&#10;TODO :&#10;- link file names to their number&#10;- module to manage collisions" />
   </component>
   <component name="WindowStateProjectService">
     <state x="104" y="62" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581277845753">
@@ -72,29 +135,29 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="377" y="191" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1280.800@0.0.1280.800" timestamp="1581277842523" />
-    <state x="221" y="0" key="CommitChangelistDialog2" timestamp="1581329470839">
+    <state x="136" y="23" width="940" height="777" key="CommitChangelistDialog2" timestamp="1581378241493">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="221" y="0" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1581329470839" />
-    <state width="1238" height="212" key="GridCell.Tab.0.bottom" timestamp="1581329470868">
+    <state x="136" y="23" width="940" height="777" key="CommitChangelistDialog2/0.0.1280.800@0.0.1280.800" timestamp="1581378241493" />
+    <state width="1238" height="212" key="GridCell.Tab.0.bottom" timestamp="1581378302371">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="212" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1581329470868" />
+    <state width="1238" height="212" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1581378302371" />
     <state width="1238" height="212" key="GridCell.Tab.0.bottom/0.23.1280.777@0.23.1280.777" timestamp="1581328756853" />
-    <state width="1238" height="212" key="GridCell.Tab.0.center" timestamp="1581329470867">
+    <state width="1238" height="212" key="GridCell.Tab.0.center" timestamp="1581378302370">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="212" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1581329470867" />
+    <state width="1238" height="212" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1581378302370" />
     <state width="1238" height="212" key="GridCell.Tab.0.center/0.23.1280.777@0.23.1280.777" timestamp="1581328756851" />
-    <state width="1238" height="212" key="GridCell.Tab.0.left" timestamp="1581329470866">
+    <state width="1238" height="212" key="GridCell.Tab.0.left" timestamp="1581378302370">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="212" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1581329470866" />
+    <state width="1238" height="212" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1581378302370" />
     <state width="1238" height="212" key="GridCell.Tab.0.left/0.23.1280.777@0.23.1280.777" timestamp="1581328756849" />
-    <state width="1238" height="212" key="GridCell.Tab.0.right" timestamp="1581329470868">
+    <state width="1238" height="212" key="GridCell.Tab.0.right" timestamp="1581378302371">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="212" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1581329470868" />
+    <state width="1238" height="212" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1581378302371" />
     <state width="1238" height="212" key="GridCell.Tab.0.right/0.23.1280.777@0.23.1280.777" timestamp="1581328756852" />
     <state x="128" y="23" width="1024" height="777" key="SettingsEditor" timestamp="1581329071925">
       <screen x="0" y="0" width="1280" height="800" />
@@ -104,5 +167,13 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="240" y="140" key="Vcs.Push.Dialog.v2/0.0.1280.800@0.0.1280.800" timestamp="1581319643497" />
+    <state x="143" y="196" key="com.intellij.ide.util.TipDialog" timestamp="1581368019818">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="143" y="196" key="com.intellij.ide.util.TipDialog/0.0.1280.800@0.0.1280.800" timestamp="1581368019818" />
+    <state x="429" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1581337508009">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="429" y="324" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.800@0.0.1280.800" timestamp="1581337508009" />
   </component>
 </project>
