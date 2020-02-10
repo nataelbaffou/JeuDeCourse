@@ -12,7 +12,7 @@ public abstract class Vehicule{
 	protected double vy;
 
 
-	public void avancer(){}
+	public void avancer(boolean[] keyPressed){}
 	public void accelerer(boolean av, boolean ar){}
 	public void ralentir(){}
 	public void tourner(boolean g, boolean d){}

@@ -12,10 +12,10 @@ public class Karting extends Vehicule{
 	
 	// coordonnées de la voiture centrée en (0, 0)
 	// image du karting
-	private int tx[] = {0, 10, 10, -10, -10};
-	private int ty[] = {20, 10, -10, -10, 10};
-	private double normes[];
-	private double angles[];
+	private int[] tx = {0, 10, 10, -10, -10};
+	private int[] ty = {20, 10, -10, -10, 10};
+	private double[] normes;
+	private double[] angles;
 	
 	
 	// caractéristiques du karting
@@ -45,7 +45,11 @@ public class Karting extends Vehicule{
 		
 	}
 
-	public void avancer(){
+	public void avancer(boolean[] keyPressed){
+		ralentir();
+		accelerer(keyPressed[2], keyPressed[0]);
+		tourner(keyPressed[1], keyPressed[3]);
+
 		P.x += vx*dt;
 		P.y += vy*dt;
 		double normeV = Math.sqrt(vx*vx+vy*vy);
