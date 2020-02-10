@@ -4,6 +4,10 @@ import java.awt.*;
 
 public class Karting extends Vehicule{
 
+	// direction (-1 gauche, 0 droit, 1 droite)
+	private int orientation=0;
+	private int sensDir=0;
+
 	// description
 	
 	// coordonnées de la voiture centrée en (0, 0)
@@ -44,15 +48,19 @@ public class Karting extends Vehicule{
 	public void avancer(){
 		P.x += vx*dt;
 		P.y += vy*dt;
+		double normeV = Math.sqrt(vx*vx+vy*vy);
+		if(normeV!=0){
+			P.setRad(P.getRad()+sensDir*orientation*0.1);
+		}
 	}
 	
 	
 	public void accelerer(boolean av, boolean ar){
-		int sens = 0;
-		if(av && !ar){ sens = 1;}
-		if(ar && !av){ sens = -1;}
-		vx -= sens*Math.sin(P.getRad());
-		vy += sens*Math.cos(P.getRad());
+		sensDir = 0;
+		if(av && !ar){ sensDir = 1;}
+		if(ar && !av){ sensDir = -1;}
+		vx -= sensDir*Math.sin(P.getRad());
+		vy += sensDir*Math.cos(P.getRad());
 	}
 	
 	public void ralentir(){
@@ -63,21 +71,19 @@ public class Karting extends Vehicule{
 	}
 
 	public void tourner(boolean g, boolean d){
-		int sens = 0;
 		if(g && !d){
-			sens = -1;
+			orientation = -1;
 			roues[0].tournerAGauche();
 			roues[3].tournerAGauche();
 		} else if(d && !g){
-			sens = 1;
+			orientation = 1;
 			roues[0].tournerADroite();
 			roues[3].tournerADroite();
 		} else {
+			orientation = 0;
 			roues[0].toutDroit();
 			roues[3].toutDroit();
 		}
-
-		P.setRad(P.getRad()+sens*0.1);
 
 	}
 
