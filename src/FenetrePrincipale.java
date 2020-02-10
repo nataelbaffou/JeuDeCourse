@@ -57,10 +57,8 @@ public class FenetrePrincipale extends JFrame implements KeyListener, ActionList
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource() == timer){
 			V.ralentir();
-			if(listeTouches[0]) { V.freiner(); }
-			if(listeTouches[1]) { V.tournerAGauche(); }
-			if(listeTouches[2]) { V.accelerer(); }
-			if(listeTouches[3]) { V.tournerADroite(); }
+			V.accelerer(listeTouches[2], listeTouches[0]);
+			V.tourner(listeTouches[1], listeTouches[3]);
 			V.avancer();
 		}
 		repaint();

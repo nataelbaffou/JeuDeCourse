@@ -5,24 +5,21 @@ import java.awt.*;
 public abstract class Vehicule{
 
 	// position
-	protected int x;
-	protected int y;
+	protected Position P;
 
 	// vitesse
 	protected double vx;
 	protected double vy;
 
-	// direction
-	protected double alpha = 0;
-
 
 	public void avancer(){}
-	public void accelerer(){}
-	public void freiner(){}
+	public void accelerer(boolean av, boolean ar){}
 	public void ralentir(){}
-	public void tournerADroite(){}
-	public void tournerAGauche(){}
+	public void tourner(boolean g, boolean d){}
 	public void dessine(Graphics g){}
-	
+
+	public Position getP() {
+		return P;
+	}
 }
 
