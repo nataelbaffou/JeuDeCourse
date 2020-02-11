@@ -24,6 +24,10 @@ public class Karting extends Vehicule{
 	private double F = 1.25; // force de frottement des roues
 	private Roue[] roues;
 
+	public Karting(){
+		this(0, 0);
+	}
+
 	public Karting(int x, int y){
 		this.P = new Position(x, y);
 		this.vx = 0;
@@ -45,7 +49,7 @@ public class Karting extends Vehicule{
 		
 	}
 
-	public void avancer(boolean[] keyPressed){
+	public void avancer(boolean[] keyPressed, Map map){
 		ralentir();
 		accelerer(keyPressed[2], keyPressed[0]);
 		tourner(keyPressed[1], keyPressed[3]);

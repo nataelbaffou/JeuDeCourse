@@ -38,7 +38,7 @@ public class GameDisplay extends JPanel implements KeyListener, ActionListener {
 
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == timer){
-            J1.avancer(listeTouches);
+            J1.avancer(listeTouches, map);
         }
         repaint();
     }

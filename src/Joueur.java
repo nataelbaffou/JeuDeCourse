@@ -26,12 +26,12 @@ public class Joueur{
         }
     }
 
-    public void avancer(LinkedList<Integer> keyPressed){
+    public void avancer(LinkedList<Integer> keyPressed, Map map){
         boolean[] usefulKeyPressed = new boolean[touchesJoueur.length];
         for(int i = 0; i < touchesJoueur.length; i++){
             usefulKeyPressed[i] = keyPressed.contains(touchesJoueur[i]);
         }
-        V.avancer(usefulKeyPressed);
+        V.avancer(usefulKeyPressed, map);
     }
 
     public void dessine(Graphics g){

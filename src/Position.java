@@ -6,35 +6,19 @@ public class Position{
     private double alpha;
 
     public Position(){
-        x = 0;
-        y = 0;
-        width = 0;
-        height = 0;
-        alpha = 0;
+        this(0, 0, 0, 0, 0);
     }
 
     public Position(int px, int py){
-        x = px;
-        y = py;
-        width = 0;
-        height = 0;
-        alpha = 0;
+        this(px, py, 0, 0, 0);
     }
 
     public Position(int px, int py, double pa){
-        x = px;
-        y = py;
-        width = 0;
-        height = 0;
-        alpha = pa;
+        this(px, py, 0, 0, pa);
     }
 
     public Position(int px, int py, int dx, int dy){
-        x = px;
-        y = py;
-        width = dx;
-        height = dy;
-        alpha = 0;
+        this(px, py, dx, dy, 0);
     }
 
     public Position(int px, int py, int dx, int dy, double pa){
