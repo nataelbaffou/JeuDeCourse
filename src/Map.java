@@ -26,13 +26,17 @@ public class Map {
         String[] pathnames = f.list();
         int countImages = 0;
         for(String pathname : pathnames) {
-            if (pathname.matches("0[a-zA-Z_0-9]*.png")) {
+            if (pathname.matches("[a-zA-Z_0-9]*.png")) {
                 countImages += 1;
             }
         }
         textures = new Texture[countImages];
-        for(int iImg = 0; iImg < countImages; iImg++){
-            textures[iImg] = new Texture(path+"/res/textures/"+pathnames[iImg], pathnames[iImg]);
+        int iImg = 0;
+        for(int iPath = 0; iPath < countImages; iPath++){
+            if (pathnames[iPath].matches("0[a-zA-Z_0-9]*.png")) {
+                textures[iImg] = new Texture(path+"/res/textures/"+pathnames[iPath], pathnames[iPath]);
+                iImg++;
+            }
         }
     }
 
@@ -47,7 +51,7 @@ public class Map {
                 nbCaseY = Integer.parseInt(line.split(" ")[1]);
                 board = new Case[nbCaseY][nbCaseX];
                 int iLig = 0;
-                Position P = new Position(0, 0, width/nbCaseX, height/nbCaseY);
+                Position P = new Position(0, 0, width/nbCaseX, height/nbCaseY, 0, 0);
                 Position dx = new Position(width/nbCaseX, 0);
                 Position dy = new Position(0, height/nbCaseY);
                 while ((line = reader.readLine()) != null) {
@@ -61,6 +65,7 @@ public class Map {
                     P.add(dy);
                     iLig++;
                 }
+
             }
 
         } catch (IOException x) {

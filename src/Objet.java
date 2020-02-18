@@ -4,6 +4,8 @@ public abstract class Objet {
     protected Texture texture;
     protected Position P;
 
-    public abstract void dessine(Graphics g);
+    public void dessine(Graphics g){
+        texture.dessine(g, P);
+    }
 
 }

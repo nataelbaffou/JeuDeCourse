@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,12 +13,12 @@ public class Texture{
     private boolean isBlocking = false;
 
     public Texture(){
-        this(System.getProperty("user.dir")+"/res/textures/grass.png", "default");
+        this(System.getProperty("user.dir")+"/res/textures/0grass.png", "default");
     }
 
     public Texture(String path, String name){
         this.name = name;
-        if(name.matches("wall[a-zA-Z_0-9]*")){
+        if(name.matches("0wall.png")){
             isBlocking = true;
         }
         try {
@@ -28,7 +29,11 @@ public class Texture{
     }
 
     public void dessine(Graphics g, Position P){
-        g.drawImage(img, P.x, P.y, P.width, P.height, null);
+        Graphics2D g2d = (Graphics2D)g;
+        AffineTransform old = g2d.getTransform();
+        g2d.rotate(P.getRad(), P.x, P.y);
+        g2d.drawImage(img, P.x-P.centerX, P.y-P.centerY, P.width, P.height, null);
+        g2d.setTransform(old);
     }
 
     public boolean isBlocking(){
