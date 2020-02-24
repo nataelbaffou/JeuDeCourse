@@ -40,4 +40,7 @@ public class Texture{
         return isBlocking;
     }
 
+    public BufferedImage getImg() {
+        return img;
+    }
 }

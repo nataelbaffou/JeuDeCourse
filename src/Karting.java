@@ -29,11 +29,12 @@ public class Karting extends Vehicule{
 	}
 
 	public Karting(int x, int y){
-		this.P = new Position(x, y, 20, 30);
+		texture = new Texture(System.getProperty("user.dir")+"/res/textures/green.png", "kart");
+		double r = texture.getImg().getHeight()/texture.getImg().getWidth();
+		this.P = new Position(x, y, 20, (int)(20*r));
 		this.vx = 0;
 		this.vy = 0;
 		color = Color.BLACK;
-		texture = new Texture(System.getProperty("user.dir")+"/res/textures/1karting.png", "kart");
 
 		roues = new Roue[4];
 		roues[0] = new Roue(P.width/2, P.height/3);
@@ -44,16 +45,18 @@ public class Karting extends Vehicule{
 	}
 
 	public void avancer(boolean[] keyPressed, Map map) {
-		if(!Collision.isColliding(this, map)){
+
+		if (true/*!Collision.isColliding(this, map)*/) {
 			ralentir();
 			accelerer(keyPressed[3], keyPressed[1]);
 			tourner(keyPressed[0], keyPressed[2]);
 
-		P.x += vx*dt;
-		P.y += vy*dt;
-		double normeV = Math.sqrt(vx*vx+vy*vy);
-		if(normeV!=0){
-			P.setRad(P.getRad()+sensDir*orientation*0.1);
+			P.x += vx * dt;
+			P.y += vy * dt;
+			double normeV = Math.sqrt(vx * vx + vy * vy);
+			if (normeV != 0) {
+				P.setRad(P.getRad() + sensDir * orientation * 0.1);
+			}
 		}
 	}
 	
@@ -73,7 +76,7 @@ public class Karting extends Vehicule{
 		if(Math.abs(vy) < 0.01){ vy = 0; }
 	}
 
-	public void tourner(boolean g, boolean d){
+	public void tourner(boolean g,  boolean d){
 		if(g && !d){
 			orientation = -1;
 			roues[0].tournerAGauche();
