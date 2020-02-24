@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
 
-public class FenetrePrincipale extends JFrame implements KeyListener{
+public class FenetrePrincipale extends JFrame{
 
 	private CardLayout panelSelection;
 	private MainMenu mainMenu;
@@ -25,8 +25,6 @@ public class FenetrePrincipale extends JFrame implements KeyListener{
 		cardContent.add(gameContent, "game");
 		setContentPane(cardContent);
 
-		addKeyListener(this);
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setResizable(false);
@@ -35,20 +33,6 @@ public class FenetrePrincipale extends JFrame implements KeyListener{
 
 		panelSelection.last(cardContent);
 
-	}
 
-	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		gameContent.keyPressed(e);
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		gameContent.keyReleased(e);
 	}
 }

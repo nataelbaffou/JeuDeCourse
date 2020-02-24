@@ -28,7 +28,7 @@ public class Karting extends Vehicule{
 		this.P = new Position(x, y);
 		this.vx = 0;
 		this.vy = 0;
-		
+		color = Color.BLACK;
 		normes = new double[tx.length];
 		angles = new double[tx.length];
 		
@@ -47,8 +47,8 @@ public class Karting extends Vehicule{
 
 	public void avancer(boolean[] keyPressed){
 		ralentir();
-		accelerer(keyPressed[2], keyPressed[0]);
-		tourner(keyPressed[1], keyPressed[3]);
+		accelerer(keyPressed[3], keyPressed[1]);
+		tourner(keyPressed[0], keyPressed[2]);
 
 		P.x += vx*dt;
 		P.y += vy*dt;
@@ -98,7 +98,7 @@ public class Karting extends Vehicule{
 		roues[2].dessine(g, P, normes[3], angles[3]);
 		roues[3].dessine(g, P, normes[4], angles[4]);
 
-		g.setColor(Color.black);
+		g.setColor(color);
 		int[] posX = new int[tx.length];
 		int[] posY = new int[tx.length];
 		for(int i=0; i < tx.length; i++){
