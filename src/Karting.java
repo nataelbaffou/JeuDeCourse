@@ -10,6 +10,14 @@ public class Karting extends Vehicule{
 
 	// description
 	
+	// coordonnées de la voiture centrée en (0, 0)
+	// image du karting
+	private int[] tx = {0, 10, 10, -10, -10};
+	private int[] ty = {20, 10, -10, -10, 10};
+	private double[] normes;
+	private double[] angles;
+	
+	
 	// caractéristiques du karting
 	private double dt = 1;
 	private double masse = 10;
@@ -24,7 +32,7 @@ public class Karting extends Vehicule{
 		this.P = new Position(x, y, 20, 30);
 		this.vx = 0;
 		this.vy = 0;
-
+		color = Color.BLACK;
 		texture = new Texture(System.getProperty("user.dir")+"/res/textures/1karting.png", "kart");
 
 		roues = new Roue[4];
@@ -38,19 +46,19 @@ public class Karting extends Vehicule{
 	public void avancer(boolean[] keyPressed, Map map) {
 		if(!Collision.isColliding(this, map)){
 			ralentir();
-			accelerer(keyPressed[2], keyPressed[0]);
-			tourner(keyPressed[1], keyPressed[3]);
+			accelerer(keyPressed[3], keyPressed[1]);
+			tourner(keyPressed[0], keyPressed[2]);
 
-			P.x += vx * dt;
-			P.y += vy * dt;
-			double normeV = Math.sqrt(vx * vx + vy * vy);
-			if (normeV != 0) {
-				P.setRad(P.getRad() + sensDir * orientation * 0.1);
-			}
+		P.x += vx*dt;
+		P.y += vy*dt;
+		double normeV = Math.sqrt(vx*vx+vy*vy);
+		if(normeV!=0){
+			P.setRad(P.getRad()+sensDir*orientation*0.1);
 		}
 	}
-
-		public void accelerer(boolean av, boolean ar){
+	
+	
+	public void accelerer(boolean av, boolean ar){
 		sensDir = 0;
 		if(av && !ar){ sensDir = 1;}
 		if(ar && !av){ sensDir = -1;}
@@ -79,6 +87,7 @@ public class Karting extends Vehicule{
 			roues[0].toutDroit();
 			roues[3].toutDroit();
 		}
+
 	}
 
 	public void dessine(Graphics g){
