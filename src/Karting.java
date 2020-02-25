@@ -34,6 +34,7 @@ public class Karting extends Vehicule{
 		
 	}
 
+	@Override
 	public void avancer(boolean[] keyPressed, Map map) {
 		Position dP = new Position();
 
@@ -60,6 +61,7 @@ public class Karting extends Vehicule{
 		}
 	}
 
+	@Override
 	protected void accelerer(boolean av, boolean ar){
 		sensDir = 0;
 		if(av && !ar){ sensDir = 1;}
@@ -68,6 +70,7 @@ public class Karting extends Vehicule{
 		vy += sensDir*Math.cos(P.getRad());
 	}
 	
+	@Override
 	protected void ralentir(){
 		vx = vx/F;
 		vy = vy/F;
@@ -75,7 +78,8 @@ public class Karting extends Vehicule{
 		if(Math.abs(vy) < 0.1){ vy = 0; }
 	}
 
-	protected void tourner(boolean g,  boolean d){
+	@Override
+	protected void tourner(boolean g, boolean d){
 		if(g && !d){
 			orientation = -1;
 			roues[0].tournerAGauche();
@@ -104,6 +108,7 @@ public class Karting extends Vehicule{
 		}
 	}*/
 
+	@Override
 	public void dessine(Graphics g){
 		((Graphics2D) g).setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 		roues[0].dessine(g, P);

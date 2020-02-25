@@ -35,17 +35,14 @@ public class Map {
             int iImg = -1;
             boolean forMap = true;
             switch (pathnames[iPath]){
-                case "0wall.png":
-                    iImg = 0;
-                    System.out.print("wall");
-                    break;
                 case "0grass.png":
+                    iImg = 0;
+                    break;
+                case "0wall.png":
                     iImg = 1;
-                    System.out.print("grass");
                     break;
                 default:
                     forMap = false;
-                    System.out.print("default");
             }
             if(forMap && iImg != -1){
                 textures[iImg] = new Texture(path+"/res/textures/"+pathnames[iPath], pathnames[iPath]);
@@ -71,6 +68,9 @@ public class Map {
                     String[] stringVals = line.split(" ");
                     for(int iCol = 0; iCol < nbCaseX; iCol++){
                         int val = Integer.parseInt(stringVals[iCol]);
+                        if(val >= textures.length){
+                            val = 0;
+                        }
                         board[iLig][iCol] = new Case(textures[val], P);
                         P.add(dx);
                     }

@@ -13,7 +13,6 @@ public abstract class Vehicule extends Objet{
 	protected abstract void accelerer(boolean av, boolean ar);
 	protected abstract void ralentir();
 	protected abstract void tourner(boolean g, boolean d);
-	public abstract void dessine(Graphics g);
 
 	public void setColor(Color c){ color = c;}
 	public Position getP() {
