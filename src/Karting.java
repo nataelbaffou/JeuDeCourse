@@ -1,5 +1,4 @@
 
-import javax.swing.*;
 import java.awt.*;
 
 public class Karting extends Vehicule{
@@ -9,14 +8,6 @@ public class Karting extends Vehicule{
 	private int sensDir=0;
 
 	// description
-	
-	// coordonnées de la voiture centrée en (0, 0)
-	// image du karting
-	private int[] tx = {0, 10, 10, -10, -10};
-	private int[] ty = {20, 10, -10, -10, 10};
-	private double[] normes;
-	private double[] angles;
-	
 	
 	// caractéristiques du karting
 	private double dt = 1;
@@ -28,13 +19,12 @@ public class Karting extends Vehicule{
 		this(0, 0);
 	}
 
-	public Karting(int x, int y){
+	public Karting(double x, double y){
 		texture = new Texture(System.getProperty("user.dir")+"/res/textures/green.png", "kart");
 		double r = texture.getImg().getHeight()/texture.getImg().getWidth();
 		this.P = new Position(x, y, 20, (int)(20*r));
 		this.vx = 0;
 		this.vy = 0;
-		color = Color.BLACK;
 
 		roues = new Roue[4];
 		roues[0] = new Roue(P.width/2, P.height/3);
@@ -45,23 +35,32 @@ public class Karting extends Vehicule{
 	}
 
 	public void avancer(boolean[] keyPressed, Map map) {
+		Position dP = new Position();
 
-		if (true/*!Collision.isColliding(this, map)*/) {
-			ralentir();
-			accelerer(keyPressed[3], keyPressed[1]);
-			tourner(keyPressed[0], keyPressed[2]);
+		ralentir();
+		accelerer(keyPressed[3], keyPressed[1]);
+		tourner(keyPressed[0], keyPressed[2]);
 
-			P.x += vx * dt;
-			P.y += vy * dt;
-			double normeV = Math.sqrt(vx * vx + vy * vy);
-			if (normeV != 0) {
-				P.setRad(P.getRad() + sensDir * orientation * 0.1);
-			}
+		double normeV = Math.sqrt(vx * vx + vy * vy);
+
+		dP.x = vx * dt;
+		dP.y = vy * dt;
+
+		if (normeV != 0) {
+			dP.setRad(sensDir*orientation*0.1);
+		}
+
+		P.add(dP);
+
+		if(Collision.isColliding(this, map)){
+			// On annule l'avance du véhicule et on stop sa vitesse
+			P.substract(dP);
+			vx = 0;
+			vy = 0;
 		}
 	}
-	
-	
-	public void accelerer(boolean av, boolean ar){
+
+	protected void accelerer(boolean av, boolean ar){
 		sensDir = 0;
 		if(av && !ar){ sensDir = 1;}
 		if(ar && !av){ sensDir = -1;}
@@ -69,14 +68,14 @@ public class Karting extends Vehicule{
 		vy += sensDir*Math.cos(P.getRad());
 	}
 	
-	public void ralentir(){
+	protected void ralentir(){
 		vx = vx/F;
 		vy = vy/F;
-		if(Math.abs(vx) < 0.01){ vx = 0; }
-		if(Math.abs(vy) < 0.01){ vy = 0; }
+		if(Math.abs(vx) < 0.1){ vx = 0; }
+		if(Math.abs(vy) < 0.1){ vy = 0; }
 	}
 
-	public void tourner(boolean g,  boolean d){
+	protected void tourner(boolean g,  boolean d){
 		if(g && !d){
 			orientation = -1;
 			roues[0].tournerAGauche();
@@ -90,8 +89,20 @@ public class Karting extends Vehicule{
 			roues[0].toutDroit();
 			roues[3].toutDroit();
 		}
-
 	}
+/*
+	protected void getReachableDirections(Map map){
+		ArrayList<Case> casesEnCollision = Collision.isColliding(this, map);
+		int[] directions = {1, 1, 1, 1};
+		for(Case c : casesEnCollision){
+			if(c.isBlocking()){
+				int[] caseDirection = Collision.getDirectionOfCollision(this, c);
+				for(int i=0; i<caseDirection.length; i++ ){
+					directions[i] *= caseDirection[i];
+				}
+			}
+		}
+	}*/
 
 	public void dessine(Graphics g){
 		((Graphics2D) g).setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );

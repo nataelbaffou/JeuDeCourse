@@ -10,10 +10,13 @@ public abstract class Objet {
 
     public Polygon getPolygon(){
         Polygon Pol = new Polygon();
-        Pol.addPoint(P.x + (int)(-P.centerX*Math.sin(P.getRad())), P.y + (int)(-P.centerY*Math.cos(P.getRad())));
-        Pol.addPoint(P.x + (int)((-P.centerX + P.width)*Math.sin(P.getRad())), P.y + (int)(-P.centerY*Math.cos(P.getRad())));
-        Pol.addPoint(P.x + (int)((-P.centerX + P.width)*Math.sin(P.getRad())), P.y + (int)((-P.centerY+P.height)*Math.cos(P.getRad())));
-        Pol.addPoint(P.x + (int)(-P.centerX*Math.sin(P.getRad())), P.y + (int)((-P.centerY+P.height)*Math.cos(P.getRad())));
+        for(int[] c : new int[][] {{0, 0}, {0, 1}, {1, 1}, {1, 0}}){
+            int x = (int)(-P.centerX + P.width*c[0]);
+            int y = (int)(-P.centerY + P.height*c[1]);
+            double dist = Math.sqrt(x*x+y*y);
+            double angle = Math.atan2(x,y);
+            Pol.addPoint((int)(P.x + dist*Math.sin(angle+P.getRad())), (int)(P.y +  dist * Math.cos(angle + P.getRad())));
+        }
         return Pol;
     }
 }

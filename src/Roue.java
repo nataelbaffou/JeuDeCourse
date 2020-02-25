@@ -2,7 +2,7 @@ import java.awt.*;
 
 public class Roue extends Objet{
 
-    public Roue(int x, int y){
+    public Roue(double x, double y){
         P = new Position(x, y, 6, 9); // position relative au kart
         texture = new Texture(System.getProperty("user.dir")+"/res/textures/1roue.png", "roue");
     }
