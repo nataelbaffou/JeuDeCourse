@@ -26,16 +26,29 @@ public class Map {
         String[] pathnames = f.list();
         int countImages = 0;
         for(String pathname : pathnames) {
-            if (pathname.matches("[a-zA-Z_0-9]*.png")) {
+            if (pathname.matches("0[a-zA-Z_0-9]*.png")) {
                 countImages += 1;
             }
         }
         textures = new Texture[countImages];
-        int iImg = 0;
-        for(int iPath = 0; iPath < countImages; iPath++){
-            if (pathnames[iPath].matches("0[a-zA-Z_0-9]*.png")) {
+        for(int iPath = 0; iPath < pathnames.length; iPath++){
+            int iImg = -1;
+            boolean forMap = true;
+            switch (pathnames[iPath]){
+                case "0wall.png":
+                    iImg = 0;
+                    System.out.print("wall");
+                    break;
+                case "0grass.png":
+                    iImg = 1;
+                    System.out.print("grass");
+                    break;
+                default:
+                    forMap = false;
+                    System.out.print("default");
+            }
+            if(forMap && iImg != -1){
                 textures[iImg] = new Texture(path+"/res/textures/"+pathnames[iPath], pathnames[iPath]);
-                iImg++;
             }
         }
     }
@@ -51,9 +64,9 @@ public class Map {
                 nbCaseY = Integer.parseInt(line.split(" ")[1]);
                 board = new Case[nbCaseY][nbCaseX];
                 int iLig = 0;
-                Position P = new Position(0, 0, width/nbCaseX, height/nbCaseY, 0, 0);
-                Position dx = new Position(width/nbCaseX, 0);
-                Position dy = new Position(0, height/nbCaseY);
+                Position P = new Position(0, 0, (double)(width)/nbCaseX, (double)(height)/nbCaseY, 0, 0);
+                Position dx = new Position((double)(width)/nbCaseX, 0);
+                Position dy = new Position(0, (double)(height)/nbCaseY);
                 while ((line = reader.readLine()) != null) {
                     String[] stringVals = line.split(" ");
                     for(int iCol = 0; iCol < nbCaseX; iCol++){

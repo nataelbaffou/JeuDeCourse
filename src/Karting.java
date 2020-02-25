@@ -21,7 +21,7 @@ public class Karting extends Vehicule{
 
 	public Karting(double x, double y){
 		texture = new Texture(System.getProperty("user.dir")+"/res/textures/green.png", "kart");
-		double r = texture.getImg().getHeight()/texture.getImg().getWidth();
+		double r = (double)(texture.getImg().getHeight())/texture.getImg().getWidth();
 		this.P = new Position(x, y, 20, (int)(20*r));
 		this.vx = 0;
 		this.vy = 0;
