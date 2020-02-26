@@ -8,9 +8,9 @@ public class MainMenu extends JPanel implements ActionListener {
     private CustomButton multi;
     private CustomButton editor;
     private CustomButton settings;
-    public MainMenu(int size){
+    public MainMenu(int width, int height){
 
-        setPreferredSize(new Dimension(size, size));
+        setPreferredSize(new Dimension(width, height));
 
         solo = new CustomButton("Solo");
         multi = new CustomButton("Multi");

@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 public class GameDisplay extends JPanel implements ActionListener {
     private Joueur[] joueurs;
-    private Map map = new Map(400, 400);
+    private Map map;
     private Timer timer;
     private int DELTA_T = 50;
     private String PRESSED = " pressed";
@@ -14,7 +14,10 @@ public class GameDisplay extends JPanel implements ActionListener {
     private int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
     private LinkedList<Integer> pressedKeys;
 
-    public GameDisplay(){
+    public GameDisplay(int width, int height){
+
+        map = new Map(width, height, "0");
+
         joueurs = new Joueur[2];
 
         joueurs[0] = new Joueur("1");
@@ -41,10 +44,9 @@ public class GameDisplay extends JPanel implements ActionListener {
     }
 
     private void setKeyBindings() {
-        HashMap<String,Integer> h = new HashMap<>();
+        HashMap<String,Integer> h;
         ActionMap actionMap = getActionMap();
-        int condition = IFW;
-        InputMap inputMap = getInputMap(condition);
+        InputMap inputMap = getInputMap(IFW);
         int key;
 
         for(Joueur j: joueurs){
@@ -61,8 +63,6 @@ public class GameDisplay extends JPanel implements ActionListener {
         }
     }
 
-    public void keyTyped(KeyEvent e){}
-
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == timer){
             for(Joueur j: joueurs){
@@ -77,7 +77,7 @@ public class GameDisplay extends JPanel implements ActionListener {
     private void handleKeyEvent(int key, boolean onKeyReleased) {
         if (onKeyReleased) {
             if (pressedKeys.contains(key)){
-                pressedKeys.remove((Object)key);
+                pressedKeys.remove((Object) key);
             }
         }
         else {

@@ -1,8 +1,6 @@
 import java.awt.*;
-import java.io.*;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.File;
+import java.util.Hashtable;
 
 public class Map {
     private Texture[] textures;
@@ -13,28 +11,28 @@ public class Map {
     private Case[][] board;
     private String mapsName = "default";
 
-    public Map(int w, int h){
+    public Map(int w, int h, String id){
         width = w;
         height = h;
         loadData();
-        generateBoard();
+        generateBoard(id);
     }
 
     private void loadData(){
         String path = System.getProperty("user.dir");
         File f = new File(path + "/res/textures");
-        String[] pathnames = f.list();
+        String[] names = f.list();
         int countImages = 0;
-        for(String pathname : pathnames) {
+        for(String pathname : names) {
             if (pathname.matches("0[a-zA-Z_0-9]*.png")) {
                 countImages += 1;
             }
         }
         textures = new Texture[countImages];
-        for(int iPath = 0; iPath < pathnames.length; iPath++){
+        for (String name : names) {
             int iImg = -1;
             boolean forMap = true;
-            switch (pathnames[iPath]){
+            switch (name) {
                 case "0grass.png":
                     iImg = 0;
                     break;
@@ -44,45 +42,51 @@ public class Map {
                 default:
                     forMap = false;
             }
-            if(forMap && iImg != -1){
-                textures[iImg] = new Texture(path+"/res/textures/"+pathnames[iPath], pathnames[iPath]);
+            if (forMap) {
+                textures[iImg] = new Texture(path + "/res/textures/" + name, name);
             }
         }
     }
 
-    public void generateBoard(){
+    public void generateBoard(String id){
         String mainPath = System.getProperty("user.dir");
-        Path file = FileSystems.getDefault().getPath(mainPath + "/res/maps", mapsName);
-        try (InputStream in = Files.newInputStream(file);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            String line = reader.readLine();
-            if(line != null){
-                nbCaseX = Integer.parseInt(line.split(" ")[0]);
-                nbCaseY = Integer.parseInt(line.split(" ")[1]);
-                board = new Case[nbCaseY][nbCaseX];
-                int iLig = 0;
-                Position P = new Position(0, 0, (double)(width)/nbCaseX, (double)(height)/nbCaseY, 0, 0);
-                Position dx = new Position((double)(width)/nbCaseX, 0);
-                Position dy = new Position(0, (double)(height)/nbCaseY);
-                while ((line = reader.readLine()) != null) {
-                    String[] stringVals = line.split(" ");
-                    for(int iCol = 0; iCol < nbCaseX; iCol++){
-                        int val = Integer.parseInt(stringVals[iCol]);
-                        if(val >= textures.length){
-                            val = 0;
-                        }
-                        board[iLig][iCol] = new Case(textures[val], P);
-                        P.add(dx);
-                    }
-                    P.x = 0;
-                    P.add(dy);
-                    iLig++;
-                }
 
+        File f = new File(mainPath + "/res/maps");
+        String[] names = f.list();
+        for(String name: names){
+            if (name.equals(id)) {
+                mapsName = id;
+                break;
             }
+        }
 
-        } catch (IOException x) {
-            System.err.println(x);
+        Hashtable<String, String> dico = IOFiles.getInformation("maps/"+mapsName);
+
+        String line = dico.get("size");
+        String[] boardData = dico.get("board").split("\n");
+
+        nbCaseX = Integer.parseInt(line.split(" ")[0]);
+        nbCaseY = Integer.parseInt(line.split(" ")[1]);
+
+        board = new Case[nbCaseY][nbCaseX];
+
+        Position P = new Position(0, 0, width/nbCaseX, height/nbCaseY, 0, 0);
+        Position dx = new Position(width/nbCaseX, 0);
+        Position dy = new Position(0, height/nbCaseY);
+
+        for(int iLig = 0; iLig < nbCaseY; iLig++) {
+            line = boardData[iLig];
+            String[] stringVals = line.split(" ");
+            for (int iCol = 0; iCol < nbCaseX; iCol++) {
+                int val = Integer.parseInt(stringVals[iCol]);
+                if (val >= textures.length) {
+                    val = 0;
+                }
+                board[iLig][iCol] = new Case(textures[val], P);
+                P.add(dx);
+            }
+            P.x = 0;
+            P.add(dy);
         }
     }
 

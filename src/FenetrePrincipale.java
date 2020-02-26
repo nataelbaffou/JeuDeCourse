@@ -9,11 +9,11 @@ public class FenetrePrincipale extends JFrame{
 	private GameContent gameContent;
 	private JPanel cardContent;
 
-	public FenetrePrincipale(){
+	public FenetrePrincipale(int width, int height){
 		this.setTitle("Jeu de voiture ULTRA stylé");
 
-		mainMenu = new MainMenu(400);
-		gameContent = new GameContent(400);
+		mainMenu = new MainMenu(width, height);
+		gameContent = new GameContent(width, height);
 		panelSelection = new CardLayout();
 
 		cardContent = new JPanel();
