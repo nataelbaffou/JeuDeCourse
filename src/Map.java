@@ -8,14 +8,16 @@ public class Map {
     private int height;
     private int nbCaseX;
     private int nbCaseY;
+    private int widthCase;
     private Case[][] board;
-    private String mapsName = "default";
+    private String mapsName;
 
     public Map(int w, int h, String id){
         width = w;
         height = h;
+        mapsName = id;
         loadData();
-        generateBoard(id);
+        generateBoard();
     }
 
     private void loadData(){
@@ -23,6 +25,7 @@ public class Map {
         File f = new File(path + "/res/textures");
         String[] names = f.list();
         int countImages = 0;
+        assert names != null;
         for(String pathname : names) {
             if (pathname.matches("0[a-zA-Z_0-9]*.png")) {
                 countImages += 1;
@@ -48,9 +51,7 @@ public class Map {
         }
     }
 
-    public void generateBoard(String id){
-        String mainPath = System.getProperty("user.dir");
-
+    public void generateBoard(){
         Hashtable<String, String> dico = IOFiles.getInformation("maps", mapsName);
 
         String line = dico.get("size");
@@ -60,10 +61,11 @@ public class Map {
         nbCaseY = Integer.parseInt(line.split(" ")[1]);
 
         board = new Case[nbCaseY][nbCaseX];
+        widthCase = Math.min(width/nbCaseX, height/nbCaseY);
 
-        Position P = new Position(0, 0, width/nbCaseX, height/nbCaseY, 0, 0);
-        Position dx = new Position(width/nbCaseX, 0);
-        Position dy = new Position(0, height/nbCaseY);
+        Position P = new Position(0, 0, widthCase, widthCase, 0, 0);
+        Position dx = new Position(widthCase, 0);
+        Position dy = new Position(0, widthCase);
 
         for(int iLig = 0; iLig < nbCaseY; iLig++) {
             line = boardData[iLig];
@@ -103,5 +105,9 @@ public class Map {
 
     public int getNbCaseY() {
         return nbCaseY;
+    }
+
+    public int getWidthCase() {
+        return widthCase;
     }
 }

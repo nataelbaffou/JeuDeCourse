@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -8,14 +7,15 @@ public class Joueur{
     private Vehicule V;
     private String nom;
     Color color;
-    private int points=0;
-    private int[] touchesJoueur;
 
     public Joueur(String pNom){
         nom = pNom;
-        V = new Karting(100, 100);
+        V = new Karting();
         binds = new Binds();
-        Object[] test = binds.values().toArray();
+    }
+
+    public void setVehicule(int x, int y, int widthCase){
+        V = new Karting(x, y, widthCase);
     }
 
     public Binds getBinds() {

@@ -5,6 +5,39 @@ import java.nio.file.Path;
 import java.util.Hashtable;
 
 public class IOFiles {
+
+    /*
+        input :
+            * path : chemin vers le dossier contenant le fichier à regarder
+              ATTENTION :
+                    . on considère la racine au dossier res
+                    . le '/' n'est pas obligatoire à la fin du path
+            * name : nom du fichier
+
+        output :
+            * un dictionnaire (HashTable) de type <String, String>
+                    . keys : titres du fichier écrit entre crochets (ex : [title])
+                    . values : String listant les informations entre 2 titres
+
+        Exemple :
+
+        fichier (extrait de) res/game/default :
+            """
+            [title]
+            Game par défaut
+            [map]
+            0
+            """
+
+        input : ("game", "default") or ("game/", "default")
+        output : {"title" : "Game par défault", "map" : "0"}
+
+        Informations complémentaires:
+            * Si le fichier n'est pas trouvé, le fichier "default" est alors appelé
+            * les lignes vides sont ignorées
+
+
+     */
     public static Hashtable<String, String> getInformation(String path, String name){
         Hashtable<String, String> dico = new Hashtable<>();
 
@@ -12,13 +45,22 @@ public class IOFiles {
 
         String fileName = "default";
 
+        if(path.charAt(path.length()-1) == '/'){
+            path = path.substring(0, path.length()-1);
+        }
+
         File f = new File(mainPath + "/res/" + path);
         String[] names = f.list();
+
+        assert names != null;
         for(String n: names){
             if (n.equals(name)) {
                 fileName = name;
                 break;
             }
+        }
+        if(!name.equals("default")&&fileName.equals("default")){
+            System.out.println("Le fichier '"+name+"' n'a pas été trouvé à l'emplacement : '"+path+"'");
         }
 
         Path file = FileSystems.getDefault().getPath(mainPath + "/res/"+path+"/"+fileName);

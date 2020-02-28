@@ -39,19 +39,22 @@ public abstract class Collision {
     }
 
     private static boolean isColliding(Karting kart, Case c){
-        Polygon Pkart = kart.getPolygon();
+        Polygon[] kartPolygons = kart.getAllPolygons();
         Polygon Pcase = c.getPolygon();
 
-        for(int ikart=0; ikart<Pkart.npoints; ikart++){
-            if(Pcase.contains(Pkart.xpoints[ikart], Pkart.ypoints[ikart])){
-                return true;
+        for(Polygon Pkart : kartPolygons){
+            for(int ikart=0; ikart<Pkart.npoints; ikart++){
+                if(Pcase.contains(Pkart.xpoints[ikart], Pkart.ypoints[ikart])){
+                    return true;
+                }
+            }
+            for(int icase=0; icase<Pcase.npoints; icase++){
+                if(Pkart.contains(Pcase.xpoints[icase], Pcase.ypoints[icase])){
+                    return true;
+                }
             }
         }
-        for(int icase=0; icase<Pcase.npoints; icase++){
-            if(Pkart.contains(Pcase.xpoints[icase], Pcase.ypoints[icase])){
-                return true;
-            }
-        }
+
         return false;
     }
 

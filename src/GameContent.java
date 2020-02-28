@@ -32,17 +32,22 @@ public class GameContent extends JPanel implements ActionListener {
         joueurs[1].getBinds().setArrowBind();
         joueurs[1].setColor(Color.GREEN);
 
-        game = new Game(joueurs, "0", width, height);
-
+        // definition des binds
         setKeyBindings();
 
+        // initialisation de la partie
+        game = new Game(joueurs, "circuit1", width, height);
+
+        // liste gérant l'appuie des touches
         pressedKeys = new LinkedList<>();
 
+        // init du panel affichant la partie
         gameDisplay = new GameDisplay(game);
         gameDisplay.setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
         add(gameDisplay,BorderLayout.CENTER);
 
+        // init du timer
         timer = new Timer(DELTA_T, this);
         timer.start();
     }

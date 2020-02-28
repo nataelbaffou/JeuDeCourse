@@ -16,21 +16,23 @@ public class Karting extends Vehicule{
 	private Roue[] roues;
 
 	public Karting(){
-		this(0, 0);
+		this(0, 0, 20);
 	}
 
-	public Karting(double x, double y){
+	public Karting(double x, double y, int widthCase){
 		texture = new Texture(System.getProperty("user.dir")+"/res/textures/green.png", "kart");
-		double r = (double)(texture.getImg().getHeight())/texture.getImg().getWidth();
-		this.P = new Position(x, y, 20, (int)(20*r));
+		//double r = (double)(texture.getImg().getHeight())/texture.getImg().getWidth();
+		double widthFactor = 0.7;
+		double heightFactor = 1.4;
+		this.P = new Position(x, y, widthCase*widthFactor, widthCase*heightFactor);
 		this.vx = 0;
 		this.vy = 0;
 
 		roues = new Roue[4];
-		roues[0] = new Roue(P.width/2, P.height/3);
-		roues[1] = new Roue(P.width/2, -P.height/2);
-		roues[2] = new Roue(-P.width/2, -P.height/2);
-		roues[3] = new Roue(-P.width/2, P.height/3);
+		roues[0] = new Roue(P.width/2, P.height/3, this.P);
+		roues[1] = new Roue(P.width/2, -P.height/2, this.P);
+		roues[2] = new Roue(-P.width/2, -P.height/2, this.P);
+		roues[3] = new Roue(-P.width/2, P.height/3, this.P);
 		
 	}
 
@@ -94,6 +96,15 @@ public class Karting extends Vehicule{
 			roues[3].toutDroit();
 		}
 	}
+
+	public Polygon[] getAllPolygons(){
+		Polygon[] poly = new Polygon[roues.length+1];
+		for(int i=0; i<roues.length; i++){
+			poly[i]=roues[i].getPolygon();
+		}
+		poly[roues.length] = this.getPolygon();
+		return poly;
+	}
 /*
 	protected void getReachableDirections(Map map){
 		ArrayList<Case> casesEnCollision = Collision.isColliding(this, map);
@@ -111,11 +122,14 @@ public class Karting extends Vehicule{
 	@Override
 	public void dessine(Graphics g){
 		((Graphics2D) g).setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-		roues[0].dessine(g, P);
-		roues[1].dessine(g, P);
-		roues[2].dessine(g, P);
-		roues[3].dessine(g, P);
+		roues[0].dessine(g);
+		roues[1].dessine(g);
+		roues[2].dessine(g);
+		roues[3].dessine(g);
 		texture.dessine(g, P);
-
+		if(showCollisionBox){
+			g.setColor(Color.BLACK);
+			g.drawPolygon(this.getPolygon());
+		}
 	}
 }

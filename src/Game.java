@@ -12,7 +12,7 @@ public class Game {
 
     public Game(Joueur[] j, String id, int w, int h){
         players = j;
-        Hashtable<String, String> dico = IOFiles.getInformation("games", id);
+        Hashtable<String, String> dico = IOFiles.getInformation("games/", id);
         for(java.util.Map.Entry<String, String> param : dico.entrySet()){
             switch (param.getKey()){
                 case "map":
@@ -33,10 +33,16 @@ public class Game {
             map = new Map(w, h, "0");
         }
 
+        // initialise le nombre de tours des joueurs
         nPlayers = j.length;
         lapsPerPlayer = new int[nPlayers];
         for(int i = 0; i< nPlayers; i++){
             lapsPerPlayer[i] = 0;
+        }
+
+        // initialise les véhicules de chaque joueurs
+        for(int i = 0; i< nPlayers; i++){
+            players[i].setVehicule(80, 80, map.getWidthCase());
         }
     }
 

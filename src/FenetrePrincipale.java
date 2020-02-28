@@ -28,8 +28,7 @@ public class FenetrePrincipale extends JFrame{
 		setVisible(true);
 		setFocusable(true);
 
-		panelSelection.last(cardContent);
-
+		panelSelection.show(cardContent, "game");
 
 	}
 }
