@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
@@ -7,11 +8,11 @@ public class Game {
     private int[] lapsPerPlayer;
     private int nLaps = 1;
     private Map map;
-    private String title;
+    private String title = "default";
 
-    public Game(Joueur[] j, int id, int w, int h){
+    public Game(Joueur[] j, String id, int w, int h){
         players = j;
-        Hashtable<String, String> dico = IOFiles.getInformation("games/"+id);
+        Hashtable<String, String> dico = IOFiles.getInformation("games", id);
         for(java.util.Map.Entry<String, String> param : dico.entrySet()){
             switch (param.getKey()){
                 case "map":
@@ -24,14 +25,23 @@ public class Game {
                     nLaps = Integer.parseInt(param.getValue());
                     break;
                 default:
-                    System.out.println("Un parametre enregistré dans le fichier : games/"+id+"n'est pas correct");
+                    System.out.println("Un parametre enregistré dans le fichier : games/"+id+" n'est pas correct : " + param.getKey());
             }
         }
+        if(map == null){
+            System.out.println("Le paramètre 'map' n'a pas été trouvé dans le fichier games/"+id);
+            map = new Map(w, h, "0");
+        }
+
         nPlayers = j.length;
         lapsPerPlayer = new int[nPlayers];
         for(int i = 0; i< nPlayers; i++){
             lapsPerPlayer[i] = 0;
         }
+    }
+
+    public void tick(LinkedList<Integer> pressedKeys){
+        avancer(pressedKeys);
     }
 
     public void avancer(LinkedList<Integer> pressedKeys){
@@ -47,5 +57,14 @@ public class Game {
             }
         }
         return -1;
+    }
+
+    public void dessineMap(Graphics g){
+        map.dessine(g);
+    }
+    public void dessineJoueurs(Graphics g){
+        for(Joueur j: players){
+            j.dessine(g);
+        }
     }
 }

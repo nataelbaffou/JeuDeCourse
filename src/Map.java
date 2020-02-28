@@ -51,16 +51,7 @@ public class Map {
     public void generateBoard(String id){
         String mainPath = System.getProperty("user.dir");
 
-        File f = new File(mainPath + "/res/maps");
-        String[] names = f.list();
-        for(String name: names){
-            if (name.equals(id)) {
-                mapsName = id;
-                break;
-            }
-        }
-
-        Hashtable<String, String> dico = IOFiles.getInformation("maps/"+mapsName);
+        Hashtable<String, String> dico = IOFiles.getInformation("maps", mapsName);
 
         String line = dico.get("size");
         String[] boardData = dico.get("board").split("\n");

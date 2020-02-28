@@ -1,18 +1,27 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Hashtable;
 
 public class IOFiles {
-    public static Hashtable<String, String> getInformation(String path){
+    public static Hashtable<String, String> getInformation(String path, String name){
         Hashtable<String, String> dico = new Hashtable<>();
 
         String mainPath = System.getProperty("user.dir");
-        Path file = FileSystems.getDefault().getPath(mainPath + "/res/"+path);
+
+        String fileName = "default";
+
+        File f = new File(mainPath + "/res/" + path);
+        String[] names = f.list();
+        for(String n: names){
+            if (n.equals(name)) {
+                fileName = name;
+                break;
+            }
+        }
+
+        Path file = FileSystems.getDefault().getPath(mainPath + "/res/"+path+"/"+fileName);
         try (InputStream in = Files.newInputStream(file);
              BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             String line;
@@ -25,7 +34,7 @@ public class IOFiles {
                         res = new StringBuilder();
                     }
                     key = line.substring(1, line.length()-1);
-                } else if(line.equals("")){
+                } else if(!line.equals("")){
                     if(!res.toString().equals("")){
                         res.append("\n");
                     }

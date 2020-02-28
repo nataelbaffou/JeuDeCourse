@@ -1,15 +1,105 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.LinkedList;
 
-public class GameContent extends JPanel {
+public class GameContent extends JPanel implements ActionListener {
     private GameDisplay gameDisplay;
 
+    private Joueur[] joueurs;
+    private Game game;
+
+    private String PRESSED = " pressed";
+    private String RELEASED = " released";
+    private int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
+    private LinkedList<Integer> pressedKeys;
+
+    private Timer timer;
+    private int DELTA_T = 50;
 
 
     public GameContent(int width, int height){
-        gameDisplay = new GameDisplay(width, height);
+
+        // Définition des joueurs
+        joueurs = new Joueur[2];
+
+        joueurs[0] = new Joueur("1");
+        joueurs[0].setColor(Color.BLACK);
+
+        joueurs[1] = new Joueur("test");
+        joueurs[1].getBinds().setArrowBind();
+        joueurs[1].setColor(Color.GREEN);
+
+        game = new Game(joueurs, "0", width, height);
+
+        setKeyBindings();
+
+        pressedKeys = new LinkedList<>();
+
+        gameDisplay = new GameDisplay(game);
         gameDisplay.setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
         add(gameDisplay,BorderLayout.CENTER);
+
+        timer = new Timer(DELTA_T, this);
+        timer.start();
+    }
+
+    private void setKeyBindings() {
+        HashMap<String,Integer> h;
+        ActionMap actionMap = getActionMap();
+        InputMap inputMap = getInputMap(IFW);
+        int key;
+
+        for(Joueur j: joueurs){
+            h = j.getBinds();
+            for(String s: h.keySet()){
+                key = h.get(s);
+                inputMap.put(KeyStroke.getKeyStroke(key, 0, false),key+PRESSED);
+                Action pressedAction = new KeyAction(key, false);
+                actionMap.put(key+PRESSED, pressedAction);
+                inputMap.put(KeyStroke.getKeyStroke(key, 0, true),key+RELEASED);
+                Action releasedAction = new KeyAction(key, true);
+                actionMap.put(key+RELEASED, releasedAction);
+            }
+        }
+    }
+
+    private void handleKeyEvent(int key, boolean onKeyReleased) {
+        if (onKeyReleased) {
+            if (pressedKeys.contains(key)){
+                pressedKeys.remove((Object) key);
+            }
+        }
+        else {
+            if (!pressedKeys.contains(key)) {
+                pressedKeys.add(key);
+            }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e){
+        if(e.getSource() == timer){
+            game.tick(pressedKeys);
+        }
+        gameDisplay.dessine();
+    }
+
+    private class KeyAction extends AbstractAction implements ActionListener {
+        private int key;
+        private boolean onKeyReleased;
+
+        public KeyAction(int key, boolean onKeyReleased) {
+            this.key = key;
+            this.onKeyReleased = onKeyReleased;
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            handleKeyEvent(key, onKeyReleased);
+        }
     }
 }
