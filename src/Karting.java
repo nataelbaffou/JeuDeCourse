@@ -16,15 +16,15 @@ public class Karting extends Vehicule{
 	private Roue[] roues;
 
 	public Karting(){
-		this(0, 0, 20);
+		this(new Position(), 20);
 	}
 
-	public Karting(double x, double y, int widthCase){
+	public Karting(Position initPos, int widthCase){
 		texture = new Texture(System.getProperty("user.dir")+"/res/textures/green.png", "kart");
 		//double r = (double)(texture.getImg().getHeight())/texture.getImg().getWidth();
 		double widthFactor = 0.7;
 		double heightFactor = 1.4;
-		this.P = new Position(x, y, widthCase*widthFactor, widthCase*heightFactor);
+		this.P = new Position(initPos.x, initPos.y, widthCase*widthFactor, widthCase*heightFactor, initPos.getDeg());
 		this.vx = 0;
 		this.vy = 0;
 
@@ -131,5 +131,7 @@ public class Karting extends Vehicule{
 			g.setColor(Color.BLACK);
 			g.drawPolygon(this.getPolygon());
 		}
+		g.setColor(Color.BLUE);
+		g.drawOval((int)P.x, (int)P.y, 2, 2);
 	}
 }

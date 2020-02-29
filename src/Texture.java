@@ -41,4 +41,8 @@ public class Texture{
     public BufferedImage getImg() {
         return img;
     }
+
+    public String getName() {
+        return name;
+    }
 }
