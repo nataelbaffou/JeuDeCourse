@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.ArrayList;
 
 public abstract class Collision {
 
@@ -15,6 +14,7 @@ public abstract class Collision {
 
     }
 
+    /*
     public static ArrayList<Case> getCasesInCollision(Vehicule V, Map map){
         ArrayList<Case> casesEnCollision = new ArrayList<Case>();
         for(int iLig=0; iLig<map.getNbCaseY(); iLig++){
@@ -27,6 +27,7 @@ public abstract class Collision {
         return casesEnCollision;
 
     }
+    */
 
     private static boolean isColliding(Vehicule V, Case c){
 
@@ -43,21 +44,28 @@ public abstract class Collision {
         Polygon Pcase = c.getPolygon();
 
         for(Polygon Pkart : kartPolygons){
-            for(int ikart=0; ikart<Pkart.npoints; ikart++){
-                if(Pcase.contains(Pkart.xpoints[ikart], Pkart.ypoints[ikart])){
-                    return true;
-                }
-            }
-            for(int icase=0; icase<Pcase.npoints; icase++){
-                if(Pkart.contains(Pcase.xpoints[icase], Pcase.ypoints[icase])){
-                    return true;
-                }
+            if(isColliding(Pkart, Pcase)){
+                return true;
             }
         }
-
         return false;
     }
 
+    public static boolean isColliding(Polygon P1, Polygon P2){
+        for(int i=0; i<P1.npoints; i++){
+            if(P2.contains(P1.xpoints[i], P1.ypoints[i])){
+                return true;
+            }
+        }
+        for(int i=0; i<P2.npoints; i++){
+            if(P1.contains(P2.xpoints[i], P2.ypoints[i])){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
     public static int[] getDirectionOfCollision(Karting kart, Case c){
         int[] dir = {1, 1, 1, 1};
         Polygon pKart = kart.getPolygon();
@@ -75,4 +83,5 @@ public abstract class Collision {
         }
         return dir;
     }
+     */
 }
