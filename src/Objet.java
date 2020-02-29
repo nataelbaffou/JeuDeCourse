@@ -28,4 +28,8 @@ public abstract class Objet {
         }
         return Pol;
     }
+
+    public Texture getTexture() {
+        return texture;
+    }
 }

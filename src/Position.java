@@ -1,3 +1,9 @@
+/*
+    Définit les paramètres de position de tous les objets du jeu
+    Pour les différentes coordonnées se référer au dessin réalisé par mes soins (Nataël)
+    ATTENTION l'attribut alpha est défini en degré pour l'initialisation : pour le reste il faut utiliser les méthodes
+ */
+
 public class Position{
     public double x;
     public double y;
@@ -21,6 +27,10 @@ public class Position{
 
     public Position(double px, double py, double dx, double dy){
         this(px, py, dx, dy, dx/2, dy/2, 0);
+    }
+
+    public Position(double px, double py, double dx, double dy, double pa){
+        this(px, py, dx, dy, dx/2, dy/2, pa);
     }
 
     public Position(double px, double py, double dx, double dy, double cx, double cy){
@@ -80,5 +90,12 @@ public class Position{
 
     public Position copy(){
         return new Position(x, y, width, height, centerX, centerY, alpha);
+    }
+
+    public String toString(){
+        String res = "";
+        res += "x : " + x + " y : " + y + " w : " + width + " h : " + height;// + "\n";
+        //res += "cx : " + centerX + " cy : " + centerY + " alpha : " + alpha;
+        return res;
     }
 }

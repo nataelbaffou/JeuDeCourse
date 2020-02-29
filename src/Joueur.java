@@ -14,8 +14,8 @@ public class Joueur{
         binds = new Binds();
     }
 
-    public void setVehicule(int x, int y, int widthCase){
-        V = new Karting(x, y, widthCase);
+    public void setVehicule(Position initPos, int widthCase){
+        V = new Karting(initPos, widthCase);
     }
 
     public Binds getBinds() {
@@ -42,5 +42,9 @@ public class Joueur{
 
     public void dessine(Graphics g){
         V.dessine(g);
+    }
+
+    public Vehicule getVehicule() {
+        return V;
     }
 }

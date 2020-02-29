@@ -11,13 +11,16 @@ public class Map {
     private int widthCase;
     private Case[][] board;
     private String mapsName;
+    private Position startPos;
+    private String startLineType = "down";
+    private Position startLinePos;
 
     public Map(int w, int h, String id){
         width = w;
         height = h;
         mapsName = id;
         loadData();
-        generateBoard();
+        initMap();
     }
 
     private void loadData(){
@@ -42,6 +45,9 @@ public class Map {
                 case "0wall.png":
                     iImg = 1;
                     break;
+                case "0startEnd.png":
+                    iImg = 2;
+                    break;
                 default:
                     forMap = false;
             }
@@ -51,9 +57,10 @@ public class Map {
         }
     }
 
-    public void generateBoard(){
+    public void initMap(){
         Hashtable<String, String> dico = IOFiles.getInformation("maps", mapsName);
 
+        // Load and Genarate Board
         String line = dico.get("size");
         String[] boardData = dico.get("board").split("\n");
 
@@ -80,6 +87,48 @@ public class Map {
             }
             P.x = 0;
             P.add(dy);
+        }
+
+        // Initialisation of the rest
+        startPos = new Position();
+        for(java.util.Map.Entry<String, String> param : dico.entrySet()){
+            switch (param.getKey()){
+                case "size":
+                    break;
+                case "board":
+                    break;
+                case "start-line":
+                    String[] lines1 = param.getValue().split("\n");
+                    startLineType = lines1[0];
+                    Point p1 = new Point(Integer.parseInt(lines1[1].split(" ")[1])*widthCase, Integer.parseInt(lines1[1].split(" ")[0])*widthCase);
+                    Point p2 = new Point((Integer.parseInt(lines1[2].split(" ")[1])+1)*widthCase, (Integer.parseInt(lines1[2].split(" ")[0])+1)*widthCase);
+                    startLinePos = new Position(p1.x, p1.y, p2.x-p1.x, p2.y-p1.y, 0, 0);
+                    break;
+                case "start-position":
+                    String[] lines2 = param.getValue().split("\n");
+                    startPos.x = Double.parseDouble(lines2[0].split(" ")[1])*widthCase;
+                    startPos.y = Double.parseDouble(lines2[0].split(" ")[0])*widthCase;
+                    switch (lines2[1]){
+                        case "right":
+                            startPos.setDeg(-90);
+                            break;
+                        case "left":
+                            startPos.setDeg(90);
+                            break;
+                        case "up":
+                            startPos.setDeg(180);
+                            break;
+                        case "down":
+                            startPos.setDeg(0);
+                            break;
+                        default:
+                            System.out.println("Start orientation isn't known : "+ lines2[1]);
+                            startPos.setDeg(180);
+                    }
+                    break;
+                default:
+                    System.out.println("Un parametre enregistré dans le fichier : maps/"+mapsName+" n'est pas correct : " + param.getKey());
+            }
         }
     }
 
@@ -109,5 +158,17 @@ public class Map {
 
     public int getWidthCase() {
         return widthCase;
+    }
+
+    public Position getStartPos() {
+        return startPos;
+    }
+
+    public Position getStartLinePos() {
+        return startLinePos;
+    }
+
+    public String getStartLineType() {
+        return startLineType;
     }
 }
