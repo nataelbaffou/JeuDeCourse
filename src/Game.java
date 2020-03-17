@@ -13,9 +13,9 @@ public class Game {
     private Map map;
     private String title = "default";
 
-    public Game(Joueur[] j, String id, int w, int h){
+    public Game(Joueur[] j, String idGame, int w, int h){
         players = j;
-        Hashtable<String, String> dico = IOFiles.getInformation("games/", id);
+        Hashtable<String, String> dico = IOFiles.getInformation("games/", idGame);
         for(java.util.Map.Entry<String, String> param : dico.entrySet()){
             switch (param.getKey()){
                 case "map":
@@ -28,11 +28,11 @@ public class Game {
                     nLaps = Integer.parseInt(param.getValue());
                     break;
                 default:
-                    System.out.println("Un parametre enregistré dans le fichier : games/"+id+" n'est pas correct : " + param.getKey());
+                    System.out.println("Un parametre enregistré dans le fichier : games/"+idGame+" n'est pas correct : " + param.getKey());
             }
         }
         if(map == null){
-            System.out.println("Le paramètre 'map' n'a pas été trouvé dans le fichier games/"+id);
+            System.out.println("Le paramètre 'map' n'a pas été trouvé dans le fichier games/"+idGame);
             map = new Map(w, h, "0");
         }
 
@@ -173,7 +173,7 @@ public class Game {
 
     public int isOver(){
         for(int i = 0; i< nPlayers; i++){
-            if(lapsPerPlayer[i] == nLaps){
+            if(lapsPerPlayer[i] == nLaps + 1){
                 return i;
             }
         }

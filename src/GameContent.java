@@ -19,8 +19,13 @@ public class GameContent extends JPanel implements ActionListener {
     private Timer timer;
     private int DELTA_T = 50;
 
+    private int width;
+    private int height;
+
 
     public GameContent(int width, int height){
+        this.width = width;
+        this.height = height;
 
         // Définition des joueurs
         joueurs = new Joueur[2];
@@ -36,7 +41,7 @@ public class GameContent extends JPanel implements ActionListener {
         setKeyBindings();
 
         // initialisation de la partie
-        game = new Game(joueurs, "circuit1", width, height);
+        launchGame("circuit1");
 
         // liste gérant l'appuie des touches
         pressedKeys = new LinkedList<>();
@@ -50,6 +55,10 @@ public class GameContent extends JPanel implements ActionListener {
         // init du timer
         timer = new Timer(DELTA_T, this);
         timer.start();
+    }
+
+    public void launchGame(String idGame){
+        game = new Game(joueurs, idGame, width, height);
     }
 
     private void setKeyBindings() {
@@ -91,6 +100,9 @@ public class GameContent extends JPanel implements ActionListener {
             game.tick(pressedKeys);
         }
         gameDisplay.dessine();
+        if(game.isOver()>-1){
+            launchGame("circuit1");
+        }
     }
 
     private class KeyAction extends AbstractAction implements ActionListener {
