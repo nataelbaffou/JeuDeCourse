@@ -20,8 +20,9 @@ public class GameContent extends JPanel implements ActionListener {
     private int DELTA_T = 50;
 
 
-    public GameContent(int width, int height){
+    public GameContent(int width, int height, FenetrePrincipale f){
 
+        setPreferredSize(new Dimension(width,height));
         // Définition des joueurs
         joueurs = new Joueur[2];
 
@@ -50,6 +51,10 @@ public class GameContent extends JPanel implements ActionListener {
         // init du timer
         timer = new Timer(DELTA_T, this);
         timer.start();
+    }
+
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
     }
 
     private void setKeyBindings() {
@@ -106,5 +111,9 @@ public class GameContent extends JPanel implements ActionListener {
         {
             handleKeyEvent(key, onKeyReleased);
         }
+    }
+
+    public void setMap(int i){
+
     }
 }

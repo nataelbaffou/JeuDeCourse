@@ -22,6 +22,7 @@ public class Joueur{
         return binds;
     }
 
+
     //TODO setTouches();
 
     public void avancer(LinkedList<Integer> keyPressed, Map map){

@@ -8,30 +8,53 @@ public class MainMenu extends JPanel implements ActionListener {
     private CustomButton multi;
     private CustomButton editor;
     private CustomButton settings;
-    public MainMenu(int width, int height){
+    private JPanel bPanel;
+    private FenetrePrincipale f;
+    public MainMenu(int width, int height, FenetrePrincipale fenetrePrincipale){
+
+        f = fenetrePrincipale;
 
         setPreferredSize(new Dimension(width, height));
 
+        bPanel = new JPanel();
+        int bW = (int)(0.4d*width);
+        int bY = (int)(0.4d*height);
+        bPanel.setBounds((int)((width-bW)/2),(int)(height/2),bW, bY);
+
         solo = new CustomButton("Solo");
+        solo.addActionListener(this);
+        solo.setFocusPainted(false);
         multi = new CustomButton("Multi");
+        multi.addActionListener(this);
+        multi.setFocusPainted(false);
         editor = new CustomButton("Level Editor");
+        editor.addActionListener(this);
+        editor.setFocusPainted(false);
         settings = new CustomButton("Settings");
+        settings.addActionListener(this);
+        settings.setFocusPainted(false);
 
-        setLayout(new GridLayout(4,1));
+        GridLayout gl = new GridLayout(4,1);
+        gl.setVgap(10);
+        bPanel.setLayout(gl);
 
-        add(solo);
-        add(multi);
-        add(editor);
-        add(settings);
+        bPanel.add(solo);
+        bPanel.add(multi);
+        bPanel.add(editor);
+        bPanel.add(settings);
+
+        setLayout(null);
+        add(bPanel);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch(e.getSource().toString()){
-            case "solo":{}
-            case "multi":{}
-            case "editor":{}
-            case "settings":{}
+        if(e.getSource()==solo) {
+                System.out.println("Done");
+                f.getPanelSelection().show(f.getCardContent(),"levelSelector");
         }
+        else if(e.getSource()==multi){}
+        else if(e.getSource()==editor){}
+        else if(e.getSource()==settings){}
     }
 }
