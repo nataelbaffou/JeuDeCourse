@@ -5,6 +5,8 @@ public abstract class Vehicule extends Objet{
 	// vitesse
 	protected double vx;
 	protected double vy;
+	protected double ax;
+	protected double ay;
 
 	protected Color color;
 

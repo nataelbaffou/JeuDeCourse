@@ -1,33 +1,43 @@
+/*
+    Définit les paramètres de position de tous les objets du jeu
+    Pour les différentes coordonnées se référer au dessin réalisé par mes soins (Nataël)
+    ATTENTION l'attribut alpha est défini en degré pour l'initialisation : pour le reste il faut utiliser les méthodes
+ */
+
 public class Position{
-    public int x;
-    public int y;
-    public int centerX;
-    public int centerY;
-    public int width;
-    public int height;
+    public double x;
+    public double y;
+    public double centerX;
+    public double centerY;
+    public double width;
+    public double height;
     private double alpha;
 
     public Position(){
         this(0, 0, 0, 0, 0, 0, 0);
     }
 
-    public Position(int px, int py){
+    public Position(double px, double py){
         this(px, py, 0, 0, 0, 0, 0);
     }
 
-    public Position(int px, int py, double pa){
+    public Position(double px, double py, double pa){
         this(px, py, 0, 0, 0, 0, pa);
     }
 
-    public Position(int px, int py, int dx, int dy){
+    public Position(double px, double py, double dx, double dy){
         this(px, py, dx, dy, dx/2, dy/2, 0);
     }
 
-    public Position(int px, int py, int dx, int dy, int cx, int cy){
+    public Position(double px, double py, double dx, double dy, double pa){
+        this(px, py, dx, dy, dx/2, dy/2, pa);
+    }
+
+    public Position(double px, double py, double dx, double dy, double cx, double cy){
         this(px, py, dx, dy, cx, cy, 0);
     }
 
-    public Position(int px, int py, int dx, int dy, int cx, int cy, double pa){
+    public Position(double px, double py, double dx, double dy, double cx, double cy, double pa){
         x = px;
         y = py;
         centerX = cx;
@@ -42,6 +52,12 @@ public class Position{
         x += P.x;
         y += P.y;
         alpha += P.getDeg();
+    }
+
+    public void substract(Position P){
+        x -= P.x;
+        y -= P.y;
+        alpha -= P.getDeg();
     }
 
     public double getDeg(){
@@ -67,12 +83,19 @@ public class Position{
     public static Position sumRelative(Position P1, Position P2){
         double dist = Math.sqrt(P2.x*P2.x+P2.y*P2.y);
         double angle = Math.atan2(P2.x, P2.y);
-        return new Position((int)(P1.x + dist*Math.sin(angle-P1.getRad())),
-                            (int)(P1.y + dist*Math.cos(angle-P1.getRad())),
+        return new Position(P1.x + dist*Math.sin(angle-P1.getRad()),
+                            P1.y + dist*Math.cos(angle-P1.getRad()),
                             P2.width, P2.height, P2.centerX, P2.centerY, P1.getDeg()+P2.getDeg());
     }
 
     public Position copy(){
         return new Position(x, y, width, height, centerX, centerY, alpha);
+    }
+
+    public String toString(){
+        String res = "";
+        res += "x : " + x + " y : " + y + " w : " + width + " h : " + height;// + "\n";
+        //res += "cx : " + centerX + " cy : " + centerY + " alpha : " + alpha;
+        return res;
     }
 }

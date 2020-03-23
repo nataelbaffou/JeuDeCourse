@@ -68,6 +68,10 @@ public class Karting extends Vehicule{
 		sensDir = 0;
 		if(av && !ar){ sensDir = 1;}
 		if(ar && !av){ sensDir = -1;}
+		if(vx <= 13.9)||(vy<=13.9){
+			ax = 4.34*dt;   // il faut créer un timer à partir de la pression de la touche)
+			ay = 4.34*dt;
+		}
 		vx -= sensDir*Math.sin(P.getRad());
 		vy += sensDir*Math.cos(P.getRad());
 	}

@@ -11,6 +11,7 @@ public class Case extends Objet{
         this.P = P.copy();
     }
 
+    @Override
     public void dessine(Graphics g){
         texture.dessine(g, P);
     }

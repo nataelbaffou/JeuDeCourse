@@ -4,8 +4,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 
 public class Texture{
     private BufferedImage img = null;
@@ -32,7 +30,7 @@ public class Texture{
         Graphics2D g2d = (Graphics2D)g;
         AffineTransform old = g2d.getTransform();
         g2d.rotate(P.getRad(), P.x, P.y);
-        g2d.drawImage(img, P.x-P.centerX, P.y-P.centerY, P.width, P.height, null);
+        g2d.drawImage(img, (int)(P.x-P.centerX), (int)(P.y-P.centerY), (int)(P.width), (int)(P.height), null);
         g2d.setTransform(old);
     }
 
@@ -40,4 +38,11 @@ public class Texture{
         return isBlocking;
     }
 
+    public BufferedImage getImg() {
+        return img;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
