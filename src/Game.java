@@ -49,7 +49,7 @@ public class Game {
         }
         lapsPerPlayer = new int[nPlayers];
         for(int i = 0; i< nPlayers; i++){
-            lapsPerPlayer[i] = 0;
+            lapsPerPlayer[i] = -1;
         }
 
         // initialise les véhicules de chaque joueurs
@@ -173,7 +173,7 @@ public class Game {
 
     public int isOver(){
         for(int i = 0; i< nPlayers; i++){
-            if(lapsPerPlayer[i] == nLaps + 1){
+            if(lapsPerPlayer[i] == nLaps){
                 return i;
             }
         }

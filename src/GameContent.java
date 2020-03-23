@@ -109,6 +109,7 @@ public class GameContent extends JPanel implements ActionListener {
         gameDisplay.dessine();
         if(game.isOver()>-1){
             launchGame("circuit1");
+            f.getPanelSelection().show(f.getCardContent(), "menu");
         }
     }
 
