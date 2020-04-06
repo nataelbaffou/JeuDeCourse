@@ -1,32 +1,28 @@
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
-import java.io.IOException;
-import java.io.InputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.LineUnavailableException;
 
 public class Audio {
 
     private static final String SOUND_PATH = "sound/";
 
-    private AudioStream audioStream;
+    private Clip clip;
 
-    public Audio(){}
+    public Audio(){
+        {
+            try {
+                clip = (Clip) AudioSystem.getLine(new Line.Info(Clip.class));
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void playMusic(String theme)
     {
-        stopMusic();
         try
         {
-            // TODO Faire en sorte que la musique se répète ;)
-            // how to get an image file as a resource out of a jar file
-            //imgBoldText = new ImageIcon(com.devdaily.opensource.jelly.MainFrame.class.getResource("text_bold.png"));
-
-            // (1) get resource as a file on the filesystem
-            //InputStream inputStream = new FileInputStream("/Users/al/DevDaily/Projects/MeditationApp/resources/gong.au");
-
-            // (2) get the sound file as a resource out of our jar file;
-            //     the sound file must be in the same directory as this class file.
-            //     this input stream recipe comes from a javaworld.com article.
             String filename;
 
             switch (theme){
@@ -39,27 +35,24 @@ public class Audio {
                 default:
                     filename = "gong.au";
             }
-            InputStream inputStream = Audio.class.getResourceAsStream(SOUND_PATH+filename);
-            audioStream = new AudioStream(inputStream);
-            AudioPlayer.player.start(audioStream);
 
-            // other methods (not needed here; just kept here for reference)
-            //audioStream.close();
-            //AudioPlayer.player.stop(as);
+            clip.close();
+            clip.open(AudioSystem.getAudioInputStream(getClass().getResource(SOUND_PATH+filename)));
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            clip.start();
+
         }
         catch (Exception e)
         {
-
+            e.printStackTrace();
         }
     }
 
-    private void stopMusic(){
+    public void stopMusic(){
         try {
-            audioStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            clip.close();
         } catch (NullPointerException e){
-
+            e.printStackTrace();
         }
     }
 }

@@ -10,7 +10,7 @@ public class FenetrePrincipale extends JFrame{
 	private JPanel cardContent;
 	private LevelSelector levelSelector;
 	private PlayersSelector playersSelector;
-	private Audio audio;
+	private Audio musiqueFond;
 
 	public FenetrePrincipale(int width, int height, boolean isFullscreen){
 		this.setTitle("Jeu de voiture ULTRA stylé");
@@ -45,8 +45,8 @@ public class FenetrePrincipale extends JFrame{
 
 		addKeyListener(playersSelector);
 
-		audio = new Audio();
-		audio.playMusic("menu");
+		musiqueFond = new Audio();
+		musiqueFond.playMusic("menu");
 
 	}
 
@@ -62,7 +62,7 @@ public class FenetrePrincipale extends JFrame{
 		return cardContent;
 	}
 
-	public Audio getAudio(){
-		return audio;
+	public Audio getMusiqueFond(){
+		return musiqueFond;
 	}
 }
