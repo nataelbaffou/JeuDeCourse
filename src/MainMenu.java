@@ -50,10 +50,12 @@ public class MainMenu extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==solo) {
-                System.out.println("Done");
-                f.getPanelSelection().show(f.getCardContent(),"levelSelector");
+            f.getGameContent().setPlayers();
+            f.getPanelSelection().show(f.getCardContent(),"levelSelector");
         }
-        else if(e.getSource()==multi){}
+        else if(e.getSource()==multi){
+            f.getPanelSelection().show(f.getCardContent(), "playersSelector");
+        }
         else if(e.getSource()==editor){}
         else if(e.getSource()==settings){}
     }

@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -9,8 +10,9 @@ public class GameContent extends JPanel implements ActionListener {
     private GameDisplay gameDisplay;
     private FenetrePrincipale f;
 
-    private Joueur[] joueurs;
+    private ArrayList<Joueur> joueurs;
     private Game game;
+    private String idGame = "default";
 
     private String PRESSED = " pressed";
     private String RELEASED = " released";
@@ -30,38 +32,37 @@ public class GameContent extends JPanel implements ActionListener {
         this.f = f;
 
         setPreferredSize(new Dimension(width,height));
+
         // Définition des joueurs
-        joueurs = new Joueur[2];
+        joueurs = new ArrayList<>();
+        setPlayers();
 
-        joueurs[0] = new Joueur("1");
-        joueurs[0].setColor(Color.BLACK);
-
-        joueurs[1] = new Joueur("test");
-        joueurs[1].getBinds().setArrowBind();
-        joueurs[1].setColor(Color.GREEN);
-
-        // definition des binds
-        setKeyBindings();
-
-        // initialisation de la partie
-        launchGame("circuit1");
 
         // liste gérant l'appuie des touches
         pressedKeys = new LinkedList<>();
+
+        // init du timer
+        timer = new Timer(DELTA_T, this);
+
+        // initialisation de la partie
+        game = new Game();
 
         // init du panel affichant la partie
         gameDisplay = new GameDisplay(game);
         gameDisplay.setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
         add(gameDisplay,BorderLayout.CENTER);
+    }
 
-        // init du timer
-        timer = new Timer(DELTA_T, this);
+    public void launchGame(){
+        setKeyBindings();
+        pressedKeys.clear();
+        game.initGame(joueurs, idGame, width, height);
         timer.start();
     }
 
-    public void launchGame(String idGame){
-        game = new Game(joueurs, idGame, width, height);
+    public void endGame(){
+        timer.stop();
     }
 
     public void paintComponent(Graphics g){
@@ -108,7 +109,7 @@ public class GameContent extends JPanel implements ActionListener {
         }
         gameDisplay.dessine();
         if(game.isOver()>-1){
-            launchGame("circuit1");
+            endGame();
             f.getPanelSelection().show(f.getCardContent(), "menu");
         }
     }
@@ -128,7 +129,29 @@ public class GameContent extends JPanel implements ActionListener {
         }
     }
 
-    public void setMap(int i){
+    public void setGame(int i){
+        idGame = "circuit" + i;
+    }
 
+    public void setPlayers(int[][] binds){
+        Color[] colors = {Color.RED, Color.GREEN, Color.PINK, Color.BLUE, Color.ORANGE, Color.GRAY};
+        String[] names = {"Fred", "Greenlee", "Pinkney", "Bluebell", "Willem", "Greydon"};
+
+        joueurs.clear();
+        for(int iBind = 0; iBind < binds.length; iBind++){
+            if(binds[iBind][0] != -1){
+                Joueur j = new Joueur(names[iBind]);
+                j.setColor(colors[iBind]);
+                j.getBinds().setBind(binds[iBind]);
+                joueurs.add(j);
+            }
+        }
+    }
+
+    public void setPlayers(){
+        joueurs.clear();
+        Joueur j = new Joueur("Fred");
+        j.setColor(Color.RED);
+        joueurs.add(j);
     }
 }

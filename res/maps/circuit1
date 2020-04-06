@@ -1,3 +1,6 @@
+[title]
+The first circuit
+
 [size]
 20 20
 
@@ -31,3 +34,7 @@ left
 [start-position]
 3 4
 right
+
+[laps]
+2
+

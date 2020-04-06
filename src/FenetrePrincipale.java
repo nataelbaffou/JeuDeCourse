@@ -9,6 +9,7 @@ public class FenetrePrincipale extends JFrame{
 	private GameContent gameContent;
 	private JPanel cardContent;
 	private LevelSelector levelSelector;
+	private PlayersSelector playersSelector;
 
 	public FenetrePrincipale(int width, int height, boolean isFullscreen){
 		this.setTitle("Jeu de voiture ULTRA stylé");
@@ -23,12 +24,14 @@ public class FenetrePrincipale extends JFrame{
 		gameContent = new GameContent(width, height,this);
 		panelSelection = new CardLayout();
 		levelSelector = new LevelSelector(new Dimension(width,height),this);
+		playersSelector = new PlayersSelector(new Dimension(width,height), this);
 
 		cardContent = new JPanel();
 		cardContent.setLayout(panelSelection);
 		cardContent.add(mainMenu, "menu");
 		cardContent.add(gameContent, "game");
 		cardContent.add(levelSelector,"levelSelector");
+		cardContent.add(playersSelector, "playersSelector");
 		setContentPane(cardContent);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,6 +41,8 @@ public class FenetrePrincipale extends JFrame{
 		setFocusable(true);
 
 		panelSelection.show(cardContent, "menu");
+
+		addKeyListener(playersSelector);
 
 	}
 

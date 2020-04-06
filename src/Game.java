@@ -1,9 +1,10 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
 public class Game {
-    private Joueur[] players;
+    private ArrayList<Joueur> players;
     private int nPlayers;
     private int[] lapsPerPlayer;
     private boolean[] playerInContactWithStartLine;
@@ -13,31 +14,26 @@ public class Game {
     private Map map;
     private String title = "default";
 
-    public Game(Joueur[] j, String idGame, int w, int h){
+    public Game(){
+    }
+
+    public void initGame(ArrayList<Joueur> j, String idMap, int w, int h){
         players = j;
-        Hashtable<String, String> dico = IOFiles.getInformation("games/", idGame);
+        Hashtable<String, String> dico = IOFiles.getInformation("maps/", idMap);
         for(java.util.Map.Entry<String, String> param : dico.entrySet()){
             switch (param.getKey()){
-                case "map":
-                    map = new Map(w, h, param.getValue());
-                    break;
                 case "title":
                     title = param.getValue();
                     break;
-                case "nLaps":
+                case "laps":
                     nLaps = Integer.parseInt(param.getValue());
                     break;
-                default:
-                    System.out.println("Un parametre enregistré dans le fichier : games/"+idGame+" n'est pas correct : " + param.getKey());
             }
         }
-        if(map == null){
-            System.out.println("Le paramètre 'map' n'a pas été trouvé dans le fichier games/"+idGame);
-            map = new Map(w, h, "0");
-        }
+        map = new Map(w, h, dico);
 
         // initialise le nombre de tours des joueurs
-        nPlayers = j.length;
+        nPlayers = j.size();
         playerInContactWithStartLine = new boolean[nPlayers];
         playerOnTheEntrySideOfStartLine = new boolean[nPlayers];
         playerOnTheOutputSideOfStartLine = new boolean[nPlayers];
@@ -54,7 +50,7 @@ public class Game {
 
         // initialise les véhicules de chaque joueurs
         for(int i = 0; i< nPlayers; i++){
-            players[i].setVehicule(map.getStartPos(), map.getWidthCase());
+            players.get(i).setVehicule(map.getStartPos(), map.getWidthCase());
         }
     }
 
@@ -65,7 +61,7 @@ public class Game {
 
     public void avancer(LinkedList<Integer> pressedKeys){
         for(int i = 0; i< nPlayers; i++){
-            players[i].avancer(pressedKeys, map);
+            players.get(i).avancer(pressedKeys, map);
         }
     }
 
@@ -75,7 +71,7 @@ public class Game {
             boolean isEntrySide;
             boolean isOutputSide;
 
-            Polygon poly = players[iPlayer].getVehicule().getPolygon();
+            Polygon poly = players.get(iPlayer).getVehicule().getPolygon();
             String startLineType = map.getStartLineType();
             Position startLinePos = map.getStartLinePos();
 
@@ -167,7 +163,6 @@ public class Game {
             playerOnTheEntrySideOfStartLine[iPlayer] = newEntrySide;
             playerInContactWithStartLine[iPlayer] = newContact;
             playerOnTheOutputSideOfStartLine[iPlayer] = newOutputSide;
-            System.out.println(lapsPerPlayer[iPlayer]);
         }
     }
 
@@ -183,12 +178,15 @@ public class Game {
     public void dessineMap(Graphics g){
         map.dessine(g);
 
-        // To print the area of the starting line
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.BLUE);
-        g2.setStroke(new BasicStroke(4));
-        g2.drawPolygon(Objet.getPolygon(map.getStartLinePos()));
-        g2.setStroke(new BasicStroke(1));
+
+        if(false){
+            // To print the area of the starting line
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setColor(Color.BLUE);
+            g2.setStroke(new BasicStroke(4));
+            g2.drawPolygon(Objet.getPolygon(map.getStartLinePos()));
+            g2.setStroke(new BasicStroke(1));
+        }
 
     }
 
