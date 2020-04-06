@@ -59,10 +59,12 @@ public class GameContent extends JPanel implements ActionListener {
         pressedKeys.clear();
         game.initGame(joueurs, idGame, width, height);
         timer.start();
+        f.getAudio().playMusic("race");
     }
 
     public void endGame(){
         timer.stop();
+        f.getAudio().playMusic("menu");
     }
 
     public void paintComponent(Graphics g){
