@@ -57,6 +57,8 @@ public class MainMenu extends JPanel implements ActionListener {
             f.getPanelSelection().show(f.getCardContent(), "playersSelector");
         }
         else if(e.getSource()==editor){}
-        else if(e.getSource()==settings){}
+        else if(e.getSource()==settings){
+            f.getPanelSelection().show(f.getCardContent(), "settings");
+        }
     }
 }

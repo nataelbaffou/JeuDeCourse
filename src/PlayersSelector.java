@@ -12,6 +12,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
 
     private FenetrePrincipale f;
     private JButton validate;
+    private JButton back;
     private JPanel[] panels;
     private JLabel[] names;
     private JLabel[][] binds;
@@ -110,7 +111,12 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         validate.setBounds(400, 500, 70, 30);
         validate.addMouseListener(this);
 
+        back = new JButton("Back to menu");
+        back.setBounds(100, 600, 200, 30);
+        back.addMouseListener(this);
+
         add(validate);
+        add(back);
     }
 
     private void inverseColor(int i){
@@ -174,6 +180,8 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
             if(e.getSource()==validate && getNumberOfPlayers()>=1){
                 f.getGameContent().setPlayers(bindsCode);
                 f.getPanelSelection().show(f.getCardContent(), "levelSelector");
+            }else if(e.getSource()==back){
+                f.getPanelSelection().show(f.getCardContent(), "menu");
             }
         }
     }
