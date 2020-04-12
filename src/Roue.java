@@ -4,7 +4,7 @@ public class Roue extends Objet{
     Position PosRelative;
 
     public Roue(double x, double y, Position PRel){
-        P = new Position(x, y, 6, 9); // position relative au kart
+        P = new Position(x, y, Math.abs(x)/4, 2*Math.abs(x)/5); // position relative au kart
         this.PosRelative = PRel;
         texture = new Texture(System.getProperty("user.dir")+"/res/textures/1roue.png", "roue");
     }

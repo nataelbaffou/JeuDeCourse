@@ -1,5 +1,9 @@
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Karting extends Vehicule{
 
@@ -16,12 +20,14 @@ public class Karting extends Vehicule{
 	private Roue[] roues;
 
 	public Karting(){
-		this(new Position(), 20);
+		this(new Position(), 20, Color.RED);
 	}
 
-	public Karting(Position initPos, int widthCase){
-		texture = new Texture(System.getProperty("user.dir")+"/res/textures/green.png", "kart");
-		//double r = (double)(texture.getImg().getHeight())/texture.getImg().getWidth();
+	public Karting(Position initPos, int widthCase, Color c){
+		//texture = new Texture(System.getProperty("user.dir")+"/res/textures/green.png", "kart");
+
+		setColor(c);
+
 		double widthFactor = 0.7;
 		double heightFactor = 1.4;
 		this.P = new Position(initPos.x, initPos.y, widthCase*widthFactor, widthCase*heightFactor, initPos.getDeg());
@@ -29,10 +35,10 @@ public class Karting extends Vehicule{
 		this.vy = 0;
 
 		roues = new Roue[4];
-		roues[0] = new Roue(P.width/2, P.height/3, this.P);
-		roues[1] = new Roue(P.width/2, -P.height/2, this.P);
-		roues[2] = new Roue(-P.width/2, -P.height/2, this.P);
-		roues[3] = new Roue(-P.width/2, P.height/3, this.P);
+		roues[0] = new Roue(P.width*0.46, P.height/3, this.P);
+		roues[1] = new Roue(P.width*0.46, -P.height/3, this.P);
+		roues[2] = new Roue(-P.width*0.46, -P.height/3, this.P);
+		roues[3] = new Roue(-P.width*0.46, P.height/3, this.P);
 		
 	}
 
@@ -130,8 +136,38 @@ public class Karting extends Vehicule{
 		if(showCollisionBox){
 			g.setColor(Color.BLACK);
 			g.drawPolygon(this.getPolygon());
+			g.setColor(Color.BLUE);
+			g.drawOval((int)P.x, (int)P.y, 2, 2);
 		}
-		g.setColor(Color.BLUE);
-		g.drawOval((int)P.x, (int)P.y, 2, 2);
+
+	}
+
+	public void setColor(Color c){
+		color = c;
+		String path = System.getProperty("user.dir")+"/res/textures/";
+		try {
+			BufferedImage vide = ImageIO.read(new File(path + "kart_vide.png"));
+
+			BufferedImage kart = new BufferedImage(vide.getWidth(), vide.getHeight(), vide.getType());
+
+			for(int col=0; col<kart.getWidth(); col++){
+				for(int lig=0; lig<kart.getHeight(); lig++){
+					int v = vide.getRGB(col, lig);
+
+					int a = (v>>24) & 0xff;
+					int r = (v>>16) & 0xff;
+					int g = (v>>8) & 0xff;
+					int b = v & 0xff;
+					int pix = ((a*color.getAlpha()/255)<<24) | ((r*color.getRed()/255)<<16) | ((g*color.getGreen()/255)<<8) | (b*color.getBlue()/255);
+
+					kart.setRGB(col, lig, pix);
+				}
+			}
+
+			texture = new Texture(kart);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

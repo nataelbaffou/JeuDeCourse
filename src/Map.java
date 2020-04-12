@@ -10,15 +10,15 @@ public class Map {
     private int nbCaseY;
     private int widthCase;
     private Case[][] board;
-    private String mapsName;
+    private Hashtable<String, String> initData;
     private Position startPos;
     private String startLineType = "down";
     private Position startLinePos;
 
-    public Map(int w, int h, String id){
+    public Map(int w, int h, Hashtable<String, String> data){
         width = w;
         height = h;
-        mapsName = id;
+        this.initData = data;
         loadData();
         initMap();
     }
@@ -58,11 +58,9 @@ public class Map {
     }
 
     public void initMap(){
-        Hashtable<String, String> dico = IOFiles.getInformation("maps", mapsName);
-
         // Load and Genarate Board
-        String line = dico.get("size");
-        String[] boardData = dico.get("board").split("\n");
+        String line = initData.get("size");
+        String[] boardData = initData.get("board").split("\n");
 
         nbCaseX = Integer.parseInt(line.split(" ")[0]);
         nbCaseY = Integer.parseInt(line.split(" ")[1]);
@@ -91,12 +89,8 @@ public class Map {
 
         // Initialisation of the rest
         startPos = new Position();
-        for(java.util.Map.Entry<String, String> param : dico.entrySet()){
+        for(java.util.Map.Entry<String, String> param : initData.entrySet()){
             switch (param.getKey()){
-                case "size":
-                    break;
-                case "board":
-                    break;
                 case "start-line":
                     String[] lines1 = param.getValue().split("\n");
                     startLineType = lines1[0];
@@ -126,8 +120,6 @@ public class Map {
                             startPos.setDeg(180);
                     }
                     break;
-                default:
-                    System.out.println("Un parametre enregistré dans le fichier : maps/"+mapsName+" n'est pas correct : " + param.getKey());
             }
         }
     }

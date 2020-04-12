@@ -10,13 +10,16 @@ public class FenetrePrincipale extends JFrame{
 	private JPanel cardContent;
 	private LevelSelector levelSelector;
 	private LevelEditor levelEditor;
+	private PlayersSelector playersSelector;
+	private Settings settings;
+	private Audio musiqueFond;
 
 	public FenetrePrincipale(int width, int height, boolean isFullscreen){
 		this.setTitle("Jeu de voiture ULTRA stylé");
 		if(isFullscreen){
 			setExtendedState(JFrame.MAXIMIZED_BOTH);
 			setUndecorated(true);
-			Dimension n = Toolkit.getDefaultToolkit().getScreenSize();
+			Rectangle n = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 			width = (int)n.getWidth();
 			height = (int)n.getHeight();
 		}
@@ -25,6 +28,8 @@ public class FenetrePrincipale extends JFrame{
 		panelSelection = new CardLayout();
 		levelSelector = new LevelSelector(new Dimension(width,height),this);
 		levelEditor = new LevelEditor(new Dimension(width,height),this);
+		playersSelector = new PlayersSelector(new Dimension(width,height), this);
+		settings = new Settings(new Dimension(width, height), this);
 
 		cardContent = new JPanel();
 		cardContent.setLayout(panelSelection);
@@ -32,6 +37,8 @@ public class FenetrePrincipale extends JFrame{
 		cardContent.add(gameContent, "game");
 		cardContent.add(levelSelector,"levelSelector");
 		cardContent.add(levelEditor,"editor");
+		cardContent.add(playersSelector, "playersSelector");
+		cardContent.add(settings, "settings");
 		setContentPane(cardContent);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,6 +48,14 @@ public class FenetrePrincipale extends JFrame{
 		setFocusable(true);
 
 		panelSelection.show(cardContent, "menu");
+
+		addKeyListener(playersSelector);
+		addKeyListener(settings);
+
+		musiqueFond = new Audio(this);
+		musiqueFond.playTheme("menu");
+		//Audio au = new Audio(this);
+		//au.playTheme("race");
 
 	}
 
@@ -54,5 +69,13 @@ public class FenetrePrincipale extends JFrame{
 
 	public JPanel getCardContent() {
 		return cardContent;
+	}
+
+	public Audio getMusiqueFond(){
+		return musiqueFond;
+	}
+
+	public Settings getSettings() {
+		return settings;
 	}
 }

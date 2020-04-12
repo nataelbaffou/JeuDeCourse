@@ -3,7 +3,7 @@ import java.awt.*;
 public abstract class Objet {
     protected Texture texture;
     protected Position P;
-    protected boolean showCollisionBox = true;
+    protected boolean showCollisionBox = false;
 
     public void dessine(Graphics g){
         texture.dessine(g, P);

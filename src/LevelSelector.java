@@ -1,4 +1,3 @@
-import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -52,7 +51,8 @@ public class LevelSelector extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         for(int i = 0; i<levels.length;i++){
             if(e.getSource() == levels[i]){
-                f.getGameContent().setMap(i);
+                f.getGameContent().setGame(i);
+                f.getGameContent().launchGame();
                 f.getPanelSelection().show(f.getCardContent(),"game");
             }
         }

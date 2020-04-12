@@ -14,6 +14,16 @@ public class Texture{
         this(System.getProperty("user.dir")+"/res/textures/0grass.png", "default");
     }
 
+    public Texture(BufferedImage img, String name, boolean isBlocking){
+        this.img = img;
+        this.name = name;
+        this.isBlocking = isBlocking;
+    }
+
+    public Texture(BufferedImage img){
+        this(img, "noName", false);
+    }
+
     public Texture(String path, String name){
         this.name = name;
         if(name.matches("0wall.png")){

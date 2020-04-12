@@ -15,15 +15,12 @@ public class Joueur{
     }
 
     public void setVehicule(Position initPos, int widthCase){
-        V = new Karting(initPos, widthCase);
+        V = new Karting(initPos, widthCase, color);
     }
 
     public Binds getBinds() {
         return binds;
     }
-
-
-    //TODO setTouches();
 
     public void avancer(LinkedList<Integer> keyPressed, Map map){
         Collection<Integer> c = binds.values();

@@ -3,6 +3,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class IOFiles {
 
@@ -61,6 +62,7 @@ public class IOFiles {
         }
         if(!name.equals("default")&&fileName.equals("default")){
             System.out.println("Le fichier '"+name+"' n'a pas été trouvé à l'emplacement : '"+path+"'");
+            System.out.println("Charging : " + path + "/" + fileName);
         }
 
         Path file = FileSystems.getDefault().getPath(mainPath + "/res/"+path+"/"+fileName);
@@ -90,6 +92,30 @@ public class IOFiles {
         } catch (IOException x) {
             System.err.println(x);
         }
+        dico.put("filename", name);
         return dico;
+    }
+
+    public static void setInformation(Hashtable<String, String> dico, String path, String name){
+        String mainPath = System.getProperty("user.dir");
+
+        if(path.charAt(path.length()-1) == '/'){
+            path = path.substring(0, path.length()-1);
+        }
+
+        Path file = FileSystems.getDefault().getPath(mainPath + "/res/"+path+"/"+name);
+        try (OutputStream out = Files.newOutputStream(file);
+             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
+
+            for(Map.Entry<String, String> entry : dico.entrySet()){
+                writer.write("["+entry.getKey()+"]");
+                writer.write('\n');
+                writer.write(entry.getValue());
+                writer.write("\n\n");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
