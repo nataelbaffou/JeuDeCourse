@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,21 +19,22 @@ public class FenetrePrincipale extends JFrame{
 		if(isFullscreen){
 			setExtendedState(JFrame.MAXIMIZED_BOTH);
 			setUndecorated(true);
-			width = Toolkit.getDefaultToolkit().getScreenSize().width;
-			height = Toolkit.getDefaultToolkit().getScreenSize().height;
-			/*
 			Rectangle n = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 			width = (int)n.getWidth();
 			height = (int)n.getHeight();
-			 */
 		}
+
+		musiqueFond = new Audio(this);
+
+		settings = new Settings(new Dimension(width, height), this);
+		musiqueFond.playTheme("menu");
+		// On charge les paramètres et la musique en premier de façon à ce que la musique soit lancée lors du chargement du reste
 		mainMenu = new MainMenu(width, height,this);
 		gameContent = new GameContent(width, height,this);
 		panelSelection = new CardLayout();
 		levelSelector = new LevelSelector(new Dimension(width,height),this);
 		levelEditor = new LevelEditor(new Dimension(width,height),this);
 		playersSelector = new PlayersSelector(new Dimension(width,height), this);
-		settings = new Settings(new Dimension(width, height), this);
 
 		cardContent = new JPanel();
 		cardContent.setLayout(panelSelection);
@@ -54,12 +56,6 @@ public class FenetrePrincipale extends JFrame{
 
 		addKeyListener(playersSelector);
 		addKeyListener(settings);
-
-		musiqueFond = new Audio(this);
-		musiqueFond.playTheme("menu");
-		//Audio au = new Audio(this);
-		//au.playTheme("race");
-
 	}
 
 	public GameContent getGameContent() {

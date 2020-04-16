@@ -45,7 +45,7 @@ public class GameContent extends JPanel implements ActionListener {
         timer = new Timer(DELTA_T, this);
 
         // initialisation de la partie
-        game = new Game();
+        game = new Game(f);
 
         // init du panel affichant la partie
         gameDisplay = new GameDisplay(game);

@@ -75,17 +75,19 @@ public class IOFiles {
             StringBuilder res = new StringBuilder();
             String key = "";
             while ((line = reader.readLine()) != null) {
-                if(line.matches("\\[(.*)\\]")){
-                    if(!key.equals("") && !res.toString().equals("")){
-                        dico.put(key, res.toString());
-                        res = new StringBuilder();
+                if(!line.startsWith("#")){
+                    if(line.matches("\\[(.*)\\]")){
+                        if(!key.equals("") && !res.toString().equals("")){
+                            dico.put(key, res.toString());
+                            res = new StringBuilder();
+                        }
+                        key = line.substring(1, line.length()-1);
+                    } else if(!line.equals("")){
+                        if(!res.toString().equals("")){
+                            res.append("\n");
+                        }
+                        res.append(line);
                     }
-                    key = line.substring(1, line.length()-1);
-                } else if(!line.equals("")){
-                    if(!res.toString().equals("")){
-                        res.append("\n");
-                    }
-                    res.append(line);
                 }
             }
             if(!key.equals("") && !res.toString().equals("")){

@@ -1,0 +1,5 @@
+Pour chaque thème il faut créer un dossier incluant les fichiers suivants:
+	- "music" : contenant les keys [race] et [menu] avec les noms des fichiers
+		qui sont dans le dossier du même nom que le thème dans sounds
+	- "map_conversion_textures" : contenant les keys [0], [1] ... avec
+		les noms des fichiers qui sont dans textures

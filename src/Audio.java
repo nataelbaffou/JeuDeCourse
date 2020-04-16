@@ -31,6 +31,7 @@ public class Audio{
     private ArrayList<String> musicMenu = new ArrayList<>();
     private ArrayList<String> musicRace = new ArrayList<>();
     private ArrayList<String> musicTroll = new ArrayList<>();
+    private float volume = 0;
 
     private boolean isTrolling = false;
 
@@ -90,6 +91,7 @@ public class Audio{
             clip = AudioSystem.getClip();
             clip.addLineListener(new ClipHandler(sound, clip));
             clip.open(AudioSystem.getAudioInputStream(getClass().getResource(SOUND_PATH+sound.filename)));
+            setVolumeToClip(clip);
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -110,7 +112,7 @@ public class Audio{
 
     public void playTheme(String theme)
     {
-        if(theme == "troll"){
+        if(theme.equals("troll")){
             isTrolling = true;
             sound = new Sound(theme, true);
             playSound();
@@ -131,6 +133,32 @@ public class Audio{
 
     public void stopTroll(){
         isTrolling = false;
+    }
+
+    private void setVolumeToClip(Clip c) {
+        if(c.isOpen()){
+            FloatControl gainControl = (FloatControl) c.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(volume));
+        }
+    }
+
+    public void setVolume(float vol){
+        if(vol < 0f){
+            volume = 0f;
+        }else if(vol > 1f){
+            volume = 1;
+        }else{
+            volume = vol;
+        }
+        setVolumeToClip(clip);
+    }
+
+    public void setVolume(double vol){
+        setVolume((float) vol);
+    }
+
+    public void setVolume(int vol){
+        setVolume((float) vol/100.0);
     }
 
     private class ClipHandler implements LineListener{

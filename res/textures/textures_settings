@@ -1,0 +1,17 @@
+#Names of the textures
+#Set set settings of each of them
+
+[startEnd.png]
+block : false
+
+[grass.png]
+block : false
+
+[wall.png]
+block : true
+
+[electric_ground.png]
+block : false
+
+[electric_wall.png]
+block : true

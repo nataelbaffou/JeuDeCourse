@@ -4,6 +4,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
 
 public class Texture{
     private BufferedImage img = null;
@@ -11,7 +12,7 @@ public class Texture{
     private boolean isBlocking = false;
 
     public Texture(){
-        this(System.getProperty("user.dir")+ "/textures/tiles/0grass.png", "default");
+        this(System.getProperty("user.dir")+"/res/textures/grass.png", "default");
     }
 
     public Texture(BufferedImage img, String name, boolean isBlocking){
@@ -25,10 +26,34 @@ public class Texture{
     }
 
     public Texture(String path, String name){
+        this(path, name, IOFiles.getInformation("textures", "textures_settings"));
+    }
+
+    public Texture(String path, String name, Hashtable<String, String> settings){
+        // TODO modifier pour mettre les paramètre au niveau de Case et non de Texture ?
         this.name = name;
-        if(name.matches(".wall\\.png")){
-            isBlocking = true;
+        for(String keyName : settings.keySet()){
+            if(name.equals(keyName)){
+                String[] vals = settings.get(keyName).split("\n");
+                for(String val : vals){
+                    String keySetting = val.split(" : ")[0];
+                    String valSetting = val.split(" : ")[1];
+                    switch (keySetting){
+                        case "block":
+                            if(valSetting.equals("true")){
+                                isBlocking = true;
+                            } else if(valSetting.equals("false")){
+                                isBlocking = false;
+                            } else{
+                                printSettingError(settings.get("filename"), keyName, keySetting);
+                            }
+                            break;
+                            // TODO Ajouter des setting en fonction des textures
+                    }
+                }
+            }
         }
+
         try {
             img = ImageIO.read(new File(path));
         } catch (IOException e) {
@@ -54,5 +79,9 @@ public class Texture{
 
     public String getName() {
         return name;
+    }
+
+    private void printSettingError(String filename, String keyName, String keySetting){
+        System.err.println("A wrong param was written in file : " + filename + " key : " + keyName + " keySetting : " + keySetting);
     }
 }

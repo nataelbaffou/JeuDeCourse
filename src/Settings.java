@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
@@ -15,6 +16,7 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
     private JComboBox<String> musicMenuBox;
     private JComboBox<String> musicRaceBox;
     private JCheckBox randomMusic;
+    private JSlider musicControl;
     private JLabel trollLabel;
     private JButton back;
     private int trollState = 0;
@@ -39,12 +41,16 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         title.setForeground(Color.BLACK);
         add(title);
 
+        // *********************
+        // **** Music PANEL ****
+        // *********************
+
         JPanel musicPanel = new JPanel();
         musicPanel.setLayout(null);
         musicPanel.setBounds(200, 150, 600, 300);
-        TitledBorder borderTitle = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), "Musique");
-        borderTitle.setTitleJustification(TitledBorder.CENTER);
-        musicPanel.setBorder(borderTitle);
+        TitledBorder musicBorderTitle = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), "Musique");
+        musicBorderTitle.setTitleJustification(TitledBorder.CENTER);
+        musicPanel.setBorder(musicBorderTitle);
         add(musicPanel);
 
         JLabel musicMenuLabel = new JLabel("Musique du menu : ");
@@ -66,8 +72,8 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
                 musicRaceBox.addItem(s);
             }
         }
-        musicMenuBox.setSelectedItem("menu/jeopardy.wav");
-        musicRaceBox.setSelectedItem("race/trackmania.wav");
+        musicRaceBox.setSelectedItem("star-realms/nova.wav");
+        musicMenuBox.setSelectedItem("star-realms/outer-fields.wav");
 
         musicMenuBox.addItemListener(this);
         musicRaceBox.addItemListener(this);
@@ -87,6 +93,18 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         randomMusic.addMouseListener(this);
         musicPanel.add(randomMusic);
 
+        musicControl = new JSlider(0, 100);
+        musicControl.setBounds(220, 180, 250, 30);
+        musicControl.addChangeListener((ChangeEvent e) -> {
+            f.getMusiqueFond().setVolume(musicControl.getValue());
+        });
+        musicControl.setValue(40);
+        musicPanel.add(musicControl);
+
+        // ***********************
+        // **** OTHER THINGS *****
+        // ***********************
+
         trollLabel = new JLabel("CLICK HERE !", JLabel.CENTER);
         trollLabel.setBounds(0, getSize().height-50, getWidth(), 50);
         trollLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
@@ -105,6 +123,7 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
     @Override
     public void itemStateChanged(ItemEvent e) {
         if(e.getStateChange() == ItemEvent.SELECTED){
+            testingSong = false;
             if(e.getSource() == musicMenuBox){
                 f.getMusiqueFond().playMusic(musicMenuBox.getSelectedItem().toString());
             } else if(e.getSource() == musicRaceBox){
@@ -126,6 +145,7 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
     public boolean isMusicRandom(){
         return randomMusic.isSelected();
     }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {

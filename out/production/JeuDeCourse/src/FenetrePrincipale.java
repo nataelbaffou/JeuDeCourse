@@ -1,30 +1,50 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.event.KeyEvent;
 
-public class FenetrePrincipale extends JFrame implements KeyListener{
+public class FenetrePrincipale extends JFrame{
 
 	private CardLayout panelSelection;
 	private MainMenu mainMenu;
 	private GameContent gameContent;
 	private JPanel cardContent;
+	private LevelSelector levelSelector;
+	private LevelEditor levelEditor;
+	private PlayersSelector playersSelector;
+	private Settings settings;
+	private Audio musiqueFond;
 
-	public FenetrePrincipale(){
+	public FenetrePrincipale(int width, int height, boolean isFullscreen){
 		this.setTitle("Jeu de voiture ULTRA stylé");
+		if(isFullscreen){
+			setExtendedState(JFrame.MAXIMIZED_BOTH);
+			setUndecorated(true);
+			Rectangle n = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+			width = (int)n.getWidth();
+			height = (int)n.getHeight();
+		}
 
-		mainMenu = new MainMenu(400);
-		gameContent = new GameContent(400);
+		musiqueFond = new Audio(this);
+
+		settings = new Settings(new Dimension(width, height), this);
+		musiqueFond.playTheme("menu");
+		// On charge les paramètres et la musique en premier de façon à ce que la musique soit lancée lors du chargement du reste
+		mainMenu = new MainMenu(width, height,this);
+		gameContent = new GameContent(width, height,this);
 		panelSelection = new CardLayout();
+		levelSelector = new LevelSelector(new Dimension(width,height),this);
+		levelEditor = new LevelEditor(new Dimension(width,height),this);
+		playersSelector = new PlayersSelector(new Dimension(width,height), this);
 
 		cardContent = new JPanel();
 		cardContent.setLayout(panelSelection);
 		cardContent.add(mainMenu, "menu");
 		cardContent.add(gameContent, "game");
+		cardContent.add(levelSelector,"levelSelector");
+		cardContent.add(levelEditor,"editor");
+		cardContent.add(playersSelector, "playersSelector");
+		cardContent.add(settings, "settings");
 		setContentPane(cardContent);
-
-		addKeyListener(this);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
@@ -32,22 +52,29 @@ public class FenetrePrincipale extends JFrame implements KeyListener{
 		setVisible(true);
 		setFocusable(true);
 
-		panelSelection.last(cardContent);
+		panelSelection.show(cardContent, "menu");
 
+		addKeyListener(playersSelector);
+		addKeyListener(settings);
 	}
 
-	@Override
-	public void keyTyped(KeyEvent e) {
-
+	public GameContent getGameContent() {
+		return gameContent;
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		gameContent.keyPressed(e);
+	public CardLayout getPanelSelection() {
+		return panelSelection;
 	}
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		gameContent.keyReleased(e);
+	public JPanel getCardContent() {
+		return cardContent;
+	}
+
+	public Audio getMusiqueFond(){
+		return musiqueFond;
+	}
+
+	public Settings getSettings() {
+		return settings;
 	}
 }

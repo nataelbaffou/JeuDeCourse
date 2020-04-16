@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.io.File;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class Map {
     private Texture[] textures;
@@ -15,52 +16,39 @@ public class Map {
     private String startLineType = "down";
     private Position startLinePos;
 
-    public Map(int w, int h, Hashtable<String, String> data){
-        width = w;
-        height = h;
-        this.initData = data;
+    public Map(){
         loadData();
-        initMap();
     }
 
     private void loadData(){
         String path = System.getProperty("user.dir");
-        File f = new File(path + "/res/textures/tiles");
-        String[] names = f.list();
-        int countImages = 0;
-        assert names != null;
-        for(String pathname : names) {
-            if (pathname.matches("0[a-zA-Z_0-9]*.png")) {
-                countImages += 1;
-            }
-        }
-        textures = new Texture[countImages];
-        for (String name : names) {
-            int iImg = -1;
-            boolean forMap = true;
-            switch (name) {
-                case "0grass.png":
-                    iImg = 0;
-                    break;
-                case "0wall.png":
-                    iImg = 1;
-                    break;
-                case "0startEnd.png":
-                    iImg = 2;
-                    break;
-                default:
-                    forMap = false;
-            }
-            if (forMap) {
-                textures[iImg] = new Texture(path + "/res/textures/tiles/" + name, name);
-            }
+        File f = new File(path + "/res/textures");
+
+        Hashtable<String, String> mapTexturesTable = IOFiles.getInformation("textures", "map_conversion_textures");
+        Hashtable<String, String> texturesSettings = IOFiles.getInformation("textures", "textures_settings");
+        mapTexturesTable.remove("filename");
+
+        int nbKeys = mapTexturesTable.size();
+
+        textures = new Texture[nbKeys];
+
+        Set<String> keySet = mapTexturesTable.keySet();
+
+        for(String key : keySet){
+            String name = mapTexturesTable.get(key);
+            textures[Integer.parseInt(key)] = new Texture(path + "/res/textures/" + name, name, texturesSettings);
         }
     }
 
-    public void initMap(){
+    public void initMap(int w, int h, Hashtable<String, String> data){
+        width = w;
+        height = h;
+        initData = data;
+
         // Load and Genarate Board
         String line = initData.get("size");
         String[] boardData = initData.get("board").split("\n");
+
 
         nbCaseX = Integer.parseInt(line.split(" ")[0]);
         nbCaseY = Integer.parseInt(line.split(" ")[1]);
