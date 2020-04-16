@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -19,9 +18,13 @@ public class FenetrePrincipale extends JFrame{
 		if(isFullscreen){
 			setExtendedState(JFrame.MAXIMIZED_BOTH);
 			setUndecorated(true);
+			width = Toolkit.getDefaultToolkit().getScreenSize().width;
+			height = Toolkit.getDefaultToolkit().getScreenSize().height;
+			/*
 			Rectangle n = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 			width = (int)n.getWidth();
 			height = (int)n.getHeight();
+			 */
 		}
 		mainMenu = new MainMenu(width, height,this);
 		gameContent = new GameContent(width, height,this);

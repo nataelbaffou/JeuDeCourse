@@ -2,21 +2,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class LevelEditor extends JPanel implements ActionListener {
-    private FenetrePrincipale f;
+
+    private Dimension s;
+
     private GridLayout gl;
     private JPanel buttonPane;
     private CustomButton createMap, editMap;
-    private JComboBox mapList;
-    private CoreEditor coreEditor;
     private JPanel menu;
-    private Dimension s;
     private CardLayout c;
+
+    private CoreEditor coreEditor;
+    private FenetrePrincipale f;
 
     public LevelEditor(Dimension size, FenetrePrincipale fenetrePrincipale){
         c = new CardLayout();
@@ -24,15 +23,8 @@ public class LevelEditor extends JPanel implements ActionListener {
         s = size;
 
         menu = new JPanel();
-        menu.setPreferredSize(size);
+        menu.setSize(size);
         menu.setLayout(null);
-
-        mapList = new JComboBox();
-        Set<String> names = listFilesUsingJavaIO("./res/maps");
-        for(String n:names){
-            mapList.addItem(n);
-        }
-
         f = fenetrePrincipale;
         buttonPane = new JPanel();
         createMap = new CustomButton("Create Map");
@@ -46,7 +38,6 @@ public class LevelEditor extends JPanel implements ActionListener {
         gl.setHgap(10);
         buttonPane.setLayout(gl);
         buttonPane.add(createMap);
-        buttonPane.add(mapList);
         buttonPane.add(editMap);
 
         int bW = (int)(0.4d*size.width);
@@ -58,20 +49,29 @@ public class LevelEditor extends JPanel implements ActionListener {
         //j.setPreferredSize(new Dimension(size.width/2,size.height));
     }
 
-    public Set<String> listFilesUsingJavaIO(String dir) {
-        return Stream.of(new File(dir).listFiles())
-                .filter(file -> !file.isDirectory())
-                .map(File::getName)
-                .collect(Collectors.toSet());
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==createMap){
-            coreEditor = new CoreEditor(s,"test");
+            String mapName = JOptionPane.showInputDialog("Please enter the map name");
+            System.out.println(mapName);
+            coreEditor = new CoreEditor(s,mapName);
         }
         else if(e.getSource() == editMap){
-            coreEditor = new CoreEditor(s, mapList.getSelectedItem().toString());
+            Set<String> names = IOFiles.listFilesUsingJavaIO("./res/maps");
+            String[] possibleValues = new String[names.size()];
+            int i = 0;
+            for(String n:names){
+                possibleValues[i++] = n;
+            }
+            String selectedValue = (String)JOptionPane.showInputDialog(null,
+
+                    "Select a map to edit", "MapName",
+
+                    JOptionPane.INFORMATION_MESSAGE, null,
+
+                    possibleValues, possibleValues[0]);
+            System.out.println(selectedValue);
+            coreEditor = new CoreEditor(s, selectedValue);
         }
         add(coreEditor,"editor");
         c.show(this,"editor");

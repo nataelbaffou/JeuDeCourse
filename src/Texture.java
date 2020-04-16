@@ -11,7 +11,7 @@ public class Texture{
     private boolean isBlocking = false;
 
     public Texture(){
-        this(System.getProperty("user.dir")+"/res/textures/0grass.png", "default");
+        this(System.getProperty("user.dir")+ "/textures/tiles/0grass.png", "default");
     }
 
     public Texture(BufferedImage img, String name, boolean isBlocking){
@@ -26,7 +26,7 @@ public class Texture{
 
     public Texture(String path, String name){
         this.name = name;
-        if(name.matches("0wall.png")){
+        if(name.matches(".wall\\.png")){
             isBlocking = true;
         }
         try {
