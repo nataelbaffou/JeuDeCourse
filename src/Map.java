@@ -4,7 +4,7 @@ import java.util.Hashtable;
 import java.util.Set;
 
 public class Map {
-    private Texture[][] textures;
+    private Texture[] textures;
     private int width;
     private int height;
     private int nbCaseX;
@@ -25,24 +25,19 @@ public class Map {
         File f = new File(path + "/res/textures");
 
         Hashtable<String, String> mapTexturesTable = IOFiles.getInformation("textures", "map_conversion_textures");
+        Hashtable<String, String> texturesSettings = IOFiles.getInformation("textures", "textures_settings");
+        mapTexturesTable.remove("filename");
 
         int nbKeys = mapTexturesTable.size();
-        // For now there is only 2 modes
-        int nbModes = 2;
 
-        textures = new Texture[nbKeys][nbModes];
+        textures = new Texture[nbKeys];
 
         Set<String> keySet = mapTexturesTable.keySet();
-        keySet.remove("filename");
 
         for(String key : keySet){
-            String[] names = mapTexturesTable.get(key).split("\n");
-            for(int iMode = 0; iMode < nbModes; iMode++){
-                String name;
-                if(iMode<names.length){ name = names[iMode];}
-                else{ name = names[0]; }
-                textures[Integer.parseInt(key)][iMode] = new Texture(path + "/res/textures/" + name, name);
-            }
+            String name = mapTexturesTable.get(key);
+            textures[Integer.parseInt(key)] = new Texture(path + "/res/textures/" + name, name, texturesSettings);
+
         }
     }
 
@@ -54,16 +49,6 @@ public class Map {
         // Load and Genarate Board
         String line = initData.get("size");
         String[] boardData = initData.get("board").split("\n");
-        String theme = initData.get("theme-mode");
-        int themeId = 0;
-        switch (theme){
-            case "peaceful":
-                themeId = 0;
-                break;
-            case "electric":
-                themeId = 1;
-                break;
-        }
 
 
         nbCaseX = Integer.parseInt(line.split(" ")[0]);
@@ -84,7 +69,7 @@ public class Map {
                 if (val >= textures.length) {
                     val = 0;
                 }
-                board[iLig][iCol] = new Case(textures[val][themeId], P);
+                board[iLig][iCol] = new Case(textures[val], P);
                 P.add(dx);
             }
             P.x = 0;

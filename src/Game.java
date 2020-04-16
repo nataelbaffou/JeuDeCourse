@@ -34,7 +34,6 @@ public class Game {
             }
         }
 
-        dico.put("theme-mode", f.getSettings().getTheme());
         map.initMap(w, h, dico);
 
         // initialise le nombre de tours des joueurs

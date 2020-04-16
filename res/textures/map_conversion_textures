@@ -5,13 +5,16 @@
 
 
 [0]
-grass.png
-electric_ground.png
-
+startEnd.png
 
 [1]
-wall.png
-electric_wall.png
+grass.png
 
 [2]
-startEnd.png
+wall.png
+
+[3]
+electric_ground.png
+
+[4]
+electric_wall.png

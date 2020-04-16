@@ -25,12 +25,14 @@ public class FenetrePrincipale extends JFrame{
 
 		musiqueFond = new Audio(this);
 
+		settings = new Settings(new Dimension(width, height), this);
+		musiqueFond.playTheme("menu");
+		// On charge les paramètres et la musique en premier de façon à ce que la musique soit lancée lors du chargement du reste
 		mainMenu = new MainMenu(width, height,this);
 		gameContent = new GameContent(width, height,this);
 		panelSelection = new CardLayout();
 		levelSelector = new LevelSelector(new Dimension(width,height),this);
 		playersSelector = new PlayersSelector(new Dimension(width,height), this);
-		settings = new Settings(new Dimension(width, height), this);
 
 		cardContent = new JPanel();
 		cardContent.setLayout(panelSelection);
