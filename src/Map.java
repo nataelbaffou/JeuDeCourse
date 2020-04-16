@@ -25,7 +25,7 @@ public class Map {
 
     private void loadData(){
         String path = System.getProperty("user.dir");
-        File f = new File(path + "/res/textures");
+        File f = new File(path + "/res/textures/tiles");
         String[] names = f.list();
         int countImages = 0;
         assert names != null;
@@ -52,7 +52,7 @@ public class Map {
                     forMap = false;
             }
             if (forMap) {
-                textures[iImg] = new Texture(path + "/res/textures/" + name, name);
+                textures[iImg] = new Texture(path + "/res/textures/tiles/" + name, name);
             }
         }
     }
