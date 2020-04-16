@@ -1,9 +1,10 @@
 import java.awt.*;
 import java.io.File;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class Map {
-    private Texture[] textures;
+    private Texture[][] textures;
     private int width;
     private int height;
     private int nbCaseX;
@@ -15,52 +16,55 @@ public class Map {
     private String startLineType = "down";
     private Position startLinePos;
 
-    public Map(int w, int h, Hashtable<String, String> data){
-        width = w;
-        height = h;
-        this.initData = data;
+    public Map(){
         loadData();
-        initMap();
     }
 
     private void loadData(){
         String path = System.getProperty("user.dir");
         File f = new File(path + "/res/textures");
-        String[] names = f.list();
-        int countImages = 0;
-        assert names != null;
-        for(String pathname : names) {
-            if (pathname.matches("0[a-zA-Z_0-9]*.png")) {
-                countImages += 1;
-            }
-        }
-        textures = new Texture[countImages];
-        for (String name : names) {
-            int iImg = -1;
-            boolean forMap = true;
-            switch (name) {
-                case "0grass.png":
-                    iImg = 0;
-                    break;
-                case "0wall.png":
-                    iImg = 1;
-                    break;
-                case "0startEnd.png":
-                    iImg = 2;
-                    break;
-                default:
-                    forMap = false;
-            }
-            if (forMap) {
-                textures[iImg] = new Texture(path + "/res/textures/" + name, name);
+
+        Hashtable<String, String> mapTexturesTable = IOFiles.getInformation("textures", "map_conversion_textures");
+
+        int nbKeys = mapTexturesTable.size();
+        // For now there is only 2 modes
+        int nbModes = 2;
+
+        textures = new Texture[nbKeys][nbModes];
+
+        Set<String> keySet = mapTexturesTable.keySet();
+        keySet.remove("filename");
+
+        for(String key : keySet){
+            String[] names = mapTexturesTable.get(key).split("\n");
+            for(int iMode = 0; iMode < nbModes; iMode++){
+                String name;
+                if(iMode<names.length){ name = names[iMode];}
+                else{ name = names[0]; }
+                textures[Integer.parseInt(key)][iMode] = new Texture(path + "/res/textures/" + name, name);
             }
         }
     }
 
-    public void initMap(){
+    public void initMap(int w, int h, Hashtable<String, String> data){
+        width = w;
+        height = h;
+        initData = data;
+
         // Load and Genarate Board
         String line = initData.get("size");
         String[] boardData = initData.get("board").split("\n");
+        String theme = initData.get("theme-mode");
+        int themeId = 0;
+        switch (theme){
+            case "peaceful":
+                themeId = 0;
+                break;
+            case "electric":
+                themeId = 1;
+                break;
+        }
+
 
         nbCaseX = Integer.parseInt(line.split(" ")[0]);
         nbCaseY = Integer.parseInt(line.split(" ")[1]);
@@ -80,7 +84,7 @@ public class Map {
                 if (val >= textures.length) {
                     val = 0;
                 }
-                board[iLig][iCol] = new Case(textures[val], P);
+                board[iLig][iCol] = new Case(textures[val][themeId], P);
                 P.add(dx);
             }
             P.x = 0;

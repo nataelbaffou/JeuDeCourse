@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
@@ -15,7 +16,11 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
     private JComboBox<String> musicMenuBox;
     private JComboBox<String> musicRaceBox;
     private JCheckBox randomMusic;
+    private JSlider musicControl;
     private JLabel trollLabel;
+    private ButtonGroup themeSelectionGroup;
+    private JRadioButton peacefulTheme;
+    private JRadioButton electricTheme;
     private JButton back;
     private int trollState = 0;
 
@@ -39,12 +44,16 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         title.setForeground(Color.BLACK);
         add(title);
 
+        // *********************
+        // **** Music PANEL ****
+        // *********************
+
         JPanel musicPanel = new JPanel();
         musicPanel.setLayout(null);
         musicPanel.setBounds(200, 150, 600, 300);
-        TitledBorder borderTitle = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), "Musique");
-        borderTitle.setTitleJustification(TitledBorder.CENTER);
-        musicPanel.setBorder(borderTitle);
+        TitledBorder musicBorderTitle = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), "Musique");
+        musicBorderTitle.setTitleJustification(TitledBorder.CENTER);
+        musicPanel.setBorder(musicBorderTitle);
         add(musicPanel);
 
         JLabel musicMenuLabel = new JLabel("Musique du menu : ");
@@ -66,8 +75,8 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
                 musicRaceBox.addItem(s);
             }
         }
-        musicMenuBox.setSelectedItem("menu/jeopardy.wav");
-        musicRaceBox.setSelectedItem("race/trackmania.wav");
+        musicRaceBox.setSelectedIndex(0);
+        musicMenuBox.setSelectedIndex(0);
 
         musicMenuBox.addItemListener(this);
         musicRaceBox.addItemListener(this);
@@ -83,9 +92,49 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
 
         randomMusic = new JCheckBox();
         randomMusic.setBounds(220, 130, 250, 30);
-        randomMusic.setSelected(false);
+        randomMusic.setSelected(true);
         randomMusic.addMouseListener(this);
         musicPanel.add(randomMusic);
+
+        musicControl = new JSlider(0, 100);
+        musicControl.setBounds(220, 180, 250, 30);
+        musicControl.addChangeListener((ChangeEvent e) -> {
+            f.getMusiqueFond().setVolume(musicControl.getValue());
+        });
+        musicControl.setValue(40);
+        musicPanel.add(musicControl);
+
+        // **************************
+        // **** Theme mode PANEL ****
+        // **************************
+
+        // TODO adapter settings to get the themes
+        // TODO Settle music and textures in function of the theme
+
+        JPanel themeModePanel = new JPanel();
+        themeModePanel.setBounds(850, 150, 400, 100);
+        themeModePanel.setLayout(new BoxLayout(themeModePanel, BoxLayout.Y_AXIS));
+        TitledBorder modeBorderTitle = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), "Theme mode");
+        modeBorderTitle.setTitleJustification(TitledBorder.CENTER);
+        themeModePanel.setBorder(modeBorderTitle);
+        add(themeModePanel);
+
+        themeSelectionGroup = new ButtonGroup();
+        peacefulTheme = new JRadioButton("peaceful");
+        electricTheme = new JRadioButton("electric");
+        peacefulTheme.setActionCommand("peaceful");
+        electricTheme.setActionCommand("electric");
+        peacefulTheme.addItemListener(this);
+        electricTheme.addItemListener(this);
+        peacefulTheme.setSelected(true);
+        themeSelectionGroup.add(peacefulTheme);
+        themeSelectionGroup.add(electricTheme);
+        themeModePanel.add(peacefulTheme);
+        themeModePanel.add(electricTheme);
+
+        // ***********************
+        // **** OTHER THINGS *****
+        // ***********************
 
         trollLabel = new JLabel("CLICK HERE !", JLabel.CENTER);
         trollLabel.setBounds(0, getSize().height-50, getWidth(), 50);
@@ -105,11 +154,18 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
     @Override
     public void itemStateChanged(ItemEvent e) {
         if(e.getStateChange() == ItemEvent.SELECTED){
+            testingSong = false;
             if(e.getSource() == musicMenuBox){
                 f.getMusiqueFond().playMusic(musicMenuBox.getSelectedItem().toString());
             } else if(e.getSource() == musicRaceBox){
                 f.getMusiqueFond().playMusic(musicRaceBox.getSelectedItem().toString());
                 testingSong = true;
+            } else if(e.getSource() == peacefulTheme){
+                musicRaceBox.setSelectedItem("race/trackmania.wav");
+                musicMenuBox.setSelectedItem("menu/jeopardy.wav");
+            } else if(e.getSource() == electricTheme){
+                musicRaceBox.setSelectedItem("other/star-realms-Nova.wav");
+                musicMenuBox.setSelectedItem("other/star-realms-theme.wav");
             }
         }
 
@@ -125,6 +181,10 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
 
     public boolean isMusicRandom(){
         return randomMusic.isSelected();
+    }
+
+    public String getTheme(){
+        return themeSelectionGroup.getSelection().getActionCommand();
     }
 
     @Override

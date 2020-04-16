@@ -1,0 +1,17 @@
+#First name is first mode
+#Second name is second mode
+#If only one name : for both modes
+#Please start the keys from 0 and increment it one-by-one
+
+
+[0]
+grass.png
+electric_ground.png
+
+
+[1]
+wall.png
+electric_wall.png
+
+[2]
+startEnd.png

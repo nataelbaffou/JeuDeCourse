@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 public class Game {
     private ArrayList<Joueur> players;
+    private FenetrePrincipale f;
     private int nPlayers;
     private int[] lapsPerPlayer;
     private boolean[] playerInContactWithStartLine;
@@ -14,7 +15,9 @@ public class Game {
     private Map map;
     private String title = "default";
 
-    public Game(){
+    public Game(FenetrePrincipale fenetrePrincipale){
+        f = fenetrePrincipale;
+        map = new Map();
     }
 
     public void initGame(ArrayList<Joueur> j, String idMap, int w, int h){
@@ -30,7 +33,9 @@ public class Game {
                     break;
             }
         }
-        map = new Map(w, h, dico);
+
+        dico.put("theme-mode", f.getSettings().getTheme());
+        map.initMap(w, h, dico);
 
         // initialise le nombre de tours des joueurs
         nPlayers = j.size();

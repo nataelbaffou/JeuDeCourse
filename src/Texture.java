@@ -26,7 +26,7 @@ public class Texture{
 
     public Texture(String path, String name){
         this.name = name;
-        if(name.matches("0wall.png")){
+        if(name.matches("wall.png")){
             isBlocking = true;
         }
         try {

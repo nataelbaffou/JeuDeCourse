@@ -23,6 +23,7 @@ public class FenetrePrincipale extends JFrame{
 			height = (int)n.getHeight();
 		}
 
+		musiqueFond = new Audio(this);
 
 		mainMenu = new MainMenu(width, height,this);
 		gameContent = new GameContent(width, height,this);
@@ -50,12 +51,6 @@ public class FenetrePrincipale extends JFrame{
 
 		addKeyListener(playersSelector);
 		addKeyListener(settings);
-
-		musiqueFond = new Audio(this);
-		musiqueFond.playTheme("menu");
-		//Audio au = new Audio(this);
-		//au.playTheme("race");
-
 	}
 
 	public GameContent getGameContent() {
