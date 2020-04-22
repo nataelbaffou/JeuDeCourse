@@ -222,23 +222,43 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         res += JOptionPane.showInputDialog(null,"Franchissement de la ligne par quel côté ?","Side",
                 JOptionPane.INFORMATION_MESSAGE, null , new String[]{"up","down","left","right"},"left") + "\n";
 
-        HashSet<String> startCoord = new HashSet<>();
-        int a=-1,b = 0;
+
+        // Detection de la plus grande surface recouverte par les cases départ
+        int cmin = -1, cmax = -1, lmin = -1, lmax = -1;
         for(int i = 0;i<board.length;i++){
             for(int j = 0; j < board[0].length; j++){
                 if(board[i][j] == 0) {
-                    startCoord.add(i + " " + j);
-                    if(a!=-1) {
-                        if (!(a == i || b == j)) {
-                            throw new Exception("Shape error : starting line must be on a single row/column");
-                        }
-                        else if(!(i==a+1 || j == b+1))
-                            throw new Exception("Shape error : starting line tiles must be linked");
+                    if(i>lmax){
+                        lmax = i;
                     }
-                    a=i;b=j;
+                    if(lmin == -1 || j < lmin){
+                        lmin = i;
+                    }
+                    if(j>cmax){
+                        cmax = j;
+                    }
+                    if(cmin == -1 || j < cmin){
+                        cmin = j;
+                    }
                 }
             }
         }
+
+        // Vérification qu'il n'y a que des cases départ sur cette zone
+        System.out.println(lmin + " " + lmax + " " + cmin + " " + cmax);
+        for(int i = lmin; i <= lmax;i++){
+            for(int j = cmin; j <= cmax; j++){
+                System.out.println(i + " " + j);
+                if(board[i][j]!=0){
+                    System.out.println(i + " " + j);
+                    throw new Exception("La ligne de départ créée n'est pas rectangulaire");
+                }
+            }
+        }
+
+        HashSet<String> startCoord = new HashSet<>();
+        startCoord.add(lmin + " " + cmin);
+        startCoord.add(lmax + " " + cmax);
         if(startCoord.size()==0)
             throw new Exception("No starting-line detected");
         for(String co: startCoord)
@@ -249,10 +269,10 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
 
     public String getStartPosition(){
         String res = "";
-        res += JOptionPane.showInputDialog("Case de départ : colonne") +" ";
-        res += JOptionPane.showInputDialog("Case de départ :ligne") + "\n";
+        res += JOptionPane.showInputDialog("Case de départ : ligne") +" ";
+        res += JOptionPane.showInputDialog("Case de départ : colonne") + "\n";
         res += JOptionPane.showInputDialog(null,"Orientation de la voiture au départ","Orientation",
-                JOptionPane.INFORMATION_MESSAGE, null , new String[]{"up","down","left","right"},"left");
+                JOptionPane.INFORMATION_MESSAGE, null , new String[]{"up","down","left","right"},"right");
         return res;
     }
 
