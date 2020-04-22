@@ -10,7 +10,7 @@ public class LevelEditor extends JPanel implements ActionListener {
 
     private GridLayout gl;
     private JPanel buttonPane;
-    private CustomButton createMap, editMap;
+    private CustomButton createMap, editMap, back;
     private JPanel menu;
     private CardLayout c;
 
@@ -39,6 +39,9 @@ public class LevelEditor extends JPanel implements ActionListener {
         buttonPane.setLayout(gl);
         buttonPane.add(createMap);
         buttonPane.add(editMap);
+        back = new CustomButton("Back to menu");
+        back.addActionListener(this);
+        buttonPane.add(back);
 
         int bW = (int)(0.4d*size.width);
         int bY = (int)(0.4d*size.height);
@@ -51,30 +54,40 @@ public class LevelEditor extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==createMap){
-            String mapName = JOptionPane.showInputDialog("Please enter the map name");
-            System.out.println(mapName);
-            coreEditor = new CoreEditor(s,mapName);
+        if(e.getSource() == back){
+            f.getPanelSelection().show(f.getCardContent(), "menu");
         }
-        else if(e.getSource() == editMap){
-            Set<String> names = IOFiles.listFilesUsingJavaIO("./res/maps");
-            String[] possibleValues = new String[names.size()];
-            int i = 0;
-            for(String n:names){
-                possibleValues[i++] = n;
+        else {
+            if (e.getSource() == createMap) {
+                //String mapName = JOptionPane.showInputDialog("Please enter the map name");
+                String mapName = "";
+                coreEditor = new CoreEditor(s, mapName, this);
             }
-            String selectedValue = (String)JOptionPane.showInputDialog(null,
+            //TODO Dans CoreEditor Check si le mapName existe déjà et si oui, load la map
+            else if (e.getSource() == editMap) {
+                Set<String> names = IOFiles.listFilesUsingJavaIO("./res/maps");
+                String[] possibleValues = new String[names.size()];
+                int i = 0;
+                for (String n : names) {
+                    possibleValues[i++] = n;
+                }
+                String selectedValue = (String) JOptionPane.showInputDialog(null,
 
-                    "Select a map to edit", "MapName",
+                        "Select a map to edit", "MapName",
 
-                    JOptionPane.INFORMATION_MESSAGE, null,
+                        JOptionPane.INFORMATION_MESSAGE, null,
 
-                    possibleValues, possibleValues[0]);
-            System.out.println(selectedValue);
-            coreEditor = new CoreEditor(s, selectedValue);
+                        possibleValues, possibleValues[0]);
+                System.out.println(selectedValue);
+                coreEditor = new CoreEditor(s, selectedValue, this);
+            }
+            add(coreEditor, "editor");
+            c.show(this, "editor");
         }
-        add(coreEditor,"editor");
-        c.show(this,"editor");
+    }
+
+    public CardLayout getC() {
+        return c;
     }
 
     public void paintComponent(Graphics g){
