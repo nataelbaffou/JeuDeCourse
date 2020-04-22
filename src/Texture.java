@@ -12,7 +12,7 @@ public class Texture{
     private boolean isBlocking = false;
 
     public Texture(){
-        this(System.getProperty("user.dir")+"/res/textures/0grass.png", "default");
+        this(System.getProperty("user.dir")+"/res/textures/grass.png", "default");
     }
 
     public Texture(BufferedImage img, String name, boolean isBlocking){
@@ -48,7 +48,7 @@ public class Texture{
                                 printSettingError(settings.get("filename"), keyName, keySetting);
                             }
                             break;
-                            // TODO Ajouter des setting en fonction des textures
+                            // TODO Ajouter des settings en fonction des textures
                     }
                 }
             }
