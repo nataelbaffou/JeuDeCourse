@@ -37,6 +37,7 @@ public class Map {
         for(String key : keySet){
             String name = mapTexturesTable.get(key);
             textures[Integer.parseInt(key)] = new Texture(path + "/res/textures/" + name, name, texturesSettings);
+
         }
     }
 
