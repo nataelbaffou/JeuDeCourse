@@ -35,10 +35,7 @@ public class CustomButton extends JButton {
     }
 
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        betterRender(g);
         if(getModel().isArmed()){
-            setContentAreaFilled(true);
             int width = getWidth();
             int height = getHeight();
             g.setColor(r);
@@ -47,17 +44,15 @@ public class CustomButton extends JButton {
             g.fillArc(width - height, 0, height, height, 270, 180);
         }
         else if(getModel().isRollover()){
-            setContentAreaFilled(true);
             int width = getWidth();
             int height = getHeight();
             g.setColor(c);
             g.fillRect(height / 2, 0, width - height, height);
             g.fillArc(0, 0, height, height, 90, 180);
-            g.fillArc(width - height -1, 0, height, height, 270, 180);
+            g.fillArc(width - height, 0, height, height, 270, 180);
         }
-        else{
-            setContentAreaFilled(false);
-        }
+        super.paintComponent(g);
+        betterRender(g);
     }
     public void betterRender(Graphics g){
         Graphics2D g2 = (Graphics2D)g;

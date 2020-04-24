@@ -108,7 +108,7 @@ public class Karting extends Vehicule{
 		dP.x = vx * dt;
 		dP.y = vy * dt;
 
-		if(Math.abs((int)(Pderape.getDeg()-P.getRad())) < 45){
+		if(Math.abs((int)(Pderape.getDeg()-P.getRad())) < 30){
 			aderape =false;
 			countderap = 0;
 		}
