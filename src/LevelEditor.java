@@ -18,38 +18,41 @@ public class LevelEditor extends JPanel implements ActionListener {
     private FenetrePrincipale f;
 
     public LevelEditor(Dimension size, FenetrePrincipale fenetrePrincipale){
+        f = fenetrePrincipale;
         c = new CardLayout();
         setLayout(c);
         s = size;
 
+        // Défini la zone où il y a les boutons
         menu = new JPanel();
-        menu.setSize(size);
-        menu.setLayout(null);
-        f = fenetrePrincipale;
+        menu.setPreferredSize(size);
+        menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
+
+        // Place les boutons dans cette zone
         buttonPane = new JPanel();
+        buttonPane.setPreferredSize(new Dimension(size.width/2,size.height/2));
+        buttonPane.setMaximumSize(new Dimension(size.width/2, size.height/2));
+        gl = new GridLayout(3,0);
+        gl.setVgap(30);
+        buttonPane.setLayout(gl);
+
         createMap = new CustomButton("Create Map");
         createMap.addActionListener(this);
         editMap = new CustomButton("Edit Map");
         editMap.addActionListener(this);
-
-        buttonPane.setSize(new Dimension(size.width/2,size.height));
-        gl = new GridLayout(3,0);
-        gl.setVgap(10);
-        gl.setHgap(10);
-        buttonPane.setLayout(gl);
-        buttonPane.add(createMap);
-        buttonPane.add(editMap);
         back = new CustomButton("Back to menu");
         back.addActionListener(this);
+
+        buttonPane.add(createMap);
+        buttonPane.add(editMap);
         buttonPane.add(back);
 
-        int bW = (int)(0.4d*size.width);
-        int bY = (int)(0.4d*size.height);
-        buttonPane.setBounds((int)((size.width-bW)/2),(int)(size.height/2),bW, bY);
+        menu.add(Box.createVerticalGlue());
         menu.add(buttonPane);
+        menu.add(Box.createVerticalGlue());
+
         add(menu,"menu");
         c.show(this,"menu");
-        //j.setPreferredSize(new Dimension(size.width/2,size.height));
     }
 
     @Override
@@ -59,9 +62,7 @@ public class LevelEditor extends JPanel implements ActionListener {
         }
         else {
             if (e.getSource() == createMap) {
-                //String mapName = JOptionPane.showInputDialog("Please enter the map name");
-                String mapName = "";
-                coreEditor = new CoreEditor(s, mapName, this);
+                coreEditor = new CoreEditor(s, "", this);
             }
             //TODO Dans CoreEditor Check si le mapName existe déjà et si oui, load la map
             else if (e.getSource() == editMap) {
@@ -78,7 +79,10 @@ public class LevelEditor extends JPanel implements ActionListener {
                         JOptionPane.INFORMATION_MESSAGE, null,
 
                         possibleValues, possibleValues[0]);
-                System.out.println(selectedValue);
+                // Si on appuie sur annuler on quitte la fonction
+                if(selectedValue == null){
+                    return;
+                }
                 coreEditor = new CoreEditor(s, selectedValue, this);
             }
             add(coreEditor, "editor");

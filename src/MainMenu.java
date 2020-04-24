@@ -15,11 +15,14 @@ public class MainMenu extends JPanel implements ActionListener {
         f = fenetrePrincipale;
 
         setPreferredSize(new Dimension(width, height));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         bPanel = new JPanel();
-        int bW = (int)(0.4d*width);
-        int bY = (int)(0.4d*height);
-        bPanel.setBounds((int)((width-bW)/2),(int)(height/2),bW, bY);
+        GridLayout gl = new GridLayout(4,0);
+        gl.setVgap(30);
+        bPanel.setLayout(gl);
+        bPanel.setPreferredSize(new Dimension(width/2, height/2));
+        bPanel.setMaximumSize(new Dimension(width/2, height/2));
 
         solo = new CustomButton("Solo");
         solo.addActionListener(this);
@@ -34,17 +37,14 @@ public class MainMenu extends JPanel implements ActionListener {
         settings.addActionListener(this);
         settings.setFocusPainted(false);
 
-        GridLayout gl = new GridLayout(4,1);
-        gl.setVgap(10);
-        bPanel.setLayout(gl);
-
         bPanel.add(solo);
         bPanel.add(multi);
         bPanel.add(editor);
         bPanel.add(settings);
 
-        setLayout(null);
+        add(Box.createVerticalGlue());
         add(bPanel);
+        add(Box.createVerticalGlue());
     }
 
     @Override

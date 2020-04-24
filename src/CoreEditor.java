@@ -40,7 +40,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         Dimension d = new Dimension(20,20);
         mapName = name;
         int[][] grid = null;
-        if(mapName != ""){
+        if(mapName!=null && !mapName.equals("")){
             // Loading map
             Hashtable<String,String> dico = IOFiles.getInformation("maps",name);
             d = new Dimension(Integer.parseInt(dico.get("size").split(" ")[0]),Integer.parseInt(dico.get("size").split(" ")[1]));
