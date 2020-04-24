@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -11,8 +12,11 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
 
     JPanel settingsPanel;
     PaintPanel paintPanel;
+    JScrollPane scrollPaintPanel;
 
     String mapName;
+    JSlider caseSizeSlider;
+    JTextField caseWidth;
     JTextField nbrCaseWidth;
     JTextField nbrCaseHeight;
     JLabel themeLabel;
@@ -48,17 +52,29 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         mapTexturesTable.remove("filename");
 
         setBackground(Color.lightGray);
-        setLayout(new FlowLayout());
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-        System.out.println(s.getHeight());
 
         settingsPanel = new JPanel();
         settingsPanel.setLayout(new BoxLayout(settingsPanel,BoxLayout.PAGE_AXIS));
-        paintPanel = new PaintPanel(new Dimension((int)(s.getWidth()),(int)(s.getHeight())),d,mapTexturesTable,grid);
 
         textures = new ImageButton[mapTexturesTable.size()];
 
         bPanel = new JPanel();
+
+        caseSizeSlider = new JSlider(3, 100);
+        caseSizeSlider.addChangeListener((ChangeEvent e) -> {
+            try{
+                paintPanel.setCaseSize(caseSizeSlider.getValue());
+                scrollPaintPanel.repaint();
+                scrollPaintPanel.revalidate();
+            } catch (Exception except){
+                // Do nothing this is just for
+            }
+
+        });
+        caseSizeSlider.setValue(40);
+        settingsPanel.add(caseSizeSlider);
 
         JLabel nbrTileWidth = new JLabel("Largeur (en case) : ");
         settingsPanel.add(nbrTileWidth);
@@ -164,7 +180,15 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         //settingsPanel.setPreferredSize(new Dimension((int)(0.2d*s.width),s.height));
         //paintPanel.setLocation((int)(0.2d*s.width),0);
         add(settingsPanel);
-        add(paintPanel);
+
+        paintPanel = new PaintPanel(new Dimension((int)(s.width*0.66), s.height), d, caseSizeSlider.getValue(), mapTexturesTable, grid);
+
+        scrollPaintPanel = new JScrollPane(paintPanel);
+        scrollPaintPanel.setFocusable(true);
+        scrollPaintPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPaintPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        add(scrollPaintPanel);
 
         //TODO Améliorer l'affichage graphique
     }
@@ -186,6 +210,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
             if(!(paintPanel.getGrid().length == h && paintPanel.getGrid()[0].length == w)) {
                 paintPanel.setCaseHeight(h);
                 paintPanel.setCaseWidth(w);
+                scrollPaintPanel.repaint();
             }
         }
 
@@ -245,12 +270,9 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         }
 
         // Vérification qu'il n'y a que des cases départ sur cette zone
-        System.out.println(lmin + " " + lmax + " " + cmin + " " + cmax);
         for(int i = lmin; i <= lmax;i++){
             for(int j = cmin; j <= cmax; j++){
-                System.out.println(i + " " + j);
                 if(board[i][j]!=0){
-                    System.out.println(i + " " + j);
                     throw new Exception("La ligne de départ créée n'est pas rectangulaire");
                 }
             }
@@ -328,28 +350,26 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
     }
 }
 
-class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
+class PaintPanel extends JPanel implements MouseListener, MouseMotionListener{
     //TODO Bug lors de l'enregistrement de la map : soit les cases sont mal modifiées ici, soit la grid est mal convertie au dessus (inversion des coordonnées)
     private String startOrientation;
     private boolean repaintRect;
-    private boolean pGrid;
     private int[][] grid;
-    private Dimension size;
-    private Dimension initialSize;
+    private Dimension visibleSize;
+    private Dimension realSize;
     private int caseSize;
     private double probBlack;
     private int currentTexture;
     private BufferedImage img;
     private BufferedImage[] textures;
     private File f;
-    private int a,b;
-    private boolean start;
     private int defaultNum;
 
-    public PaintPanel(Dimension size, Dimension n,Hashtable<String, String> map,int[][] board){
+    public PaintPanel(Dimension size, Dimension n, int caseSize, Hashtable<String, String> map,int[][] board){
         //img = new BufferedImage(n,n,BufferedImage.TYPE_BYTE_BINARY);
-        this.size = size;
-        this.initialSize = size;
+        this.visibleSize = size;
+        this.caseSize = caseSize;
+        this.realSize = new Dimension((int)(caseSize*n.getWidth()), (int)(caseSize*n.getHeight()));
 
         defaultNum = 1;
 
@@ -374,9 +394,8 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
                 }
             }
         }
-        caseSize = Math.min((int)(size.getHeight()/n.getHeight()),(int)(size.getWidth()/n.getWidth()));
-        size = new Dimension((int)(caseSize*n.getWidth()),(int)(caseSize*n.getHeight()));
-        setPreferredSize(size);
+
+        setPreferredSize(visibleSize);
         setFocusable(true);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -384,9 +403,7 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
         setKeyBindings();
 
         probBlack = 0.2;
-        pGrid = true;
         repaintRect = false;
-        start = true;
     }
 
     public void setDefaultNum(int i){
@@ -405,7 +422,6 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
         actionMap.put(vkR, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println('r');
                 randomize();
                 repaint();
             }
@@ -419,11 +435,7 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
                 grid[i][j] = defaultNum;
             }
         }
-        caseSize = Math.min((int)(initialSize.getHeight()/num),(int)(initialSize.getWidth()/grid[0].length));
-        size = new Dimension((int)(caseSize*grid[0].length),(int)(caseSize*num));
-        System.out.println(size);
-        //setPreferredSize(size);
-        pGrid = true;
+        realSize.setSize(realSize.width, caseSize*num);
         repaint();
     }
     public void setCaseWidth(int num){
@@ -433,30 +445,15 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
                 grid[i][j] = defaultNum;
             }
         }
-        caseSize = Math.min((int)(initialSize.getHeight()/grid.length),(int)(initialSize.getWidth()/num));
-        size = new Dimension((int)(caseSize*num),(int)(caseSize*grid.length));
-        setSize(size);
-        System.out.println(size +", real : "+getSize());
-        pGrid = true;
+        realSize.setSize(caseSize*num, realSize.height);
         repaint();
     }
-    /*
-    public void changeSize(int n){
-        img = new BufferedImage(n,n,BufferedImage.TYPE_BYTE_BINARY);
-        grid = new int[n][n];
-        for(int i = 0;i<n;i++){
-            for(int j = 0; j < n; j++){
-                grid[i][j] = 1;
-            }
-        }
-        caseSize = initialSize/n;
-        if(size != caseSize*n){
-            size = caseSize*n;
-        }
-        setPreferredSize(new Dimension(size,size));
+
+    public void setCaseSize(int num){
+        realSize.setSize(realSize.width*num/caseSize, realSize.height*num/caseSize);
+        caseSize = num;
         repaint();
     }
-    */
 
     public void clear(){
         for(int i = 0; i<grid.length; i++){
@@ -464,7 +461,6 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
                 grid[i][j] = defaultNum;
             }
         }
-        pGrid = true;
         repaint();
     }
     public void randomize(){
@@ -473,7 +469,6 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
                 grid[i][j] = Math.random() < probBlack ? defaultNum+1 : defaultNum;
             }
         }
-        pGrid = true;
     }
 
     public void save(){
@@ -502,44 +497,24 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
             g.drawImage(textures[currentTexture],(int)r.getX(),(int)r.getY(),(int)r.getWidth(),(int)r.getHeight(),null);
             repaintRect = false;
         }
-        else if(pGrid){
+        else{
             paintGrid(g);
-            pGrid = false;
         }
-        else if(start){
-            paintGrid(g);
-            start = false;
-        }
-        /*
-        if(repaintRect){
-            r = g.getClipBounds();
-            g.setColor(tileColor);
-            g.fillRect((int)r.getX(),(int)r.getY(),(int)r.getWidth(),(int)r.getHeight());
-            repaintRect = false;
-        }
-        else if(pGrid){
-            paintGrid(g);
-            pGrid = false;
-        }
-
-         */
     }
 
     public void paintGrid(Graphics g){
-        //System.out.println(Arrays.deepToString(grid));
         for(int i = 0;i<grid.length;i++){
             for(int j = 0; j < grid[0].length; j++){
                 g.drawImage(textures[grid[i][j]],j*caseSize,i*caseSize, caseSize,caseSize,null);
             }
         }
     }
-    public int constrainInRange(int v, int min, int max){
-        if(v< min)
-            return min;
-        else if(v>max)
-            return max;
-        return v;
+
+    @Override
+    public Dimension getPreferredSize() {
+        return realSize;
     }
+
 
     public void setTexture(int nbr){
         currentTexture = nbr;
@@ -552,11 +527,13 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        a = e.getX()/caseSize;
-        b = e.getY()/caseSize;
-        grid[b][a] = currentTexture;
-        repaintRect = true;
-        repaint(a*caseSize,b*caseSize,caseSize,caseSize);
+        int a = e.getX()/caseSize;
+        int b = e.getY()/caseSize;
+        if(0 <= b && b < grid.length && 0 <= a && a < grid[0].length){
+            grid[b][a] = currentTexture;
+            repaintRect = true;
+            repaint(a*caseSize,b*caseSize,caseSize,caseSize);
+        }
     }
 
     @Override
@@ -575,12 +552,9 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener {
     }
     @Override
     public void mouseDragged(MouseEvent e) {
-        int i, j;
-        i = constrainInRange(e.getX()/caseSize,0,this.getWidth()/caseSize-1);
-        j = constrainInRange(e.getY()/caseSize,0,this.getHeight()/caseSize-1);
-        if(a != i || b != j) {
-            a = i;
-            b = j;
+        int a = e.getX() / caseSize;
+        int b = e.getY() / caseSize;
+        if (0 <= b && b < grid.length && 0 <= a && a < grid[0].length) {
             grid[b][a] = currentTexture;
             repaintRect = true;
             repaint(a * caseSize, b * caseSize, caseSize, caseSize);
