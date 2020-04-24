@@ -163,13 +163,13 @@ public class Karting extends Vehicule{
 
 
 		vc = vc/1.5;
-		if(vc<0.2){
+		if(vc<0.1){
 			vc =0;
 			countderap =0;
 			aderape = false;
 		}
 		if(vc !=0){
-			normeV = normeV /1.35;
+			normeV = normeV /1.9;
 		}
 		System.out.println( "vc :" + vc);
 	}
