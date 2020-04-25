@@ -1,9 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class CustomButton extends JButton {
+public class CustomButton extends JButton{
     Color c;
     Color r;
     public CustomButton(String text){
@@ -16,7 +20,7 @@ public class CustomButton extends JButton {
 
         setBackground(new Color(255,255,255,0));
 
-        c = new Color(100, 100, 100, 200);
+        c = new Color(70, 70, 70, 150);
 
         r = new Color(0xC8FF0000, true);
 

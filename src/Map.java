@@ -84,7 +84,7 @@ public class Map {
                     startLineType = lines1[0];
                     Point p1 = new Point(Integer.parseInt(lines1[1].split(" ")[1])*widthCase, Integer.parseInt(lines1[1].split(" ")[0])*widthCase);
                     Point p2 = new Point((Integer.parseInt(lines1[2].split(" ")[1])+1)*widthCase, (Integer.parseInt(lines1[2].split(" ")[0])+1)*widthCase);
-                    startLinePos = new Position(p1.x, p1.y, p2.x-p1.x, p2.y-p1.y, 0, 0);
+                    startLinePos = new Position(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.abs(p2.x-p1.x), Math.abs(p2.y-p1.y), 0, 0);
                     break;
                 case "start-position":
                     String[] lines2 = param.getValue().split("\n");

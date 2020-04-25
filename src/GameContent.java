@@ -131,8 +131,8 @@ public class GameContent extends JPanel implements ActionListener {
         }
     }
 
-    public void setGame(int i){
-        idGame = "circuit" + i;
+    public void setGame(String name){
+        idGame = name;
     }
 
     public void setPlayers(int[][] binds){

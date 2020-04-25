@@ -71,8 +71,8 @@ public class Karting extends Vehicule{
 		Fc = (masse * normeV * normeV) / (Rc*coefprop);
 		Ff = masse * 9.81 * 2.5;
 
-		System.out.println("Fc : "+ Fc);
-		System.out.println("Ff : "+ Ff);
+		//System.out.println("Fc : "+ Fc);
+		//System.out.println("Ff : "+ Ff);
 
 		if(Fc > 4 * Ff && (keyPressed[0] || keyPressed[2]) && countderap == 0){
 			Pderape.x = P.x;
@@ -155,7 +155,7 @@ public class Karting extends Vehicule{
 				while( !Collision.isColliding(this, map) && deg < 360){
 					deg ++;
 					P.setDeg(P.getDeg() + deg);
-					System.out.println("B");
+					//System.out.println("B");
 				}
 				P.setDeg((P.getDeg() + deg -1));
 			}
@@ -171,7 +171,7 @@ public class Karting extends Vehicule{
 		if(vc !=0){
 			normeV = normeV /1.9;
 		}
-		System.out.println( "vc :" + vc);
+		//System.out.println( "vc :" + vc);
 	}
 
 	@Override
@@ -251,7 +251,7 @@ public class Karting extends Vehicule{
 
 		Position derap = new Position();
 		vc = (Fc - Ff)  / (100 *masse);
-		System.out.println("vc = " + vc);
+		//System.out.println("vc = " + vc);
 
 
 		if (d) {
@@ -262,7 +262,7 @@ public class Karting extends Vehicule{
 			derap.setDeg(76 * vc - 46);
 			P.substract(derap);
 		}
-		System.out.println("degré = " + derap.getDeg());
+		//System.out.println("degré = " + derap.getDeg());
 	}
 
 
