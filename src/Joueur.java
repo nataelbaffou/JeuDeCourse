@@ -15,7 +15,7 @@ public class Joueur{
     }
 
     public void setVehicule(Position initPos, int widthCase){
-        V = new Karting(initPos, widthCase);
+        V = new Karting(initPos, widthCase); //test clone
     }
 
     public Binds getBinds() {
