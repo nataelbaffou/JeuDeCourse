@@ -3,12 +3,17 @@ package Pages;
 import IOEngine.Audio;
 import IOEngine.Binds;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,17 +30,33 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
     private JLabel trollLabel;
     private JButton back;
     private int trollState = 0;
+    private BufferedImage background;
 
     private boolean testingSong = false;
 
     public Settings(Dimension size, FenetrePrincipale fenetrePrincipale){
-        setSize(size);
-        setLayout(null);
+        setPreferredSize(size);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        try {
+            background = ImageIO.read(new File("res/textures/wallpaperSettings2.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         f = fenetrePrincipale;
 
-        JLabel title = new JLabel("SETTINGS");
-        title.setBounds(200, 100, 150, 50);
+        Color bgColor = new Color(200, 200, 200, 120);
+        Border bgBorder = BorderFactory.createLineBorder(Color.BLACK, 2);
+        Border spaceBorder = BorderFactory.createEmptyBorder(10, 20, 10, 20);
+        Color transp = new Color(0, true);
+
+        // TITLE
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+        titlePanel.setBackground(transp);
+
+        JLabel title = new JLabel(" SETTINGS ");
         try {
             title.setFont(Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("res/fonts/memphis5.ttf")).deriveFont(25F));
         } catch (FontFormatException e) {
@@ -44,33 +65,38 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
             e.printStackTrace();
         }
         title.setForeground(Color.BLACK);
-        add(title);
+        title.setOpaque(true);
+        title.setHorizontalTextPosition(JLabel.CENTER);
+        title.setBorder(new EmptyBorder(20, 30, 20, 30));
+        title.setBackground(bgColor);
+        titlePanel.add(Box.createHorizontalGlue());
+        titlePanel.add(title);
+        titlePanel.add(Box.createHorizontalGlue());
 
         // *********************
         // **** Music PANEL ****
         // *********************
 
+        // Panel
         JPanel musicPanel = new JPanel();
-        musicPanel.setLayout(null);
-        musicPanel.setBounds(200, 150, 600, 300);
-        TitledBorder musicBorderTitle = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), "Musique");
-        musicBorderTitle.setTitleJustification(TitledBorder.CENTER);
-        musicPanel.setBorder(musicBorderTitle);
-        add(musicPanel);
+        musicPanel.setLayout(new GridLayout(4, 2));
+        musicPanel.setPreferredSize(new Dimension(600, 300));
+        musicPanel.setMaximumSize(new Dimension(600, 300));
+        //TitledBorder musicBorderTitle = BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Musique");
+        //musicBorderTitle.setTitleJustification(TitledBorder.CENTER);
+        musicPanel.setBorder(bgBorder);
+        musicPanel.setBackground(bgColor);
 
+        // MENU ET RACE
         JLabel musicMenuLabel = new JLabel("Musique du menu : ");
         JLabel musicRaceLabel = new JLabel("Musique de la course : ");
-
-        musicMenuLabel.setBounds(20, 30, 250, 30);
-        musicRaceLabel.setBounds(20, 80, 250, 30);
-        musicPanel.add(musicMenuLabel);
-        musicPanel.add(musicRaceLabel);
-
+        musicMenuLabel.setBorder(spaceBorder);
+        musicRaceLabel.setBorder(spaceBorder);
         musicMenuBox = new JComboBox<>();
         musicRaceBox = new JComboBox<>();
-
+        musicMenuBox.setBorder(spaceBorder);
+        musicRaceBox.setBorder(spaceBorder);
         ArrayList<String> musics = Audio.getMusics();
-
         for(String s : musics){
             if(!s.startsWith("troll/")){
                 musicMenuBox.addItem(s);
@@ -79,47 +105,86 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         }
         musicRaceBox.setSelectedItem("star-realms/nova.wav");
         musicMenuBox.setSelectedItem("star-realms/outer-fields.wav");
-
         musicMenuBox.addItemListener(this);
         musicRaceBox.addItemListener(this);
-
-        musicMenuBox.setBounds(220, 30, 250, 30);
-        musicRaceBox.setBounds(220, 80, 250, 30);
+        musicMenuBox.addMouseListener(this);
+        musicRaceBox.addMouseListener(this);
+        musicPanel.add(musicMenuLabel);
         musicPanel.add(musicMenuBox);
+        musicPanel.add(musicRaceLabel);
         musicPanel.add(musicRaceBox);
 
+        // RANDOM
         JLabel randomMusicLabel = new JLabel("Musique aléatoire : ");
-        randomMusicLabel.setBounds(20, 130, 250, 30);
-        musicPanel.add(randomMusicLabel);
-
+        randomMusicLabel.setBorder(spaceBorder);
         randomMusic = new JCheckBox();
-        randomMusic.setBounds(220, 130, 250, 30);
+        randomMusic.setBorder(spaceBorder);
         randomMusic.setSelected(false);
         randomMusic.addMouseListener(this);
+        musicPanel.add(randomMusicLabel);
         musicPanel.add(randomMusic);
 
+        // VOLUME
+        JLabel musicControlLabel = new JLabel("Volume : ");
+        musicControlLabel.setBorder(spaceBorder);
         musicControl = new JSlider(0, 100);
-        musicControl.setBounds(220, 180, 250, 30);
+        musicControl.setBorder(spaceBorder);
         musicControl.addChangeListener((ChangeEvent e) -> {
             f.getMusiqueFond().setVolume(musicControl.getValue());
+            repaint();
         });
         musicControl.setValue(40);
+        musicPanel.add(musicControlLabel);
         musicPanel.add(musicControl);
+
+        JPanel musicPanelCentered = new JPanel();
+        musicPanelCentered.setLayout(new BoxLayout(musicPanelCentered, BoxLayout.X_AXIS));
+        musicPanelCentered.setBackground(transp);
+        musicPanelCentered.add(Box.createHorizontalGlue());
+        musicPanelCentered.add(musicPanel);
+        musicPanelCentered.add(Box.createHorizontalGlue());
 
         // ***********************
         // **** OTHER THINGS *****
         // ***********************
 
-        trollLabel = new JLabel("CLICK HERE !", JLabel.CENTER);
-        trollLabel.setBounds(0, getSize().height-50, getWidth(), 50);
-        trollLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        trollLabel.addMouseListener(this);
-        add(trollLabel);
-
-        back = new JButton("Back to menu");
-        back.setBounds(100, 600, 200, 30);
+        // Back button
+        JPanel backPanel = new JPanel();
+        backPanel.setBackground(transp);
+        backPanel.setLayout(new BoxLayout(backPanel, BoxLayout.X_AXIS));
+        back = new JButton("Back to menu"){
+            @Override
+            public Dimension getPreferredSize(){
+                return new Dimension(musicPanel.getWidth()/2, 30);
+            }
+        };
         back.addMouseListener(this);
-        add(back);
+        backPanel.add(Box.createHorizontalGlue());
+        backPanel.add(back);
+        backPanel.add(Box.createHorizontalGlue());
+
+        //Troll
+        trollLabel = new JLabel("CLICK HERE !", JLabel.CENTER);
+        trollLabel.setPreferredSize(new Dimension((int)size.getWidth(), 50));
+        trollLabel.addMouseListener(this);
+
+        JPanel trollLabelCentered = new JPanel();
+        trollLabelCentered.setLayout(new BoxLayout(trollLabelCentered, BoxLayout.X_AXIS));
+        trollLabelCentered.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        trollLabelCentered.setBackground(bgColor);
+        trollLabelCentered.add(Box.createHorizontalGlue());
+        trollLabelCentered.add(trollLabel);
+        trollLabelCentered.add(Box.createHorizontalGlue());
+
+        //****** PAGE ******
+        add(Box.createVerticalGlue());
+        add(titlePanel);
+        add(Box.createVerticalGlue());
+        add(musicPanelCentered);
+        add(backPanel);
+        add(Box.createVerticalGlue());
+        add(trollLabelCentered);
+
 
         addMouseListener(this);
 
@@ -136,7 +201,6 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
                 testingSong = true;
             }
         }
-
     }
 
     public JComboBox<String> getMusicMenuBox() {
@@ -151,6 +215,16 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         return randomMusic.isSelected();
     }
 
+    @Override
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        int w = background.getWidth();
+        int h = background.getHeight();
+        float r1 = (float) getWidth() / w;
+        float r2 = (float) getHeight() / h;
+        float r = Math.max(r1, r2);
+        g.drawImage(background, 0, 0, (int) (w * r), (int) (h * r), null);
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -171,38 +245,38 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
                     trollLabel.setText("oh no it doesn't work. Type the name of the red player !");
                     trollState = 2;
                     break;
-                case 10:
+                case 11:
                     trollLabel.setText("Cool it is over ^^ click here if you want :)");
                     f.getMusiqueFond().stopTroll();
                     f.getMusiqueFond().playTheme("menu");
                     trollState = 0;
             }
         }
+        repaint();
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
+    public void mousePressed(MouseEvent mouseEvent) {
+        repaint();
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
+    public void mouseReleased(MouseEvent mouseEvent) {
+        repaint();
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-
+    public void mouseEntered(MouseEvent mouseEvent) {
+        repaint();
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
-
+    public void mouseExited(MouseEvent mouseEvent) {
+        repaint();
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
@@ -222,24 +296,29 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
             case 5:
                 if(e.getKeyChar()=='d'){
                     trollState=6;
-                    trollLabel.setText("Youhouuu but keep going ! Pourquoi je parle anglais dis donc ?");
+                    trollLabel.setText("Youhouuu but keep going ! Repeat 'after me'");
                     break;
                 }
                 else{trollState=2;}
             case 6:
-                if(e.getKeyChar()=='d'){trollState=7;}
+                if(e.getKeyChar()=='a'){trollState=7;}
                 break;
             case 7:
-                if(e.getKeyChar()=='o'){trollState=8;}
+                if(e.getKeyChar()=='f'){trollState=8;}
                 else{trollState=6;}
                 break;
             case 8:
-                if(e.getKeyChar()=='n'){trollState=9;}
+                if(e.getKeyChar()=='t'){trollState=9;}
                 else{trollState=6;}
                 break;
             case 9:
-                if(e.getKeyChar()=='c'){
-                    trollState=10;
+                if(e.getKeyChar()=='e'){trollState=10;}
+                else{trollState=6;}
+                break;
+            case 10:
+                if(e.getKeyChar()=='r'){
+                    JOptionPane.showOptionDialog(this,"Would you like to continue ?", "A damn question", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,  new String[]{"Yes", "No", "Maybe"}, null);
+                    trollState=11;
                     trollLabel.setText("C'est presque fini ! Click to stop this f**king music");
                 }
                 else{trollState=6;}

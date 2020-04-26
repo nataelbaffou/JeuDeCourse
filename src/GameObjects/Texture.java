@@ -52,7 +52,7 @@ public class Texture{
                                 printSettingError(settings.get("filename"), keyName, keySetting);
                             }
                             break;
-                            // TODO Ajouter des setting en fonction des textures
+                            // TODO Ajouter des settings en fonction des textures
                     }
                 }
             }
