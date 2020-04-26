@@ -291,8 +291,8 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
 
     public String getStartPosition(){
         String res = "";
-        res += JOptionPane.showInputDialog("GameObjects.Case de départ : ligne") +" ";
-        res += JOptionPane.showInputDialog("GameObjects.Case de départ : colonne") + "\n";
+        res += JOptionPane.showInputDialog("Case de départ de la voiture : ligne") +" ";
+        res += JOptionPane.showInputDialog("ase de départ de la voiture : colonne") + "\n";
         res += JOptionPane.showInputDialog(null,"Orientation de la voiture au départ","Orientation",
                 JOptionPane.INFORMATION_MESSAGE, null , new String[]{"up","down","left","right"},"right");
         return res;
