@@ -159,7 +159,7 @@ public class Game {
 
             // Si les hypothèses sont fausses on remet les variables à zéro (normalement il n'y aura jamais de problème)
             if( (ie&&io) || (e&&o) || (!e&&c&!o)){
-                System.err.println("Un problème à été détecté");
+                System.err.println("Un problème à été détecté, le véhicule doit être mal placé");
                 newEntrySide = false;
                 newContact = false;
                 newOutputSide = false;
@@ -191,7 +191,6 @@ public class Game {
     public void dessineMap(Graphics g){
         map.dessine(g);
 
-
         if(false){
             // To print the area of the starting line
             Graphics2D g2 = (Graphics2D) g;
@@ -207,5 +206,9 @@ public class Game {
         for(Joueur j: players){
             j.dessine(g);
         }
+    }
+
+    public Rectangle getMapSize(){
+        return new Rectangle(map.getNbCaseX()*map.getWidthCase(), map.getNbCaseY()*map.getWidthCase());
     }
 }

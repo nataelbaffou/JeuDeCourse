@@ -1,6 +1,6 @@
 package Pages;
 
-import Buttons.CustomButton;
+import LookAndFeel.CustomButton;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +16,7 @@ public class MainMenu extends JPanel implements MouseListener {
     private CustomButton multi;
     private CustomButton editor;
     private CustomButton settings;
+    private CustomButton quit;
     private JPanel bPanel;
     private FenetrePrincipale f;
     private BufferedImage background;
@@ -28,13 +29,13 @@ public class MainMenu extends JPanel implements MouseListener {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         try {
-            background = ImageIO.read(new File("res/textures/wallpaperMainMenu.png"));
+            background = ImageIO.read(new File("res/textures/bg/wpMainMenu.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         bPanel = new JPanel();
-        GridLayout gl = new GridLayout(4, 0);
+        GridLayout gl = new GridLayout(5, 0);
         gl.setVgap(30);
         bPanel.setLayout(gl);
         bPanel.setPreferredSize(new Dimension(width / 2, height / 2));
@@ -53,11 +54,15 @@ public class MainMenu extends JPanel implements MouseListener {
         settings = new CustomButton("Settings");
         settings.addMouseListener(this);
         settings.setFocusPainted(false);
+        quit = new CustomButton("Quit");
+        quit.addMouseListener(this);
+        quit.setFocusPainted(false);
 
         bPanel.add(solo);
         bPanel.add(multi);
         bPanel.add(editor);
         bPanel.add(settings);
+        bPanel.add(quit);
 
         add(Box.createVerticalGlue());
         add(bPanel);
@@ -86,6 +91,8 @@ public class MainMenu extends JPanel implements MouseListener {
             f.getPanelSelection().show(f.getCardContent(), "playersSelector");
         } else if (e.getSource() == settings) {
             f.getPanelSelection().show(f.getCardContent(), "settings");
+        } else if (e.getSource() == quit) {
+            System.exit(1);
         }
     }
 

@@ -2,13 +2,13 @@ package Pages;
 
 import IOEngine.Audio;
 import IOEngine.Binds;
+import LookAndFeel.CustomButton;
+import LookAndFeel.DesignFont;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
@@ -28,7 +28,7 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
     private JCheckBox randomMusic;
     private JSlider musicControl;
     private JLabel trollLabel;
-    private JButton back;
+    private CustomButton back;
     private int trollState = 0;
     private BufferedImage background;
 
@@ -39,7 +39,7 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         try {
-            background = ImageIO.read(new File("res/textures/wallpaperSettings2.png"));
+            background = ImageIO.read(new File("res/textures/bg/wpSettings2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,13 +57,8 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         titlePanel.setBackground(transp);
 
         JLabel title = new JLabel(" SETTINGS ");
-        try {
-            title.setFont(Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("res/fonts/memphis5.ttf")).deriveFont(25F));
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        title.setFont(DesignFont.getTitleFont());
+
         title.setForeground(Color.BLACK);
         title.setOpaque(true);
         title.setHorizontalTextPosition(JLabel.CENTER);
@@ -149,19 +144,21 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         // ***********************
 
         // Back button
-        JPanel backPanel = new JPanel();
-        backPanel.setBackground(transp);
-        backPanel.setLayout(new BoxLayout(backPanel, BoxLayout.X_AXIS));
-        back = new JButton("Back to menu"){
+        back = new CustomButton("Back to menu", bgColor){
             @Override
             public Dimension getPreferredSize(){
-                return new Dimension(musicPanel.getWidth()/2, 30);
+                return new Dimension(musicPanel.getWidth(), 70);
             }
         };
+        back.setRoundBorder(false);
+        back.setBorder(bgBorder);
         back.addMouseListener(this);
-        backPanel.add(Box.createHorizontalGlue());
-        backPanel.add(back);
-        backPanel.add(Box.createHorizontalGlue());
+        JPanel backPanelCentered = new JPanel();
+        backPanelCentered.setLayout(new BoxLayout(backPanelCentered, BoxLayout.X_AXIS));
+        backPanelCentered.setBackground(transp);
+        backPanelCentered.add(Box.createHorizontalGlue());
+        backPanelCentered.add(back);
+        backPanelCentered.add(Box.createHorizontalGlue());
 
         //Troll
         trollLabel = new JLabel("CLICK HERE !", JLabel.CENTER);
@@ -181,7 +178,8 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         add(titlePanel);
         add(Box.createVerticalGlue());
         add(musicPanelCentered);
-        add(backPanel);
+        add(Box.createVerticalGlue());
+        add(backPanelCentered);
         add(Box.createVerticalGlue());
         add(trollLabelCentered);
 

@@ -1,6 +1,6 @@
 package Editor;
 
-import Buttons.CustomButton;
+import LookAndFeel.CustomButton;
 import IOEngine.IOFiles;
 import Pages.FenetrePrincipale;
 
@@ -32,7 +32,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         f = fenetrePrincipale;
 
         try {
-            background = ImageIO.read(new File("res/textures/wallpaperLevelEditor.png"));
+            background = ImageIO.read(new File("res/textures/bg/wpLevelEditor.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

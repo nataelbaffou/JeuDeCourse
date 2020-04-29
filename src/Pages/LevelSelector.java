@@ -1,8 +1,7 @@
 package Pages;
 
-import Buttons.CustomButton;
-import Buttons.LevelButton;
 import IOEngine.IOFiles;
+import LookAndFeel.LevelButton;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,10 +14,8 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Set;
 
 public class LevelSelector extends JPanel implements MouseListener, AdjustmentListener {
     private ArrayList<LevelButton> levels;
@@ -31,7 +28,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
         setPreferredSize(size);
 
         try {
-            background = ImageIO.read(new File("res/textures/wallpaperMapSelector.png"));
+            background = ImageIO.read(new File("res/textures/bg/wpMapSelector.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,7 +43,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
 
         Collections.sort(maps);
 
-        maps.add("Back");
+        maps.add("Back to menu");
 
         Dimension size;
         if(s == null){
@@ -149,7 +146,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
     public void mouseClicked(MouseEvent e) {
         for(LevelButton button : levels){
             if(e.getSource() == button){
-                if(button.getText().equals("Back")){
+                if(button.getText().equals("Back to menu")){
                     f.getPanelSelection().show(f.getCardContent(), "menu");
                     buttonScrollPane.getVerticalScrollBar().setValue(buttonScrollPane.getVerticalScrollBar().getMinimum());
                 }else{
