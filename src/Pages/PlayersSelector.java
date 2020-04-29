@@ -16,6 +16,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 
 public class PlayersSelector extends JPanel implements MouseListener, KeyListener {
 
@@ -36,6 +38,21 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
     private BufferedImage background;
 
     private static Border spaceBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+
+    private static final HashMap<Integer, String> VK_FIELDS = new HashMap<Integer, String>();
+
+    static {
+        Field[] fields = KeyEvent.class.getFields();
+        for (Field f : fields) {
+            if (f.getName().startsWith("VK_") && f.getType()==Integer.TYPE) {
+                try {
+                    VK_FIELDS.put(f.getInt(null), f.getName().substring(3));
+                } catch (IllegalAccessException ex) {
+                    //ignore
+                }
+            }
+        }
+    }
 
 
     public PlayersSelector(Dimension size, FenetrePrincipale fenetrePrincipale){
@@ -213,10 +230,10 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         currentBind = 0;
     }
 
-    private void setBind(int c){
-        System.out.println(KeyEvent.getKeyText(c));
-        binds[playerNo][currentBind].setText(KeyEvent.getKeyText(c));
-        bindsCode[playerNo][currentBind] = c;
+    private void setBind(KeyEvent k){
+        System.out.println(getKeyText(k));
+        binds[playerNo][currentBind].setText(getKeyText(k));
+        bindsCode[playerNo][currentBind] = k.getKeyCode();
         currentBind++;
         if(currentBind==4){
             waitingKey = false;
@@ -232,6 +249,40 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
             }
         }
         return n;
+    }
+
+    public static String getKeyText(KeyEvent evt) {
+        char chr = evt.getKeyChar();
+        String chrstr = String.valueOf(chr);
+        int code = evt.getKeyCode();
+
+        String keyField = VK_FIELDS.get(code);
+        String fixed = keyField != null ? fixName(keyField) : KeyEvent.getKeyText(code);
+        return ((chr==KeyEvent.CHAR_UNDEFINED || chr < 32) ? fixed : chrstr).toUpperCase();
+    }
+
+    private static String fixName(String input) {
+        char[] ar = new char[input.length()];
+        char last = ' ';
+        for (int i=0; i<ar.length; i++) {
+            char c = input.charAt(i);
+            if (c=='_')
+                c = ' ';
+            ar[i] = Character.isSpaceChar(last) ? Character.toTitleCase(c) : Character.toLowerCase(c);
+            last = c;
+        }
+        return new String(ar);
+    }
+
+    @Override
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        int w = background.getWidth();
+        int h = background.getHeight();
+        float r1 = (float) getWidth() / w;
+        float r2 = (float) getHeight() / h;
+        float r = Math.max(r1, r2);
+        g.drawImage(background, 0, 0, (int) (w * r), (int) (h * r), null);
     }
 
 
@@ -250,17 +301,6 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
                 f.getPanelSelection().show(f.getCardContent(), "menu");
             }
         }
-    }
-
-    @Override
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
-        int w = background.getWidth();
-        int h = background.getHeight();
-        float r1 = (float) getWidth() / w;
-        float r2 = (float) getHeight() / h;
-        float r = Math.max(r1, r2);
-        g.drawImage(background, 0, 0, (int) (w * r), (int) (h * r), null);
     }
 
     @Override
@@ -290,7 +330,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
     @Override
     public void keyPressed(KeyEvent e) {
         if(waitingKey){
-            setBind(e.getKeyCode());
+            setBind(e);
         }
     }
 
