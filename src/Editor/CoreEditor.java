@@ -1,6 +1,6 @@
 package Editor;
 
-import Buttons.ImageButton;
+import LookAndFeel.ImageButton;
 import IOEngine.IOFiles;
 
 import javax.imageio.ImageIO;
@@ -292,7 +292,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
     public String getStartPosition(){
         String res = "";
         res += JOptionPane.showInputDialog("Case de départ de la voiture : ligne") +" ";
-        res += JOptionPane.showInputDialog("ase de départ de la voiture : colonne") + "\n";
+        res += JOptionPane.showInputDialog("Case de départ de la voiture : colonne") + "\n";
         res += JOptionPane.showInputDialog(null,"Orientation de la voiture au départ","Orientation",
                 JOptionPane.INFORMATION_MESSAGE, null , new String[]{"up","down","left","right"},"right");
         return res;
@@ -308,7 +308,6 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
             res += "\n";
         }
         res = res.substring(0,res.length()-1);
-        System.out.println(res);
         return res;
     }
 

@@ -1,94 +1,131 @@
 package Pages;
 
+import LookAndFeel.DesignFont;
+import LookAndFeel.CustomButton;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 
 public class PlayersSelector extends JPanel implements MouseListener, KeyListener {
-    //Puis amener vers level selector
 
     private FenetrePrincipale f;
-    private JButton validate;
-    private JButton back;
+    private CustomButton validate;
+    private CustomButton back;
     private JPanel[] panels;
     private JLabel[] names;
     private JLabel[][] binds;
     private int[][] bindsCode;
 
-    private Color[] colors = {Color.RED, Color.GREEN, Color.PINK, Color.BLUE, Color.ORANGE, Color.GRAY};
+    private Color[] colors = {Color.RED, Color.GREEN, new Color(183, 0, 255), Color.BLUE, new Color(255, 115, 0), Color.YELLOW};
     private Color[] colorsMat;
 
     private boolean waitingKey = false;
     private int playerNo;
     private int currentBind;
+    private BufferedImage background;
+
+    private static Border spaceBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+
+    private static final HashMap<Integer, String> VK_FIELDS = new HashMap<Integer, String>();
+
+    static {
+        Field[] fields = KeyEvent.class.getFields();
+        for (Field f : fields) {
+            if (f.getName().startsWith("VK_") && f.getType()==Integer.TYPE) {
+                try {
+                    VK_FIELDS.put(f.getInt(null), f.getName().substring(3));
+                } catch (IllegalAccessException ex) {
+                    //ignore
+                }
+            }
+        }
+    }
 
 
     public PlayersSelector(Dimension size, FenetrePrincipale fenetrePrincipale){
         setPreferredSize(size);
-        setLayout(null);
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         f = fenetrePrincipale;
+
+        try {
+            background = ImageIO.read(new File("res/textures/bg/wp8.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Color bgColor = new Color(255, 255, 255, 140);
+        Border bgBorder = BorderFactory.createLineBorder(Color.BLACK, 2);
+        Color transp = new Color(0, true);
 
         // Definition des couleurs
         colorsMat = new Color[6];
         for(int i = 0; i < 6; i++){
-            colorsMat[i] = new Color(colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue(), 60);
+            colorsMat[i] = new Color(colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue(), 120);
+            //colorsMat[i] = colors[i].darker();
         }
+
+
+        JPanel choicePanel = new JPanel();
+        choicePanel.setLayout(new BoxLayout(choicePanel, BoxLayout.Y_AXIS));
+        choicePanel.setBackground(bgColor);
+
+        Border nameBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        Border bindBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 
         // Génération des titres
         JPanel titlePanel = new JPanel();
-        JLabel username = new JLabel("name", 10);
-
-        username.setBounds(20, 0, 150, 50);
+        titlePanel.setLayout(new GridLayout(1, 6));
+        titlePanel.setBackground(transp);
+        JLabel username = new JLabel("name");
+        username.setBorder(nameBorder);
         username.setForeground(Color.BLACK);
-        try {
-            username.setFont(Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("res/fonts/memphis5.ttf")).deriveFont(25F));
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        titlePanel.setLayout(null);
+        username.setFont(DesignFont.getTitleFont());
+
         titlePanel.add(username);
+        titlePanel.add(Box.createGlue());
 
         JLabel[] titleBind = new JLabel[4];
         for(int iBind=0; iBind<4; iBind++){
             titleBind[iBind] = new JLabel(new String[]{"Up", "Down", "Left", "Right"}[iBind]);
-            titleBind[iBind].setBounds(150+(iBind+1)*80, 0, 80, 60);
+            titleBind[iBind].setBorder(bindBorder);
             titleBind[iBind].setForeground(Color.BLACK);
             titlePanel.add(titleBind[iBind]);
         }
-
-        titlePanel.setBounds(150, 40, 550, 50);
-        titlePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-        add(titlePanel);
+        titlePanel.setBorder(BorderFactory.createCompoundBorder(spaceBorder, BorderFactory.createLineBorder(Color.BLACK, 4)));
+        choicePanel.add(titlePanel);
 
 
         // Génération des 6 joueurs et binds
         panels = new JPanel[6];
 
         names = new JLabel[6];
-        String[] strNames = {"Fred", "Greenlee", "Pinkney", "Bluebell", "Willem", "Greydon"};
+        String[] strNames = {"Fred", "Greenlee", "Purploo", "Bluebell", "Willem", "Yellan"};
         for(int i=0;i<6;i++){
-            names[i] = new JLabel(strNames[i], 10);
-            names[i].setBounds(20, 0, 150, 50);
+            names[i] = new JLabel(strNames[i]);
             names[i].setForeground(colorsMat[i]);
-            try {
-                names[i].setFont(Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("res/fonts/memphis5.ttf")).deriveFont(25F));
-            } catch (FontFormatException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            names[i].setBorder(nameBorder);
+            names[i].setFont(DesignFont.getBindsFont());
             names[i].addMouseListener(this);
+
             panels[i] = new JPanel();
-            panels[i].setLayout(null);
+            panels[i].setLayout(new GridLayout(1, 6));
+            panels[i].setBackground(transp);
             panels[i].add(names[i]);
+            panels[i].add(Box.createGlue());
         }
 
         binds = new JLabel[6][4];
@@ -97,28 +134,69 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
             for(int iBind=0; iBind<4; iBind++){
                 bindsCode[iPlayer][iBind] = -1;
                 binds[iPlayer][iBind] = new JLabel();
-                binds[iPlayer][iBind].setBounds(150+(iBind+1)*80, 0, 80, 60);
                 binds[iPlayer][iBind].setForeground(colorsMat[iPlayer]);
+                binds[iPlayer][iBind].setBorder(bindBorder);
+                binds[iPlayer][iBind].setFont(DesignFont.getBindsFont());
                 panels[iPlayer].add(binds[iPlayer][iBind]);
             }
         }
 
         for(int i=0; i<6; i++){
-            panels[i].setBounds(150, 100+60*i, 550, 50);
-            panels[i].setBorder(BorderFactory.createLineBorder(colorsMat[i], 3));
-            add(panels[i]);
+            Border coloredLineBorder = BorderFactory.createLineBorder(colorsMat[i], 4);
+            panels[i].setBorder(BorderFactory.createCompoundBorder(spaceBorder, coloredLineBorder));
+            choicePanel.add(panels[i]);
         }
 
-        validate = new JButton("Validate");
-        validate.setBounds(400, 500, 70, 30);
+        validate = new CustomButton("Validate", bgColor){
+            @Override
+            public Dimension getPreferredSize(){
+                return new Dimension(choicePanel.getWidth()/2, 40);
+            }
+        };
+        validate.setRoundBorder(false);
+        validate.setBorder(bgBorder);
         validate.addMouseListener(this);
 
-        back = new JButton("Back to menu");
-        back.setBounds(100, 600, 200, 30);
+        JPanel validatePanel = new JPanel();
+        validatePanel.setLayout(new BoxLayout(validatePanel, BoxLayout.X_AXIS));
+        validatePanel.setBackground(transp);
+        validatePanel.add(Box.createHorizontalGlue());
+        validatePanel.add(validate);
+        validatePanel.add(Box.createHorizontalGlue());
+
+        back = new CustomButton("Back to menu", bgColor){
+            @Override
+            public Dimension getPreferredSize(){
+                return new Dimension(choicePanel.getWidth()/2, 40);
+            }
+        };
+        back.setRoundBorder(false);
+        back.setBorder(bgBorder);
         back.addMouseListener(this);
 
-        add(validate);
-        add(back);
+        JPanel backPanel = new JPanel();
+        backPanel.setLayout(new BoxLayout(backPanel, BoxLayout.X_AXIS));
+        backPanel.setBackground(transp);
+        backPanel.add(Box.createHorizontalGlue());
+        backPanel.add(back);
+        backPanel.add(Box.createHorizontalGlue());
+
+        JPanel globalPanel = new JPanel();
+        globalPanel.setLayout(new BoxLayout(globalPanel, BoxLayout.Y_AXIS));
+        globalPanel.setBackground(transp);
+        globalPanel.add(Box.createVerticalGlue());
+        globalPanel.add(Box.createVerticalGlue());
+        globalPanel.add(choicePanel);
+        globalPanel.add(Box.createVerticalGlue());
+        globalPanel.add(validatePanel);
+        globalPanel.add(Box.createVerticalGlue());
+        globalPanel.add(backPanel);
+        globalPanel.add(Box.createVerticalGlue());
+
+        setBackground(transp);
+        add(Box.createHorizontalGlue());
+        add(globalPanel);
+        add(Box.createHorizontalGlue());
     }
 
     private void inverseColor(int i){
@@ -132,7 +210,8 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
             initSetBind(i);
         }
         names[i].setForeground(c);
-        panels[i].setBorder(BorderFactory.createLineBorder(c, 3));
+        Border coloredLineBorder = BorderFactory.createLineBorder(c, 4);
+        panels[i].setBorder(BorderFactory.createCompoundBorder(spaceBorder, coloredLineBorder));
         for(JLabel b : binds[i]){
             b.setForeground(c);
         }
@@ -151,13 +230,15 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         currentBind = 0;
     }
 
-    private void setBind(int c){
-        binds[playerNo][currentBind].setText(KeyEvent.getKeyText(c));
-        bindsCode[playerNo][currentBind] = c;
+    private void setBind(KeyEvent k){
+        System.out.println(getKeyText(k));
+        binds[playerNo][currentBind].setText(getKeyText(k));
+        bindsCode[playerNo][currentBind] = k.getKeyCode();
         currentBind++;
         if(currentBind==4){
             waitingKey = false;
         }
+        repaint();
     }
 
     private int getNumberOfPlayers(){
@@ -168,6 +249,40 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
             }
         }
         return n;
+    }
+
+    public static String getKeyText(KeyEvent evt) {
+        char chr = evt.getKeyChar();
+        String chrstr = String.valueOf(chr);
+        int code = evt.getKeyCode();
+
+        String keyField = VK_FIELDS.get(code);
+        String fixed = keyField != null ? fixName(keyField) : KeyEvent.getKeyText(code);
+        return ((chr==KeyEvent.CHAR_UNDEFINED || chr < 32) ? fixed : chrstr).toUpperCase();
+    }
+
+    private static String fixName(String input) {
+        char[] ar = new char[input.length()];
+        char last = ' ';
+        for (int i=0; i<ar.length; i++) {
+            char c = input.charAt(i);
+            if (c=='_')
+                c = ' ';
+            ar[i] = Character.isSpaceChar(last) ? Character.toTitleCase(c) : Character.toLowerCase(c);
+            last = c;
+        }
+        return new String(ar);
+    }
+
+    @Override
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        int w = background.getWidth();
+        int h = background.getHeight();
+        float r1 = (float) getWidth() / w;
+        float r2 = (float) getHeight() / h;
+        float r = Math.max(r1, r2);
+        g.drawImage(background, 0, 0, (int) (w * r), (int) (h * r), null);
     }
 
 
@@ -189,23 +304,23 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
+    public void mousePressed(MouseEvent mouseEvent) {
+        repaint();
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
+    public void mouseReleased(MouseEvent mouseEvent) {
+        repaint();
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-
+    public void mouseEntered(MouseEvent mouseEvent) {
+        repaint();
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
-
+    public void mouseExited(MouseEvent mouseEvent) {
+        repaint();
     }
 
     @Override
@@ -215,7 +330,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
     @Override
     public void keyPressed(KeyEvent e) {
         if(waitingKey){
-            setBind(e.getKeyCode());
+            setBind(e);
         }
     }
 

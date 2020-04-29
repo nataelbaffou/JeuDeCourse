@@ -141,7 +141,7 @@ public class GameContent extends JPanel implements ActionListener {
     }
 
     public void setPlayers(int[][] binds){
-        Color[] colors = {Color.RED, Color.GREEN, Color.PINK, Color.BLUE, Color.ORANGE, Color.GRAY};
+        Color[] colors = {Color.RED, Color.GREEN, new Color(183, 0, 255), Color.BLUE, new Color(255, 115, 0), Color.YELLOW};
         String[] names = {"Fred", "Greenlee", "Pinkney", "Bluebell", "Willem", "Greydon"};
 
         joueurs.clear();
