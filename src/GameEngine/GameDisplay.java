@@ -89,8 +89,8 @@ public class GameDisplay extends JPanel{
         Rectangle rTPL = getRectangle(rGene, 0.9, 0.2, 0.05, 0.07);
         rTPL.y += rTime.y + rTime.height;
         HashSet<String> TPL = new HashSet<>(minTPL.values());
-        TPL.remove("--:--");
-        String val = "--:--";
+        TPL.remove("--:--:--");
+        String val = "--:--:--";
         if(TPL.size()>0){
             val = Collections.min(TPL);
         }
@@ -178,7 +178,7 @@ public class GameDisplay extends JPanel{
             printCoundown = false;
             return;
         }else{
-            game.setCountDown(false);
+            game.endCountDown();
             value = "GO";
         }
 

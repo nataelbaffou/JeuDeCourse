@@ -87,10 +87,12 @@ public class Game {
         currentLap = new ArrayList<>(nPlayers);
         minTPL = new ArrayList<>(nPlayers);
 
+        elapsed = "00:00:00";
+
         for(int iPlayer = 0; iPlayer < nPlayers; iPlayer++){
             initLap.add(null);
-            currentLap.add( "--:--");
-            minTPL.add( "--:--");
+            currentLap.add( "--:--:--");
+            minTPL.add( "--:--:--");
         }
     }
 
@@ -200,7 +202,7 @@ public class Game {
                     lapsPerPlayer[iPlayer] ++;
                     if(initLap.get(iPlayer)!=null){
                         String lastTPL = getTime(initLap.get(iPlayer), Instant.now());
-                        if(minTPL.get(iPlayer).equals("--:--") || minTPL.get(iPlayer).compareTo(lastTPL) > 0){
+                        if(minTPL.get(iPlayer).equals("--:--:--") || minTPL.get(iPlayer).compareTo(lastTPL) > 0){
                             minTPL.set(iPlayer, lastTPL);
                         }
                     }
@@ -227,7 +229,7 @@ public class Game {
         Instant now = Instant.now();
         for(int iPlayer = 0; iPlayer < nPlayers; iPlayer++){
             if(initLap.get(iPlayer) == null){
-                currentLap.set(iPlayer, "--:--");
+                currentLap.set(iPlayer, "--:--:--");
             }else {
                 currentLap.set(iPlayer, getTime(initLap.get(iPlayer), now));
             }
@@ -236,8 +238,8 @@ public class Game {
 
     private String getTime(Instant init, Instant end){
         Duration timeLeft = Duration.ofMillis(ChronoUnit.MILLIS.between(init, end));
-        String time = String.format("%02d:%02d",
-                timeLeft.toMinutesPart(), timeLeft.toSecondsPart());
+        String time = String.format("%02d:%02d:%02d",
+                timeLeft.toMinutesPart(), timeLeft.toSecondsPart(), timeLeft.toMillisPart()/10);
         return time;
     }
 
@@ -319,12 +321,9 @@ public class Game {
         initCountdown = Instant.now();
     }
 
-    public boolean isCountDown() {
-        return countDown;
-    }
-
-    public void setCountDown(boolean countDown) {
-        this.countDown = countDown;
+    public void endCountDown() {
+        countDown = false;
+        initTime = Instant.now();
     }
 
     public Instant getInitCountdown() {
