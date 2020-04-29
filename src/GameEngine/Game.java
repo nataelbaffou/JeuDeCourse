@@ -31,6 +31,10 @@ public class Game {
     private Instant initTime;
     private String elapsed = "00:00";
 
+    private ArrayList<Instant> initLap;
+    private ArrayList<String> currentLap;
+    private ArrayList<String> minTPL;
+
     public Game(FenetrePrincipale fenetrePrincipale){
         f = fenetrePrincipale;
         map = new Map();
@@ -75,14 +79,22 @@ public class Game {
 
         // itialisation du compteur du temps passé
         initTime = Instant.now();
+
+        initLap = new ArrayList<>(nPlayers);
+        currentLap = new ArrayList<>(nPlayers);
+        minTPL = new ArrayList<>(nPlayers);
+
+        for(int iPlayer = 0; iPlayer < nPlayers; iPlayer++){
+            initLap.add(null);
+            currentLap.add( "--:--");
+            minTPL.add( "--:--");
+        }
     }
 
     public void tick(LinkedList<Integer> pressedKeys){
         avancer(pressedKeys);
         refreshLaps();
-        Duration timeLeft = Duration.ofMillis(ChronoUnit.MILLIS.between(initTime, Instant.now()));
-        elapsed = String.format("%02d:%02d",
-                timeLeft.toMinutesPart(), timeLeft.toSecondsPart());
+        refreshTimes();
     }
 
     public void avancer(LinkedList<Integer> pressedKeys){
@@ -179,10 +191,20 @@ public class Game {
             } else {
                 // Sinon on peut potentiellement modifier le nombre de tours par joueur
                 if(e&&c&&io){
+                    // Les conditions ont été remplies le joueur à passé un tour
                     lapsPerPlayer[iPlayer] ++;
+                    if(initLap.get(iPlayer)!=null){
+                        String lastTPL = getTime(initLap.get(iPlayer), Instant.now());
+                        if(minTPL.get(iPlayer).equals("--:--") || minTPL.get(iPlayer).compareTo(lastTPL) > 0){
+                            minTPL.set(iPlayer, lastTPL);
+                        }
+                    }
+                    initLap.set(iPlayer, Instant.now());
                 }
                 if(o&&c&&ie){
+                    // Les conditions inverses ont été remplies le joueur est passé dans l'autre sens
                     lapsPerPlayer[iPlayer] --;
+                    initLap.set(iPlayer, null);
                 }
             }
 
@@ -190,6 +212,28 @@ public class Game {
             playerInContactWithStartLine[iPlayer] = newContact;
             playerOnTheOutputSideOfStartLine[iPlayer] = newOutputSide;
         }
+    }
+
+    private void refreshTimes(){
+        // Time elapsed
+        elapsed = getTime(initTime, Instant.now());
+
+        // Current laps
+        Instant now = Instant.now();
+        for(int iPlayer = 0; iPlayer < nPlayers; iPlayer++){
+            if(initLap.get(iPlayer) == null){
+                currentLap.set(iPlayer, "--:--");
+            }else {
+                currentLap.set(iPlayer, getTime(initLap.get(iPlayer), now));
+            }
+        }
+    }
+
+    private String getTime(Instant init, Instant end){
+        Duration timeLeft = Duration.ofMillis(ChronoUnit.MILLIS.between(init, end));
+        String time = String.format("%02d:%02d",
+                timeLeft.toMinutesPart(), timeLeft.toSecondsPart());
+        return time;
     }
 
     public int isOver(){
@@ -233,8 +277,20 @@ public class Game {
         return elapsed;
     }
 
+    public HashMap<String, String> getCurrentTimePerLap(){
+        HashMap<String, String> h = new HashMap<>();
+        for(int iPlayer = 0; iPlayer < nPlayers; iPlayer++){
+            h.put(players.get(iPlayer).getNom(), currentLap.get(iPlayer));
+        }
+        return h;
+    }
+
     public HashMap<String, String> getMinTimePerLap(){
-        return null;
+        HashMap<String, String> h = new HashMap<>();
+        for(int iPlayer = 0; iPlayer < nPlayers; iPlayer++){
+            h.put(players.get(iPlayer).getNom(), minTPL.get(iPlayer));
+        }
+        return h;
     }
 
     public HashMap<String, Integer> getLaps(){

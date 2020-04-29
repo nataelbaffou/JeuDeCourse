@@ -7,8 +7,7 @@ import LookAndFeel.DesignFont;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class GameDisplay extends JPanel{
 
@@ -52,6 +51,13 @@ public class GameDisplay extends JPanel{
         g.setColor(Color.lightGray);
         g.fillRect(rBandeau.x, rBandeau.y, rBandeau.width, rBandeau.height);
 
+        // get all infos
+        ArrayList<Joueur> js = game.getPlayers();
+        HashMap<String, Integer> laps = game.getLaps();
+        int maxLaps = game.getLapsGoal();
+        HashMap<String, String> minTPL = game.getMinTimePerLap();
+        HashMap<String, String> currentTPL = game.getCurrentTimePerLap();
+
         // ############ General informations ###########
         double heightGeneralRatio = 0.25;
         Rectangle rGene = new Rectangle(0, 0, rBandeau.width, (int)(rBandeau.height*heightGeneralRatio));
@@ -60,23 +66,32 @@ public class GameDisplay extends JPanel{
         g.setColor(Color.black);
 
         // Title
-        Rectangle pTitle = getRectangle(rGene, 0.9, 0.4, 0.05, 0);
+        Rectangle rTitle = getRectangle(rGene, 0.9, 0.4, 0.05, 0);
         String text = game.getTitle();
-        g.setFont(scaleFontToFit(text, pTitle.width, pTitle.height, g, titleFont));
-        g.drawString(text, pTitle.x, pTitle.y+g.getFontMetrics().getHeight());
+        g.setFont(scaleFontToFit(text, rTitle.width, rTitle.height, g, titleFont));
+        g.drawString(text, rTitle.x, rGene.y + rTitle.y+g.getFontMetrics().getHeight());
 
         // Time elapsed
-        Rectangle pTime = getRectangle(rGene, 0.9, 0.25, 0.05, 0);
-        pTime.y += pTitle.y + pTitle.height;
-        g.setFont(titleFont.deriveFont((float)pTime.height));
-        g.drawString(game.getTimeElapsed(), pTime.x, pTime.y+pTime.height);
+        Rectangle rTime = getRectangle(rGene, 0.9, 0.2, 0.05, 0.07);
+        rTime.y += rTitle.y + rTitle.height;
+        String elapsed = game.getTimeElapsed();
+        g.setFont(scaleFontToFit(elapsed, rTime.width, rTime.height, g, titleFont));
+        g.drawString(elapsed, rTime.x, rGene.y + rTime.y+g.getFontMetrics().getHeight());
+
+        // min TPL (all players)
+        Rectangle rTPL = getRectangle(rGene, 0.9, 0.2, 0.05, 0.07);
+        rTPL.y += rTime.y + rTime.height;
+        HashSet<String> TPL = new HashSet<>(minTPL.values());
+        TPL.remove("--:--");
+        String val = "--:--";
+        if(TPL.size()>0){
+            val = Collections.min(TPL);
+        }
+        String txtTPL = "min t/L : " + val;
+        g.setFont(scaleFontToFit(txtTPL, rTPL.width, rTPL.height, g, titleFont));
+        g.drawString(txtTPL, rTPL.x, rGene.y + rTPL.y+rTPL.height);
 
         // ############ Info for each player ###########
-        // get all infos
-        ArrayList<Joueur> js = game.getPlayers();
-        HashMap<String, Integer> laps = game.getLaps();
-        int maxLaps = game.getLapsGoal();
-        HashMap<String, String> timePerLap = game.getMinTimePerLap();
 
         // calcul for printing
         Rectangle rJoueurs = new Rectangle(rBandeau.x, rGene.y+rGene.height, rBandeau.width, rBandeau.height-rGene.height);
@@ -88,7 +103,7 @@ public class GameDisplay extends JPanel{
             String nom = j.getNom();
             Color c = j.getColor();
             Rectangle rJ = getRectangle(rJoueurs, 1., 1./nJs, 0, 0);
-            rJ.y += (int)(iJ*dy);
+            rJ.y += rJoueurs.y + (int)(iJ*dy);
             // background
             g.setColor(c.brighter());
             g.fillRect(rJ.x, rJ.y, rJ.width, rJ.height);
@@ -96,20 +111,35 @@ public class GameDisplay extends JPanel{
             g.setColor(c.darker());
             Rectangle rName = getRectangle(rJ, 0.9, 0.3, 0.05, 0);
             g.setFont(scaleFontToFit(nom, rName.width, rName.height, g, titleFont));
-            g.drawString(nom, rName.x, rName.y + g.getFontMetrics().getHeight());
-            // laps
-            Rectangle rLaps = getRectangle(rJ, 0.9, 0.2, 0.05, 0);
-            rLaps.y += rName.height;
+            g.drawString(nom, rName.x, rJ.y + rName.y + g.getFontMetrics().getHeight());
+            // nb laps
+            Rectangle rLaps = getRectangle(rJ, 0.9, 0.2, 0.05, 0.05);
+            rLaps.y += rName.y + rName.height;
             String l = String.valueOf(laps.get(nom));
             if(l.equals("-1")){l="_";}
             String txtLaps = "laps : " + l + " / " + maxLaps;
             g.setFont(scaleFontToFit(txtLaps, rLaps.width, rLaps.height, g, titleFont));
-            g.drawString(txtLaps, rLaps.x, rLaps.y+g.getFontMetrics().getHeight());
+            g.drawString(txtLaps, rLaps.x, rJ.y + rLaps.y+g.getFontMetrics().getHeight());
+            // min TPL
+            Rectangle rMinTPL = getRectangle(rJ, 0.9, 0.15, 0.05, 0.05);
+            rMinTPL.y += rLaps.y + rLaps.height;
+            val = minTPL.get(nom);
+            String txtMinTPL = "min t/L : " + val;
+            g.setFont(scaleFontToFit(txtMinTPL, rMinTPL.width, rMinTPL.height, g, titleFont));
+            g.drawString(txtMinTPL, rMinTPL.x, rJ.y + rMinTPL.y+g.getFontMetrics().getHeight());
+
+            // current TPL
+            Rectangle rCurrentTPL = getRectangle(rJ, 0.9, 0.15, 0.05, 0.05);
+            rCurrentTPL.y += rMinTPL.y + rMinTPL.height;
+            val = currentTPL.get(nom);
+            String txtCurrentTPL = "current t/L : " + val;
+            g.setFont(scaleFontToFit(txtCurrentTPL, rCurrentTPL.width, rCurrentTPL.height, g, titleFont));
+            g.drawString(txtCurrentTPL, rCurrentTPL.x, rJ.y + rCurrentTPL.y+g.getFontMetrics().getHeight());
         }
     }
 
     private Rectangle getRectangle(Rectangle r, double wFact, double hFact, double dxFact, double dyFact){
-        return new Rectangle((int)(r.x + dxFact*r.width), (int)(r.y + dyFact*r.height), (int)(r.width*wFact), (int)(r.height*hFact));
+        return new Rectangle((int)(dxFact*r.width), (int)(dyFact*r.height), (int)(r.width*wFact), (int)(r.height*hFact));
     }
 
     public static Font scaleFontToFit(String text, int width, int height, Graphics g, Font pFont)
