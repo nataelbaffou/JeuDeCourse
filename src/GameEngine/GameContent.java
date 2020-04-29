@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,13 +22,14 @@ public class GameContent extends JPanel implements ActionListener {
     private Game game;
     private String idGame = "default";
 
-    private String PRESSED = " pressed";
-    private String RELEASED = " released";
-    private int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
+    private static String PRESSED = " pressed";
+    private static String RELEASED = " released";
+    private static int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
     private LinkedList<Integer> pressedKeys;
 
     private Timer timer;
-    private int DELTA_T = 50;
+    private static int DELTA_T = 50;
+
 
     private int width;
     private int height;
@@ -62,9 +66,10 @@ public class GameContent extends JPanel implements ActionListener {
     public void launchGame(){
         setKeyBindings();
         pressedKeys.clear();
-        game.initGame(joueurs, idGame, width, height);
-        timer.start();
+        gameDisplay.initGame(joueurs, idGame, width, height);
         f.getMusiqueFond().playTheme("race");
+        gameDisplay.showCountdown();
+        timer.start();
     }
 
     public void endGame(){
@@ -142,7 +147,7 @@ public class GameContent extends JPanel implements ActionListener {
 
     public void setPlayers(int[][] binds){
         Color[] colors = {Color.RED, Color.GREEN, new Color(183, 0, 255), Color.BLUE, new Color(255, 115, 0), Color.YELLOW};
-        String[] names = {"Fred", "Greenlee", "Pinkney", "Bluebell", "Willem", "Greydon"};
+        String[] names = {"Fred", "Greenlee", "Purploo", "Bluebell", "Willem", "Yellan"};
 
         joueurs.clear();
         for(int iBind = 0; iBind < binds.length; iBind++){

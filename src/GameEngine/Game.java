@@ -8,7 +8,11 @@ import IOEngine.IOFiles;
 import Pages.FenetrePrincipale;
 
 import java.awt.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
@@ -24,6 +28,9 @@ public class Game {
     private Map map;
     private String title = "default";
 
+    private Instant initTime;
+    private String elapsed = "00:00";
+
     public Game(FenetrePrincipale fenetrePrincipale){
         f = fenetrePrincipale;
         map = new Map();
@@ -34,7 +41,7 @@ public class Game {
         Hashtable<String, String> dico = IOFiles.getInformation("maps/", idMap);
         for(java.util.Map.Entry<String, String> param : dico.entrySet()){
             switch (param.getKey()){
-                case "title":
+                case "filename":
                     title = param.getValue();
                     break;
                 case "laps":
@@ -65,11 +72,17 @@ public class Game {
         for(int i = 0; i< nPlayers; i++){
             players.get(i).setVehicule(map.getStartPos(), map.getWidthCase());
         }
+
+        // itialisation du compteur du temps passé
+        initTime = Instant.now();
     }
 
     public void tick(LinkedList<Integer> pressedKeys){
         avancer(pressedKeys);
         refreshLaps();
+        Duration timeLeft = Duration.ofMillis(ChronoUnit.MILLIS.between(initTime, Instant.now()));
+        elapsed = String.format("%02d:%02d",
+                timeLeft.toMinutesPart(), timeLeft.toSecondsPart());
     }
 
     public void avancer(LinkedList<Integer> pressedKeys){
@@ -210,5 +223,33 @@ public class Game {
 
     public Rectangle getMapSize(){
         return new Rectangle(map.getNbCaseX()*map.getWidthCase(), map.getNbCaseY()*map.getWidthCase());
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getTimeElapsed(){
+        return elapsed;
+    }
+
+    public HashMap<String, String> getMinTimePerLap(){
+        return null;
+    }
+
+    public HashMap<String, Integer> getLaps(){
+        HashMap<String, Integer> h = new HashMap<>();
+        for(int iPlayer = 0; iPlayer < nPlayers; iPlayer++){
+            h.put(players.get(iPlayer).getNom(), lapsPerPlayer[iPlayer]);
+        }
+        return h;
+    }
+
+    public int getLapsGoal(){
+        return nLaps;
+    }
+
+    public ArrayList<Joueur> getPlayers() {
+        return players;
     }
 }
