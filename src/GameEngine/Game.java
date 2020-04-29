@@ -35,6 +35,9 @@ public class Game {
     private ArrayList<String> currentLap;
     private ArrayList<String> minTPL;
 
+    private boolean countDown = false;
+    private Instant initCountdown;
+
     public Game(FenetrePrincipale fenetrePrincipale){
         f = fenetrePrincipale;
         map = new Map();
@@ -92,9 +95,11 @@ public class Game {
     }
 
     public void tick(LinkedList<Integer> pressedKeys){
-        avancer(pressedKeys);
-        refreshLaps();
-        refreshTimes();
+        if(!countDown) {
+            avancer(pressedKeys);
+            refreshLaps();
+            refreshTimes();
+        }
     }
 
     public void avancer(LinkedList<Integer> pressedKeys){
@@ -307,5 +312,22 @@ public class Game {
 
     public ArrayList<Joueur> getPlayers() {
         return players;
+    }
+
+    public void startCountDown(){
+        countDown = true;
+        initCountdown = Instant.now();
+    }
+
+    public boolean isCountDown() {
+        return countDown;
+    }
+
+    public void setCountDown(boolean countDown) {
+        this.countDown = countDown;
+    }
+
+    public Instant getInitCountdown() {
+        return initCountdown;
     }
 }

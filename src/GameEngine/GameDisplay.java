@@ -7,6 +7,8 @@ import LookAndFeel.DesignFont;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class GameDisplay extends JPanel{
@@ -16,6 +18,8 @@ public class GameDisplay extends JPanel{
     private Rectangle rGame;
     private Rectangle rMap;
     private Dimension size;
+
+    private boolean printCoundown = false;
 
     public GameDisplay(Game game){
         this.game = game;
@@ -35,6 +39,9 @@ public class GameDisplay extends JPanel{
         ((Graphics2D) g).setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
         paintBandeau(g);
         paintGame(g);
+        if(printCoundown){
+            paintCountdown(g);
+        }
     }
 
     private void paintGame(Graphics g){
@@ -153,8 +160,37 @@ public class GameDisplay extends JPanel{
         return pFont.deriveFont(fontSize);
     }
 
-    public void showCountdown(){
-        // TODO Make CountDown
+    public void startCountdown(){
+        game.startCountDown();
+        printCoundown = true;
+    }
+
+    private void paintCountdown(Graphics g){
+        g.setColor(Color.YELLOW);
+
+        // in millis
+        long dtMillis = ChronoUnit.MILLIS.between(game.getInitCountdown(), Instant.now());
+        float factor = (1f-(dtMillis%1000)/1000f);
+        String value = "";
+        if(dtMillis<=3000){
+            value = String.valueOf(3 - (int)(dtMillis/1000));
+        }else if(dtMillis > 4000){
+            printCoundown = false;
+            return;
+        }else{
+            game.setCountDown(false);
+            value = "GO";
+        }
+
+
+        int maxHeight = rGame.height;
+        int height = (int)(maxHeight*(.9f*factor+.1f));
+        g.setFont(scaleFontToFit(value, rGame.width, height, g, DesignFont.getTitleFont()));
+
+        int w = g.getFontMetrics().stringWidth(value);
+        int h = g.getFontMetrics().getAscent();
+
+        g.drawString(value, rGame.x + (rGame.width-w)/2, rGame.y + (rGame.height+h)/2);
     }
 
 

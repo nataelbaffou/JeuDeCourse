@@ -30,7 +30,6 @@ public class GameContent extends JPanel implements ActionListener {
     private Timer timer;
     private static int DELTA_T = 50;
 
-
     private int width;
     private int height;
 
@@ -68,8 +67,8 @@ public class GameContent extends JPanel implements ActionListener {
         pressedKeys.clear();
         gameDisplay.initGame(joueurs, idGame, width, height);
         f.getMusiqueFond().playTheme("race");
-        gameDisplay.showCountdown();
         timer.start();
+        gameDisplay.startCountdown();
     }
 
     public void endGame(){
@@ -166,4 +165,5 @@ public class GameContent extends JPanel implements ActionListener {
         j.setColor(Color.RED);
         joueurs.add(j);
     }
+
 }
