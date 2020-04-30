@@ -39,12 +39,13 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
     public void charge(Dimension s){
         removeAll();
 
+
+        // On récupère les maps et on ajoute "Back to menu"
         ArrayList<String> maps = new ArrayList<>(IOFiles.listFilesUsingJavaIO("res/maps"));
-
         Collections.sort(maps);
-
         maps.add("Back to menu");
 
+        // Calculs préliminaires et stockage des données utiles
         Dimension size;
         if(s == null){
             size = getSize();
@@ -55,6 +56,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
         int spaceBetweenButton = 30;
         int nButton = maps.size();
 
+        // Panel qui stock l'ensemble des boutons
         JPanel buttonPane = new JPanel(){
             @Override
             public Dimension getPreferredSize() {
@@ -68,6 +70,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
 
         levels = new ArrayList<>(nButton);
 
+        // On créé l'ensembles des boutons
         for(String mapName : maps){
             LevelButton lb = new LevelButton(mapName);
             lb.setPreferredSize(new Dimension((int)(0.8*size.width), (int)(0.3*size.height)));
@@ -87,6 +90,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
 
         buttonPane.add(Box.createVerticalGlue());
 
+        // On ajoute la scrollbar
         buttonScrollPane = new JScrollPane(buttonPane);
         buttonScrollPane.setFocusable(true);
         buttonScrollPane.setPreferredSize(size);
