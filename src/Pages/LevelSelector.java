@@ -75,6 +75,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
             LevelButton lb = new LevelButton(mapName);
             lb.setPreferredSize(new Dimension((int)(0.8*size.width), (int)(0.3*size.height)));
             lb.setMaximumSize(new Dimension((int)(0.8*size.width), (int)(0.3*size.height)));
+            lb.setMinimumSize(new Dimension((int)(0.8*size.width), (int)(0.3*size.height)));
             lb.addMouseListener(this);
             // Pour centrer les boutons
             JPanel jp = new JPanel();
@@ -150,11 +151,11 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
     public void mouseClicked(MouseEvent e) {
         for(LevelButton button : levels){
             if(e.getSource() == button){
-                if(button.getText().equals("Back to menu")){
+                if(button.getActionCommand().equals("Back to menu")){
                     f.getPanelSelection().show(f.getCardContent(), "menu");
                     buttonScrollPane.getVerticalScrollBar().setValue(buttonScrollPane.getVerticalScrollBar().getMinimum());
                 }else{
-                    f.getGameContent().setGame(button.getText());
+                    f.getGameContent().setGame(button.getActionCommand());
                     f.getGameContent().launchGame();
                     f.getPanelSelection().show(f.getCardContent(),"game");
                 }

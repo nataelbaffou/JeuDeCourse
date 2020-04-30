@@ -1,8 +1,13 @@
-[laps]
-2
+[filename]
+circuit0
 
-[size]
-25 20
+[lap-record]
+00:07:58
+
+[start-line]
+left
+1 12
+4 13
 
 [board]
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
@@ -26,15 +31,19 @@
 4 4 4 4 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 4 4
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
 
+[time-record]
+00:20:44
+
+[description]
+Why ?
+
 [start-position]
 2 10
 right
 
-[start-line]
-left
-1 12
-4 13
+[laps]
+2
 
-[description]
-Why ?
+[size]
+25 20
 

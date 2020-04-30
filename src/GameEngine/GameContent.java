@@ -1,18 +1,18 @@
 package GameEngine;
 
 import GameObjects.Joueur;
+import IOEngine.IOFiles;
 import Pages.FenetrePrincipale;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 public class GameContent extends JPanel implements ActionListener {
     private GameDisplay gameDisplay;
@@ -73,6 +73,26 @@ public class GameContent extends JPanel implements ActionListener {
 
     public void endGame(){
         timer.stop();
+        Hashtable<String, String> h = IOFiles.getInformation("maps", idGame);
+        // ### REFRESH RECORDS ###
+        // time record
+        String timeRecord = h.getOrDefault("time-record", null);
+        if(timeRecord==null || timeRecord.compareTo(game.getTimeElapsed()) > 0){
+            h.put("time-record", game.getTimeElapsed());
+        }
+        // lap record
+        String lapRecord = h.getOrDefault("lap-record", null);
+        HashMap<String, String> minTPL = game.getMinTimePerLap();
+        HashSet<String> TPL = new HashSet<>(minTPL.values());
+        TPL.remove("--:--:--");
+        String thisLapRecord = "";
+        if(TPL.size()>0){
+            thisLapRecord = Collections.min(TPL);
+        }
+        if(lapRecord==null || lapRecord.compareTo(thisLapRecord) > 0){
+            h.put("lap-record", thisLapRecord);
+        }
+        IOFiles.setInformation(h, "maps", h.get("filename"));
         f.getMusiqueFond().playTheme("menu");
     }
 

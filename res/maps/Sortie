@@ -1,8 +1,13 @@
-[laps]
-2
+[filename]
+Sortie
 
-[size]
-30 22
+[lap-record]
+00:06:15
+
+[start-line]
+left
+2 14
+5 15
 
 [board]
 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
@@ -28,6 +33,9 @@
 3 4 4 4 4 3 3 3 3 3 3 4 4 4 4 4 4 4 4 3 3 3 3 3 3 4 4 4 4 3
 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
 
+[time-record]
+00:13:62
+
 [description]
 On peut se balader
 
@@ -35,8 +43,9 @@ On peut se balader
 4 11
 right
 
-[start-line]
-left
-2 14
-5 15
+[laps]
+2
+
+[size]
+30 22
 
