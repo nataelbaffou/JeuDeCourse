@@ -243,7 +243,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
                 mapName = JOptionPane.showInputDialog("Nom de la map");
             String path = "maps"; //TODO Possibilité de choisir le sous-dossier (mais impossibilité de modifier les maps enregistrées dans maps/campaign)
             //TODO Vérifier que la map n'existe pas déjà + Vérification à chaque niveau que les données rentrées sont conformes
-            data.put("title", JOptionPane.showInputDialog("Description de la map"));
+            data.put("description", JOptionPane.showInputDialog("Description de la map"));
             data.put("size", nbrCaseWidth.getText() + " " + nbrCaseHeight.getText());
             data.put("board", formatBoard(paintPanel.getGrid()));
             data.put("start-line", getStartLine(paintPanel.getGrid()));
