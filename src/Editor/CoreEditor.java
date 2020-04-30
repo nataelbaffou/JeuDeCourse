@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Hashtable;
 
 public class CoreEditor extends JPanel implements ActionListener, MouseListener{
@@ -29,6 +30,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
     JButton change;
     JButton clear;
     JButton save;
+    JButton createOv;
     JButton back;
 
     JPanel bPanel;
@@ -177,6 +179,10 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         save.addActionListener(this);
         settingsPanel.add(save);
 
+        createOv = new JButton("Create Overview");
+        createOv.addActionListener(this);
+        settingsPanel.add(createOv);
+
         back = new JButton("Back");
         back.addActionListener(this);
 
@@ -201,6 +207,11 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == save){
             save();
+        }
+        else if(e.getSource() == createOv){
+            if(mapName==null || mapName.equals(""))
+                mapName = JOptionPane.showInputDialog("Nom de la map");
+            paintPanel.save(mapName);
         }
         else if(e.getSource() == theme)
             paintPanel.setDefaultNum(theme.getSelectedIndex() == 0 ? 1:3);
@@ -228,7 +239,8 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
     public void save(){
         try {
             Hashtable<String, String> data = new Hashtable<>();
-            String name = JOptionPane.showInputDialog("Nom de la map");
+            if(mapName==null || mapName.equals(""))
+                mapName = JOptionPane.showInputDialog("Nom de la map");
             String path = "maps"; //TODO Possibilité de choisir le sous-dossier (mais impossibilité de modifier les maps enregistrées dans maps/campaign)
             //TODO Vérifier que la map n'existe pas déjà + Vérification à chaque niveau que les données rentrées sont conformes
             data.put("description", JOptionPane.showInputDialog("Description de la map"));
@@ -238,7 +250,9 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
             data.put("start-position", getStartPosition());
             data.put("laps", JOptionPane.showInputDialog("Nombre de tour à faire"));
 
-            IOFiles.setInformation(data, path, name);
+            IOFiles.setInformation(data, path, mapName);
+
+            paintPanel.save(mapName);
 
             levelEditor.f.getLevelSelector().charge(null);
 
@@ -435,6 +449,7 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener{
             }
         }
         realSize.setSize(realSize.width, caseSize*num);
+        setSize(realSize);
         repaint();
     }
     public void setCaseWidth(int num){
@@ -445,12 +460,14 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener{
             }
         }
         realSize.setSize(caseSize*num, realSize.height);
+        setSize(realSize);
         repaint();
     }
 
     public void setCaseSize(int num){
         realSize.setSize(realSize.width*num/caseSize, realSize.height*num/caseSize);
         caseSize = num;
+        setSize(realSize);
         repaint();
     }
 
@@ -470,11 +487,24 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener{
         }
     }
 
-    public void save(){
+    public void save(String mapName){
 
 
 
         //TODO Save L'aperçu de la map
+        //resize before save
+        setCaseSize(Math.max(this.getHeight()/grid.length,this.getWidth()/grid[0].length));
+        Dimension d = this.getSize();
+        BufferedImage image = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = image.createGraphics();
+        print(g2d);
+        g2d.dispose();
+        try {
+            ImageIO.write(image, "PNG", new File(System.getProperty("user.dir")+"/res/textures/map/" + mapName+".png"));
+            System.out.println("Successfully created overview");
+        }catch(Exception e){
+            System.out.println(e);
+        }
         /*
         for(int i = 0; i<grid.length; i++){
             for(int j = 0; j<grid[0].length;j++){
