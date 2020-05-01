@@ -1,8 +1,13 @@
-[laps]
-2
+[filename]
+circuit3
 
-[size]
-30 40
+[lap-record]
+01:32:07
+
+[start-line]
+down
+21 2
+21 4
 
 [board]
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
@@ -46,15 +51,19 @@
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
 
+[time-record]
+03:09:98
+
+[description]
+nothing
+
 [start-position]
 25 3
 up
 
-[start-line]
-down
-21 2
-21 4
+[laps]
+2
 
-[description]
-nothing
+[size]
+30 40
 

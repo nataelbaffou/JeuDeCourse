@@ -1,8 +1,13 @@
-[title]
-Default is default
+[filename]
+default
 
-[size]
-10 10
+[lap-record]
+00:06:23
+
+[start-line]
+left
+1 4
+2 4
 
 [board]
 2 2 2 2 2 2 2 2 2 2
@@ -16,10 +21,11 @@ Default is default
 2 1 1 1 1 1 1 1 1 2
 2 2 2 2 2 2 2 2 2 2
 
-[start-line]
-left
-1 4
-2 4
+[time-record]
+00:12:40
+
+[title]
+Default is default
 
 [start-position]
 3 3
@@ -27,3 +33,7 @@ right
 
 [laps]
 1
+
+[size]
+10 10
+
