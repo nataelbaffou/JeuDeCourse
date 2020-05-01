@@ -127,9 +127,12 @@ public class IOFiles {
     }
 
     public static Set<String> listFilesUsingJavaIO(String dir) {
-        return Stream.of(new File(dir).listFiles())
+        Set<String> set = Stream.of(new File(dir).listFiles())
                 .filter(file -> !file.isDirectory())
                 .map(File::getName)
                 .collect(Collectors.toSet());
+        // remove mac file that is in every directory
+        set.remove(".DS_Store");
+        return set;
     }
 }

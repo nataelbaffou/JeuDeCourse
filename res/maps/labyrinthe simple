@@ -1,8 +1,13 @@
-[laps]
-2
+[filename]
+labyrinthe simple
 
-[size]
-40 30
+[lap-record]
+00:20:99
+
+[start-line]
+left
+11 12
+17 13
 
 [board]
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
@@ -36,15 +41,19 @@
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
 
+[time-record]
+00:50:64
+
+[description]
+haha
+
 [start-position]
 14 6
 right
 
-[start-line]
-left
-11 12
-17 13
+[laps]
+2
 
-[title]
-haha
+[size]
+40 30
 

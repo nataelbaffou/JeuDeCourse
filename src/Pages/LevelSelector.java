@@ -39,12 +39,13 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
     public void charge(Dimension s){
         removeAll();
 
+
+        // On récupère les maps et on ajoute "Back to menu"
         ArrayList<String> maps = new ArrayList<>(IOFiles.listFilesUsingJavaIO("res/maps"));
-
         Collections.sort(maps);
-
         maps.add("Back to menu");
 
+        // Calculs préliminaires et stockage des données utiles
         Dimension size;
         if(s == null){
             size = getSize();
@@ -55,6 +56,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
         int spaceBetweenButton = 30;
         int nButton = maps.size();
 
+        // Panel qui stock l'ensemble des boutons
         JPanel buttonPane = new JPanel(){
             @Override
             public Dimension getPreferredSize() {
@@ -68,10 +70,12 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
 
         levels = new ArrayList<>(nButton);
 
+        // On créé l'ensembles des boutons
         for(String mapName : maps){
             LevelButton lb = new LevelButton(mapName);
             lb.setPreferredSize(new Dimension((int)(0.8*size.width), (int)(0.3*size.height)));
             lb.setMaximumSize(new Dimension((int)(0.8*size.width), (int)(0.3*size.height)));
+            lb.setMinimumSize(new Dimension((int)(0.8*size.width), (int)(0.3*size.height)));
             lb.addMouseListener(this);
             // Pour centrer les boutons
             JPanel jp = new JPanel();
@@ -87,6 +91,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
 
         buttonPane.add(Box.createVerticalGlue());
 
+        // On ajoute la scrollbar
         buttonScrollPane = new JScrollPane(buttonPane);
         buttonScrollPane.setFocusable(true);
         buttonScrollPane.setPreferredSize(size);
@@ -146,11 +151,11 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
     public void mouseClicked(MouseEvent e) {
         for(LevelButton button : levels){
             if(e.getSource() == button){
-                if(button.getText().equals("Back to menu")){
+                if(button.getActionCommand().equals("Back to menu")){
                     f.getPanelSelection().show(f.getCardContent(), "menu");
                     buttonScrollPane.getVerticalScrollBar().setValue(buttonScrollPane.getVerticalScrollBar().getMinimum());
                 }else{
-                    f.getGameContent().setGame(button.getText());
+                    f.getGameContent().setGame(button.getActionCommand());
                     f.getGameContent().launchGame();
                     f.getPanelSelection().show(f.getCardContent(),"game");
                 }

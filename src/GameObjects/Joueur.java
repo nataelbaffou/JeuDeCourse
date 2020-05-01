@@ -49,4 +49,12 @@ public class Joueur{
     public Vehicule getVehicule() {
         return V;
     }
+
+    public String getNom(){
+        return nom;
+    }
+
+    public Color getColor(){
+        return color;
+    }
 }
