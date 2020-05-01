@@ -25,6 +25,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
     Point[] mapBounds;
     int[][] boardResized;
     double rSettings;
+    int caseSize;
 
     JSlider caseSizeSlider;
     JComboBox<String> theme;
@@ -86,9 +87,27 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         caseSizeSlider = new JSlider(14, 100);
         caseSizeSlider.addChangeListener((ChangeEvent e) -> {
             try{
-                paintPanel.setCaseSize(caseSizeSlider.getValue());
-                scrollPaintPanel.repaint();
+                int v = caseSizeSlider.getValue();
+                Rectangle r = scrollPaintPanel.getViewport().getViewRect();
+
+                double rx = r.getCenterX()/(100*caseSize);
+                double ry = r.getCenterY()/(100*caseSize);
+
+                paintPanel.setCaseSize(v);
                 scrollPaintPanel.revalidate();
+                scrollPaintPanel.repaint();
+
+                r = scrollPaintPanel.getViewport().getViewRect();
+
+                rx = rx*100*v-r.getWidth()/2d;
+                if(rx < 0)
+                    rx = 0;
+                ry = ry*100*v-r.getHeight()/2d;
+                if(ry < 0)
+                    ry = 0;
+                scrollPaintPanel.getViewport().setViewPosition(new Point((int)(rx),(int)(ry)));
+
+                caseSize = caseSizeSlider.getValue();
             } catch (Exception except){
                 // Do nothing this is just for
             }
@@ -100,6 +119,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         caseSizeSlider.setLabelTable(zoomLabels);
         caseSizeSlider.setPaintLabels(true);
         caseSizeSlider.setValue(40);
+        caseSize = caseSizeSlider.getValue();
         zoomPanel.add(caseSizeSlider);
         toolBar.add(zoomPanel);
 
@@ -543,22 +563,15 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener{
 
     public void setCaseSize(int num){
         //TODO Fix les problèmes, car capture toute la map même le blanc
-        /*
-        int a = c.scrollPaintPanel.getVerticalScrollBar().getValue();
-        int b = c.scrollPaintPanel.getHorizontalScrollBar().getValue();
 
-         */
+        //c.scrollPaintPanel.getViewport().getVisibleRect();
+
+
         realSize.setSize(grid[0].length*num,grid.length*num);
         //realSize.setSize(realSize.width*num/caseSize, realSize.height*num/caseSize);
         caseSize = num;
-        setPreferredSize(realSize);
+        setSize(realSize);
         repaint();
-        /*
-        c.scrollPaintPanel.repaint();
-        c.scrollPaintPanel.getVerticalScrollBar().setValue(a);
-        c.scrollPaintPanel.getHorizontalScrollBar().setValue(b);
-
-         */
     }
 
     public void clear(){
@@ -595,14 +608,6 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener{
         }
         grid = tempGrid.clone();
         repaint();
-        /*
-        for(int i = 0; i<grid.length; i++){
-            for(int j = 0; j<grid[0].length;j++){
-                img.setRGB(i,j,new Color(grid[i][j]-1).getRGB());
-            }
-        }
-
-         */
     }
 
     public void paintComponent(Graphics g){
