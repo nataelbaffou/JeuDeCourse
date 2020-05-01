@@ -1,8 +1,13 @@
-[laps]
-3
+[filename]
+the square
 
-[size]
-40 27
+[lap-record]
+00:06:17
+
+[start-line]
+left
+2 15
+8 24
 
 [board]
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
@@ -33,15 +38,19 @@
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
 
+[time-record]
+00:21:20
+
+[description]
+un carré
+
 [start-position]
 5 7
 right
 
-[start-line]
-left
-2 15
-8 24
+[laps]
+3
 
-[description]
-un carré
+[size]
+40 27
 

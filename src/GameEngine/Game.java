@@ -239,7 +239,7 @@ public class Game {
     private String getTime(Instant init, Instant end){
         Duration timeLeft = Duration.ofMillis(ChronoUnit.MILLIS.between(init, end));
         String time = String.format("%02d:%02d:%02d",
-                timeLeft.toMinutesPart(), timeLeft.toSecondsPart(), timeLeft.toMillisPart()/10);
+                timeLeft.toMinutes()%60, (timeLeft.toMillis()%60000)/1000, (timeLeft.toMillis()%1000)/10);
         return time;
     }
 
