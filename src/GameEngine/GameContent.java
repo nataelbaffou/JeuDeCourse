@@ -93,6 +93,10 @@ public class GameContent extends JPanel implements ActionListener {
             h.put("lap-record", thisLapRecord);
         }
         IOFiles.setInformation(h, "maps", h.get("filename"));
+
+        // Recreate the button
+        f.getLevelSelector().charge(null);
+
         f.getMusiqueFond().playTheme("menu");
     }
 

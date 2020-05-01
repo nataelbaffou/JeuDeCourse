@@ -1,8 +1,13 @@
-[laps]
-1
+[filename]
+square court
 
-[size]
-40 27
+[lap-record]
+00:05:67
+
+[start-line]
+left
+2 15
+8 24
 
 [board]
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
@@ -33,15 +38,19 @@
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
 
+[time-record]
+00:06:88
+
+[description]
+square court
+
 [start-position]
 5 10
 right
 
-[start-line]
-left
-2 15
-8 24
+[laps]
+1
 
-[description]
-square court
+[size]
+40 27
 

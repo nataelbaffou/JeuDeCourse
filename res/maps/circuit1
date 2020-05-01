@@ -1,8 +1,13 @@
-[laps]
-2
+[filename]
+circuit1
 
-[size]
-50 30
+[lap-record]
+00:28:83
+
+[start-line]
+left
+1 7
+3 7
 
 [board]
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
@@ -36,15 +41,19 @@
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 
+[time-record]
+01:03:31
+
+[description]
+HELL NO
+
 [start-position]
 2 3
 right
 
-[start-line]
-left
-1 7
-3 7
+[laps]
+2
 
-[description]
-HELL NO
+[size]
+50 30
 
