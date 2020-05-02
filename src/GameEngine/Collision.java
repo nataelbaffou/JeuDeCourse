@@ -6,6 +6,7 @@ import GameObjects.Map;
 import GameObjects.Vehicule;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public abstract class Collision {
 
@@ -21,12 +22,12 @@ public abstract class Collision {
 
     }
 
-    /*
-    public static ArrayList<GameObjects.Case> getCasesInCollision(GameObjects.Vehicule V, GameObjects.Map map){
-        ArrayList<GameObjects.Case> casesEnCollision = new ArrayList<GameObjects.Case>();
+
+    public static ArrayList<Case> getCasesInCollision(Vehicule V, Map map){
+        ArrayList<Case> casesEnCollision = new ArrayList<>();
         for(int iLig=0; iLig<map.getNbCaseY(); iLig++){
             for(int iCol=0; iCol<map.getNbCaseX(); iCol++){
-                if(GameEngine.Collision.isColliding(V, map.get(iLig, iCol))){
+                if(Collision.isColliding(V, map.get(iLig, iCol))){
                     casesEnCollision.add(map.get(iLig, iCol));
                 }
             }
@@ -34,7 +35,7 @@ public abstract class Collision {
         return casesEnCollision;
 
     }
-    */
+
 
     private static boolean isColliding(Vehicule V, Case c){
 
