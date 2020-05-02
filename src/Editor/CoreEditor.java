@@ -154,27 +154,27 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         optionPanel.setLayout(fl);
         optionPanel.setBorder(BorderFactory.createTitledBorder("Options"));
 
-        clear = new ImageButton("Clear Map",path+"clearIcon.png",new Dimension(30,30));
+        clear = new ImageButton("clear","Clear Map",path+"clearIcon.png",new Dimension(30,30));
         clear.addActionListener(this);
         optionPanel.add(clear);
 
-        boundsButton = new ImageButton("Select map bounds",path+"boundsIcon.png",new Dimension(30,30));
+        boundsButton = new ImageButton("bounds","Select map bounds",path+"boundsIcon.png",new Dimension(30,30));
         boundsButton.addActionListener(this);
         optionPanel.add(boundsButton);
 
-        startButton = new ImageButton("Select start",path+"startIcon.png",new Dimension(30,30));
+        startButton = new ImageButton("start","Select start",path+"startIcon.png",new Dimension(30,30));
         startButton.addActionListener(this);
         optionPanel.add(startButton);
 
-        createOv = new ImageButton("Create Overview",path+"screenIcon.png",new Dimension(30,30));
+        createOv = new ImageButton("overView","Create Overview",path+"screenIcon.png",new Dimension(30,30));
         createOv.addActionListener(this);
         optionPanel.add(createOv);
 
-        save = new ImageButton("Save map",path+"saveIcon.png",new Dimension(30,30));
+        save = new ImageButton("save","Save map",path+"saveIcon.png",new Dimension(30,30));
         save.addActionListener(this);
         optionPanel.add(save);
 
-        back = new ImageButton("Back",path+"backIcon.png",new Dimension(30,30));
+        back = new ImageButton("back","Back",path+"backIcon.png",new Dimension(30,30));
         back.addActionListener(this);
         optionPanel.add(back);
         toolBar.add(optionPanel);
@@ -218,7 +218,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         bPanelstart.setLayout(fl);
         bPanelstart.setBackground(toolColor);
         bPanelstart.setBorder(BorderFactory.createTitledBorder("Start Tiles"));
-        textures[0] = new ImageButton(mapTexturesTable.get("0").split("\\.png")[0],"./res/textures/"+mapTexturesTable.get("0"), bSize);
+        textures[0] = new ImageButton("0",mapTexturesTable.get("0").split("\\.png")[0],"./res/textures/"+mapTexturesTable.get("0"), bSize);
         textures[0].addActionListener(this);
         bPanelstart.add(textures[0]);
         mapTexturesTable.remove("0");
@@ -229,7 +229,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         bPanelground.setBorder(BorderFactory.createTitledBorder("Ground Tiles"));
         for(String key: mapTexturesTable.keySet()){
             if(mapTexturesSettings.get(mapTexturesTable.get(key)).equals("block : false")){
-                textures[Integer.parseInt(key)] = new ImageButton(mapTexturesTable.get(key).split("\\.png")[0],"./res/textures/"+mapTexturesTable.get(key), bSize);
+                textures[Integer.parseInt(key)] = new ImageButton(key,mapTexturesTable.get(key).split("\\.png")[0],"./res/textures/"+mapTexturesTable.get(key), bSize);
                 textures[Integer.parseInt(key)].addActionListener(this);
                 bPanelground.add(textures[Integer.parseInt(key)]);
             }
@@ -243,7 +243,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
 
         for(String key: mapTexturesTable.keySet()){
             if(mapTexturesSettings.get(mapTexturesTable.get(key)).equals("block : true")) {
-                textures[Integer.parseInt(key)] = new ImageButton(mapTexturesTable.get(key).split("\\.png")[0], "./res/textures/" + mapTexturesTable.get(key), bSize);
+                textures[Integer.parseInt(key)] = new ImageButton(key,mapTexturesTable.get(key).split("\\.png")[0], "./res/textures/" + mapTexturesTable.get(key), bSize);
                 textures[Integer.parseInt(key)].addActionListener(this);
                 bPanelwall.add(textures[Integer.parseInt(key)]);
             }
