@@ -26,6 +26,8 @@ public class Karting extends Vehicule{
 	private int countderap =0; // compteur de 'combien de fois' il a dérapé
 	private Position Pderape = new Position(); // repère des vitesse quand on dérape
 	private double normeVavant =0; // C'est la vitesse avant que la voiture ne dérape
+	private int gauche = 0;
+	private int droite = 0;
 
 
 
@@ -77,7 +79,7 @@ public class Karting extends Vehicule{
 		//System.out.println("Fc : "+ Fc);
 		//System.out.println("Ff : "+ Ff);
 
-		if(Fc > 4 * Ff && (keyPressed[0] || keyPressed[2]) && countderap == 0){
+		if(Fc > 4 * Ff && (keyPressed[0] || keyPressed[2]) && countderap == 0 && (gauche>2 ||droite >2)){
 			Pderape.x = P.x;
 			Pderape.y = P.y;
 			Pderape.setDeg(P.getDeg());
@@ -136,21 +138,22 @@ public class Karting extends Vehicule{
 		}
 
 		if(Collision.isColliding(this, map) && aderape){
-			// On annule l'avance du véhicule et on stop sa vitesse
+			// On réduit l'avance du véhicule et on stop sa vitesse
 			dP.x = 1.2 * dP.x;
 			dP.y = 1.2 * dP.y;
 			P.substract(dP);
-			normeV = 0;
+
 			aderape = false;
 			vc = 0;
 			P.setDeg(Pderape.getDeg());
 			int deg =0;
-			System.out.println("début");
+			//System.out.println("début");
 			if(keyPressed[0]) {
 				while( !Collision.isColliding(this, map) && deg < 360){
 					deg ++;
 					P.setDeg(P.getDeg() - 1);
-					System.out.println("A");
+					//System.out.println("A");
+					normeV = normeV / 1.1;
 				}
 				P.setDeg((P.getDeg()  + 1));
 			}
@@ -159,7 +162,8 @@ public class Karting extends Vehicule{
 				while( !Collision.isColliding(this, map) && deg < 360){
 					deg ++;
 					P.setDeg(P.getDeg() + 1);
-					System.out.println("B");
+					//System.out.println("B");
+					normeV = normeV / 1.1;
 				}
 				P.setDeg((P.getDeg() - 1));
 			}
@@ -176,6 +180,23 @@ public class Karting extends Vehicule{
 			normeV = normeV /1.9;
 		}
 		//System.out.println( "vc :" + vc);
+
+		if (keyPressed[0]) {
+			gauche++;
+		}else{
+			gauche = 0;
+		}
+
+		if (keyPressed[2]) {
+			droite++;
+		}else{
+			droite = 0;
+		}
+
+		System.out.println("droite :" + droite);
+		System.out.println("gauche :" + gauche);
+
+
 	}
 
 	@Override
