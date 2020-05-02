@@ -15,3 +15,15 @@ block : false
 
 [electric_wall.png]
 block : true
+
+[asphalt.png]
+block : false
+
+[brick.png]
+block : true
+
+[newGrass.png]
+block : false
+
+[patternWall.png]
+block : true
