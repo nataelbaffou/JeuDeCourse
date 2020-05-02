@@ -218,7 +218,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         bPanelstart.setLayout(fl);
         bPanelstart.setBackground(toolColor);
         bPanelstart.setBorder(BorderFactory.createTitledBorder("Start Tiles"));
-        textures[0] = new ImageButton("0","./res/textures/"+mapTexturesTable.get("0"), bSize);
+        textures[0] = new ImageButton(mapTexturesTable.get("0").split("\\.png")[0],"./res/textures/"+mapTexturesTable.get("0"), bSize);
         textures[0].addActionListener(this);
         bPanelstart.add(textures[0]);
         mapTexturesTable.remove("0");
@@ -229,7 +229,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         bPanelground.setBorder(BorderFactory.createTitledBorder("Ground Tiles"));
         for(String key: mapTexturesTable.keySet()){
             if(mapTexturesSettings.get(mapTexturesTable.get(key)).equals("block : false")){
-                textures[Integer.parseInt(key)] = new ImageButton(key,"./res/textures/"+mapTexturesTable.get(key), bSize);
+                textures[Integer.parseInt(key)] = new ImageButton(mapTexturesTable.get(key).split("\\.png")[0],"./res/textures/"+mapTexturesTable.get(key), bSize);
                 textures[Integer.parseInt(key)].addActionListener(this);
                 bPanelground.add(textures[Integer.parseInt(key)]);
             }
@@ -243,7 +243,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
 
         for(String key: mapTexturesTable.keySet()){
             if(mapTexturesSettings.get(mapTexturesTable.get(key)).equals("block : true")) {
-                textures[Integer.parseInt(key)] = new ImageButton(key, "./res/textures/" + mapTexturesTable.get(key), bSize);
+                textures[Integer.parseInt(key)] = new ImageButton(mapTexturesTable.get(key).split("\\.png")[0], "./res/textures/" + mapTexturesTable.get(key), bSize);
                 textures[Integer.parseInt(key)].addActionListener(this);
                 bPanelwall.add(textures[Integer.parseInt(key)]);
             }
@@ -263,8 +263,10 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
                 mapName = JOptionPane.showInputDialog("Nom de la map");
             paintPanel.save(mapName);
         }
-        else if(e.getSource() == theme)
-            paintPanel.setDefaultNum(theme.getSelectedIndex() == 0 ? 1:3);
+        else if(e.getSource() == theme) {
+            paintPanel.setDefaultNum(theme.getSelectedIndex() == 0 ? 1 : 3);
+            paintPanel.clear();
+        }
         else if(e.getSource() == clear)
             paintPanel.clear();
         else if(e.getSource() == boundsButton){
