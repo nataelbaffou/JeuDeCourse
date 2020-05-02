@@ -143,24 +143,25 @@ public class Karting extends Vehicule{
 			normeV = 0;
 			aderape = false;
 			vc = 0;
-			//P.setDeg(Pderape.getDeg());
+			P.setDeg(Pderape.getDeg());
 			int deg =0;
+			System.out.println("début");
 			if(keyPressed[0]) {
 				while( !Collision.isColliding(this, map) && deg < 360){
 					deg ++;
-					P.setDeg(P.getDeg() - deg);
-					//System.out.println("A");
+					P.setDeg(P.getDeg() - 1);
+					System.out.println("A");
 				}
-				P.setDeg((P.getDeg() - deg +1));
+				P.setDeg((P.getDeg()  + 1));
 			}
 
 			if(keyPressed[2]) {
 				while( !Collision.isColliding(this, map) && deg < 360){
 					deg ++;
-					P.setDeg(P.getDeg() + deg);
-					//System.out.println("B");
+					P.setDeg(P.getDeg() + 1);
+					System.out.println("B");
 				}
-				P.setDeg((P.getDeg() + deg -1));
+				P.setDeg((P.getDeg() - 1));
 			}
 		}
 
