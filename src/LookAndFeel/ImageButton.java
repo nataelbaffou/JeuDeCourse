@@ -15,14 +15,14 @@ public class ImageButton extends JButton {
         setPreferredSize(size);
         setBorder(null);
         setBorderPainted(false);
-
+        setToolTipText(title);
         this.path = path;
         try {
             imageBG = ImageIO.read(new File(path));
         }catch(Exception e){
             e.printStackTrace();
         }
-        setBackground(Color.black);
+        setBackground(Color.white);
     }
 
     public void paintComponent(Graphics g){

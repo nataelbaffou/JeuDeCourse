@@ -21,6 +21,8 @@ public class FenetrePrincipale extends JFrame{
 
 	public FenetrePrincipale(int width, int height, boolean isFullscreen){
 		this.setTitle("Jeu de voiture ULTRA stylé");
+		ImageIcon img = new ImageIcon(System.getProperty("user.dir")+"/res/textures/logo.png");
+		setIconImage(img.getImage());
 		if(isFullscreen){
 			setExtendedState(JFrame.MAXIMIZED_BOTH);
 			setUndecorated(true);

@@ -9,12 +9,13 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Hashtable;
 
 public class CoreEditor extends JPanel implements ActionListener, MouseListener{
 
-    JPanel settingsPanel;
     PaintPanel paintPanel;
     JScrollPane scrollPaintPanel;
     JToolBar toolBar;
@@ -26,35 +27,40 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
     int[][] boardResized;
     double rSettings;
     int caseSize;
+    String lap;
+    Color toolColor;
 
     JSlider caseSizeSlider;
     JComboBox<String> theme;
 
-    JButton change;
-    JButton clear;
-    JButton save;
-    JButton createOv;
+    FlowLayout fl;
+
+    ImageButton clear;
+    ImageButton createOv;
     JButton startButton;
-    JButton boundsButton;
-    JButton back;
+    ImageButton boundsButton;
+    ImageButton save;
+    ImageButton back;
 
     JPanel bPanelstart;
     JPanel bPanelground;
     JPanel bPanelwall;
     JPanel zoomPanel;
     JPanel themePanel;
+    JPanel optionPanel;
 
     GridLayout bLayout;
     ImageButton[] textures;
 
     LevelEditor levelEditor;
 
+    boolean isSaving;
+
     public CoreEditor(Dimension s, String name, LevelEditor l){
         levelEditor = l;
-        //TODO Gérer la place des éléments dans les settings/tools
-        //TODO Gérer la partie edit map
         Dimension d = new Dimension(20,20);
         mapName = name;
+        isSaving = false;
         int[][] grid = null;
         if(mapName!=null && !mapName.equals("")){
             // Loading map
@@ -65,26 +71,31 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         }
 
         rSettings = 0.2;
+        toolColor = new Color(255, 255, 255);
+        String path = System.getProperty("user.dir")+"/res/textures/";
 
         Hashtable<String, String> mapTexturesTable = IOFiles.getInformation("textures", "map_conversion_textures");
         mapTexturesTable.remove("filename");
 
         setBackground(Color.lightGray);
-        //setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setLayout(new BorderLayout());
 
 
         toolBar = new JToolBar("Menu");
-        //toolBar.setLayout(new BoxLayout(toolBar,BoxLayout.LINE_AXIS));
+        toolBar.setBackground(toolColor);
 
-        settingsPanel = new JPanel();
-        settingsPanel.setLayout(new BoxLayout(settingsPanel,BoxLayout.PAGE_AXIS));
+        fl = new FlowLayout(FlowLayout.CENTER);
+        fl.setHgap(10);
+        fl.setVgap(10);
+
 
         textures = new ImageButton[mapTexturesTable.size()];
 
         zoomPanel = new JPanel();
+        zoomPanel.setBackground(toolColor);
         zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom"));
         caseSizeSlider = new JSlider(14, 100);
+        caseSizeSlider.setBackground(toolColor);
         caseSizeSlider.addChangeListener((ChangeEvent e) -> {
             try{
                 int v = caseSizeSlider.getValue();
@@ -126,8 +137,11 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         createButtonPanels(mapTexturesTable);
 
         themePanel = new JPanel();
+        themePanel.setLayout(fl);
+        themePanel.setBackground(toolColor);
         themePanel.setBorder(BorderFactory.createTitledBorder("Theme"));
         theme = new JComboBox<String>();
+        theme.setBackground(toolColor);
         theme.addItem("classic");
         theme.addItem("neon");
         theme.setSelectedIndex(0);
@@ -135,82 +149,101 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         themePanel.add(theme);
         toolBar.add(themePanel);
 
+        optionPanel = new JPanel();
+        optionPanel.setBackground(toolColor);
+        optionPanel.setLayout(fl);
+        optionPanel.setBorder(BorderFactory.createTitledBorder("Options"));
 
-        clear = new JButton("Clear map");
+        clear = new ImageButton("Clear Map",path+"clearIcon.png",new Dimension(30,30));
         clear.addActionListener(this);
-        toolBar.add(clear);
-        //settingsPanel.add(clear);
+        optionPanel.add(clear);
 
-        save = new JButton("Save map");
-        save.addActionListener(this);
-        toolBar.add(save);
-        //settingsPanel.add(save);
-
-        createOv = new JButton("Create Overview");
-        createOv.addActionListener(this);
-        toolBar.add(createOv);
-        //settingsPanel.add(createOv);
-
-        startButton = new JButton("Select start");
-        startButton.addActionListener(this);
-        toolBar.add(startButton);
-        //settingsPanel.add(startButton);
-
-        boundsButton = new JButton("Select bounds");
+        boundsButton = new ImageButton("Select map bounds",path+"boundsIcon.png",new Dimension(30,30));
         boundsButton.addActionListener(this);
-        toolBar.add(boundsButton);
-        //settingsPanel.add(boundsButton);
+        optionPanel.add(boundsButton);
 
-        back = new JButton("Back");
+        startButton = new ImageButton("Select start",path+"startIcon.png",new Dimension(30,30));
+        startButton.addActionListener(this);
+        optionPanel.add(startButton);
+
+        createOv = new ImageButton("Create Overview",path+"screenIcon.png",new Dimension(30,30));
+        createOv.addActionListener(this);
+        optionPanel.add(createOv);
+
+        save = new ImageButton("Save map",path+"saveIcon.png",new Dimension(30,30));
+        save.addActionListener(this);
+        optionPanel.add(save);
+
+        back = new ImageButton("Back",path+"backIcon.png",new Dimension(30,30));
         back.addActionListener(this);
-        toolBar.add(back);
-        //settingsPanel.add(back);
-        //toolBar.setPreferredSize(new Dimension(s.width,(int)(0.1*s.height)));
+        optionPanel.add(back);
+        toolBar.add(optionPanel);
+        toolBar.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                String propName = evt.getPropertyName();
+                if("orientation".equals(propName)){
+                    caseSizeSlider.setOrientation(toolBar.getOrientation());
+                }
+                if(toolBar.getOrientation()==JToolBar.VERTICAL){
+                    toolBar.setPreferredSize(new Dimension((int)(0.1*s.width),s.height));
+                }
+                else{
+                    toolBar.setPreferredSize(new Dimension(s.width,(int)(0.1*s.height)));
+                }
+            }
+        });
         add(toolBar,BorderLayout.PAGE_START);
-        //add(settingsPanel);
 
         paintPanel = new PaintPanel(new Dimension(s.width, s.height),caseSizeSlider.getValue(),mapTexturesTable,grid,this);
         scrollPaintPanel = new JScrollPane(paintPanel);
         scrollPaintPanel.setFocusable(true);
         scrollPaintPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPaintPanel.getHorizontalScrollBar().setUnitIncrement(16);
+        scrollPaintPanel.getHorizontalScrollBar().setValue(scrollPaintPanel.getHorizontalScrollBar().getMaximum()/2);
         scrollPaintPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPaintPanel.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPaintPanel.getVerticalScrollBar().setValue(scrollPaintPanel.getVerticalScrollBar().getMaximum()/2);
 
         add(scrollPaintPanel,BorderLayout.CENTER);
-
-        //TODO Améliorer l'affichage graphique
     }
 
     public void createButtonPanels(Hashtable<String, String> map){
+        Dimension bSize = new Dimension(20,20);
         Hashtable<String, String> mapTexturesTable = (Hashtable<String, String>) map.clone();
         Hashtable<String, String> mapTexturesSettings = IOFiles.getInformation("textures", "textures_settings");
         mapTexturesSettings.remove("filename");
 
         bPanelstart = new JPanel();
+        bPanelstart.setLayout(fl);
+        bPanelstart.setBackground(toolColor);
         bPanelstart.setBorder(BorderFactory.createTitledBorder("Start Tiles"));
-        textures[0] = new ImageButton("0","./res/textures/"+mapTexturesTable.get("0"), new Dimension(16,16));
+        textures[0] = new ImageButton("0","./res/textures/"+mapTexturesTable.get("0"), bSize);
         textures[0].addActionListener(this);
         bPanelstart.add(textures[0]);
         mapTexturesTable.remove("0");
 
         bPanelground = new JPanel();
+        bPanelground.setLayout(fl);
+        bPanelground.setBackground(toolColor);
         bPanelground.setBorder(BorderFactory.createTitledBorder("Ground Tiles"));
         for(String key: mapTexturesTable.keySet()){
             if(mapTexturesSettings.get(mapTexturesTable.get(key)).equals("block : false")){
-                textures[Integer.parseInt(key)] = new ImageButton(key,"./res/textures/"+mapTexturesTable.get(key), new Dimension(16,16));
+                textures[Integer.parseInt(key)] = new ImageButton(key,"./res/textures/"+mapTexturesTable.get(key), bSize);
                 textures[Integer.parseInt(key)].addActionListener(this);
                 bPanelground.add(textures[Integer.parseInt(key)]);
             }
         }
         bPanelwall = new JPanel();
+        bPanelwall.setLayout(fl);
+        bPanelwall.setBackground(toolColor);
         bPanelwall.setBorder(BorderFactory.createTitledBorder("Wall Tiles"));
 
         bLayout = new GridLayout((int)Math.sqrt(mapTexturesTable.size())+1,(int)Math.sqrt(mapTexturesTable.size()),5,5);
 
         for(String key: mapTexturesTable.keySet()){
             if(mapTexturesSettings.get(mapTexturesTable.get(key)).equals("block : true")) {
-                textures[Integer.parseInt(key)] = new ImageButton(key, "./res/textures/" + mapTexturesTable.get(key), new Dimension(16, 16));
+                textures[Integer.parseInt(key)] = new ImageButton(key, "./res/textures/" + mapTexturesTable.get(key), bSize);
                 textures[Integer.parseInt(key)].addActionListener(this);
                 bPanelwall.add(textures[Integer.parseInt(key)]);
             }
@@ -218,7 +251,6 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         toolBar.add(bPanelstart);
         toolBar.add(bPanelground);
         toolBar.add(bPanelwall);
-        //settingsPanel.add(bPanel);
     }
 
     @Override
@@ -252,16 +284,6 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
             }
             levelEditor.getC().show(levelEditor, "menu");
         }
-        else if(e.getSource() == change){
-            /*
-            int w = Integer.parseInt(nbrCaseWidth.getText());
-            int h = Integer.parseInt(nbrCaseHeight.getText());
-            if(!(paintPanel.getGrid().length == h && paintPanel.getGrid()[0].length == w)) {
-                paintPanel.setCaseHeight(h);
-                paintPanel.setCaseWidth(w);
-                scrollPaintPanel.repaint();
-            }*/
-        }
 
         for(ImageButton b:textures){
             if(e.getSource() == b){
@@ -272,9 +294,18 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
 
     public void save(){
         try {
+            isSaving=true;
             Hashtable<String, String> data = new Hashtable<>();
-            if(mapName==null || mapName.equals(""))
-                mapName = JOptionPane.showInputDialog("Nom de la map");
+            if(mapName==null || mapName.equals("")) {
+                mapName = JOptionPane.showInputDialog("Nom de la map").trim();
+                while(IOFiles.listFilesUsingJavaIO("./res/maps").contains(mapName) || mapName.equals("")) {
+                    if(IOFiles.listFilesUsingJavaIO("./res/maps").contains(mapName))
+                        JOptionPane.showMessageDialog(this,"Map " + mapName + " already exist, please choose another name");
+                    else
+                        JOptionPane.showMessageDialog(this,"Veuillez rentrer un nom valide");
+                    mapName = JOptionPane.showInputDialog("Nom de la map");
+                }
+            }
             if(desc == null)
                 desc = JOptionPane.showInputDialog("Description de la map");
             if(mapBounds == null) {
@@ -285,6 +316,20 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
                 paintPanel.selectStart();
                 throw new Exception("selectStart");
             }
+            if(lap == null){
+                lap = JOptionPane.showInputDialog("Nombre de tours à faire").trim();
+                try {
+                    int l = Integer.parseInt(lap);
+                    if(l < 1)
+                        throw new Exception("Le nombre de tours doit être au moins égal à 1");
+                }
+                catch(NumberFormatException nfe){
+                    throw new Exception("Le nombre de tours doit être un entier");
+                }
+                catch(Exception e){
+                    throw e;
+                }
+            }
             String path = "maps"; //TODO Possibilité de choisir le sous-dossier (mais impossibilité de modifier les maps enregistrées dans maps/campaign)
             //TODO Vérifier que la map n'existe pas déjà + Vérification à chaque niveau que les données rentrées sont conformes
             //int[][] boardResized = resizeBoard(paintPanel.getGrid(),mapBounds);
@@ -294,9 +339,8 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
             data.put("size", boardResized[0].length + " " + boardResized.length);
             data.put("board", formatBoard(boardResized));
             data.put("start-line", getStartLine(boardResized));
-            //data.put("start-position", getStartPosition());
             data.put("start-position", formatStart(startPos));
-            data.put("laps", JOptionPane.showInputDialog("Nombre de tour à faire"));
+            data.put("laps", lap);
 
             IOFiles.setInformation(data, path, mapName);
 
@@ -312,19 +356,22 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
                 JOptionPane.showMessageDialog(this, "Erreur :" + e);
             }
             System.out.println(e);
+            isSaving = false;
         }
     }
 
     public void setMapBounds(Point[] bounds){
         mapBounds = bounds;
         JOptionPane.showMessageDialog(this,"Sélection réussie");
-        save();
+        if(isSaving)
+            save();
     }
 
     public void setStart(Point start){
         startPos = start;
         JOptionPane.showMessageDialog(this,"Sélection réussie");
-        save();
+        if(isSaving)
+            save();
     }
 
     public String getStartLine(int[][] board) throws Exception {
@@ -482,7 +529,7 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener{
                 grid[i][j] = defaultNum;
             }
         }
-        //TODO centrer la board existante sur la grid
+
         if(board!=null){
             int nX = (grid[0].length-board[0].length)/2;
             int nY = (grid.length-board.length)/2;
@@ -562,13 +609,7 @@ class PaintPanel extends JPanel implements MouseListener, MouseMotionListener{
     }
 
     public void setCaseSize(int num){
-        //TODO Fix les problèmes, car capture toute la map même le blanc
-
-        //c.scrollPaintPanel.getViewport().getVisibleRect();
-
-
         realSize.setSize(grid[0].length*num,grid.length*num);
-        //realSize.setSize(realSize.width*num/caseSize, realSize.height*num/caseSize);
         caseSize = num;
         setSize(realSize);
         repaint();
