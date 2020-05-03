@@ -9,6 +9,7 @@ import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -28,10 +29,11 @@ public class GameContent extends JPanel implements ActionListener {
     private LinkedList<Integer> pressedKeys;
 
     private Timer timer;
-    private static int DELTA_T = 50;
+    private static int DELTA_T = 1000/30;
 
     private int width;
     private int height;
+    private String winner;
 
 
     public GameContent(int width, int height, FenetrePrincipale f){
@@ -93,7 +95,6 @@ public class GameContent extends JPanel implements ActionListener {
             h.put("lap-record", thisLapRecord);
         }
         IOFiles.setInformation(h, "maps", h.get("filename"));
-
         // Recreate the button
         f.getLevelSelector().charge(null);
 
@@ -122,6 +123,14 @@ public class GameContent extends JPanel implements ActionListener {
                 actionMap.put(key+RELEASED, releasedAction);
             }
         }
+
+        key = KeyEvent.VK_ESCAPE;
+        inputMap.put(KeyStroke.getKeyStroke(key, 0, false),key+PRESSED);
+        Action pressedAction = new KeyAction(key, false);
+        actionMap.put(key+PRESSED, pressedAction);
+        inputMap.put(KeyStroke.getKeyStroke(key, 0, true),key+RELEASED);
+        Action releasedAction = new KeyAction(key, true);
+        actionMap.put(key+RELEASED, releasedAction);
     }
 
     private void handleKeyEvent(int key, boolean onKeyReleased) {
@@ -140,11 +149,26 @@ public class GameContent extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == timer){
+            if(pressedKeys.contains(KeyEvent.VK_ESCAPE)) {
+                timer.stop();
+                if(JOptionPane.showConfirmDialog(null,"Revenir au menu principal ?","Leave ?",JOptionPane.YES_NO_OPTION)==0) {
+                    endGame();
+                    f.getPanelSelection().show(f.getCardContent(), "menu");
+                }
+                pressedKeys.clear();
+                timer.start();
+            }
             game.tick(pressedKeys);
         }
         gameDisplay.dessine();
-        if(game.isOver()>-1){
+        int a = game.isOver();
+        if(a>-1){
+            winner = joueurs.get(a).getNom();
             endGame();
+            if(joueurs.size()>1)
+                JOptionPane.showMessageDialog(null,"Race is over !\nThe winner is "+winner+" in : "+game.getTimeElapsed());
+            else
+                JOptionPane.showMessageDialog(null,"Race over\nYour time : "+game.getTimeElapsed());
             f.getPanelSelection().show(f.getCardContent(), "menu");
         }
     }

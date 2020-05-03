@@ -99,7 +99,7 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
             }
         }
         musicRaceBox.setSelectedItem("star-realms/nova.wav");
-        musicMenuBox.setSelectedItem("star-realms/outer-fields.wav");
+        musicMenuBox.setSelectedItem("race/trackmania.wav");
         musicMenuBox.addItemListener(this);
         musicRaceBox.addItemListener(this);
         musicMenuBox.addMouseListener(this);
