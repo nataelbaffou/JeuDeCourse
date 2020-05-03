@@ -58,7 +58,7 @@ public class Texture{
 
                         case "type":
                             if(valSetting.equals("classic")){
-                                System.out.println("A");
+                                //System.out.println("A");
                                 k = 2.5;
                                 F = 1.05;
                                 kderape = 1;
