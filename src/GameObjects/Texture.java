@@ -67,9 +67,13 @@ public class Texture{
                                 F = 1.04;
                                 kderape = 1.5;
                             }else if(valSetting.equals("snow")){
-                                k = 0.8;
-                                F = 1.001;
+                                k = 0.4;
+                                F = 1.15;
                                 kderape = 5;
+                            }else if(valSetting.equals("sand")){
+                                k = 0.6;
+                                F = 1.25;
+                                kderape = 1;
                             }
                             break;
 

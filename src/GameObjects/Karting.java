@@ -17,7 +17,7 @@ public class Karting extends Vehicule{
 
 	private static double Rc; // rayon de courbure associé au virage
 	// description
-	private double widthCaseref = 28;
+	private double widthCaseref = 15;
 	private double coefprop;
 	private double Fc; // force centrifuge
 	private double Ff; // force de frottement opoosé à force centrifuge
@@ -90,7 +90,7 @@ public class Karting extends Vehicule{
 				if(texturecase.getkderape() > kderape){
 					kderape = texturecase.getkderape();
 				}
-				if(texturecase.getF() < F){
+				if(texturecase.getF() > F){
 					F = texturecase.getF();
 				}
 			}
@@ -109,7 +109,7 @@ public class Karting extends Vehicule{
 		//System.out.println("Fc : "+ Fc);
 		//System.out.println("Ff : "+ Ff);
 
-		if(Fc > 4 * Ff && (keyPressed[0] || keyPressed[2]) && countderap == 0 && (gauche> k ||droite >k )){
+		if(Fc > Ff && (keyPressed[0] || keyPressed[2]) && countderap == 0 && (gauche> k ||droite >k )){
 			Pderape.x = P.x;
 			Pderape.y = P.y;
 			Pderape.setDeg(P.getDeg());
@@ -143,8 +143,8 @@ public class Karting extends Vehicule{
 		dP.x = vx * dt;
 		dP.y = vy * dt;
 
-		if(Math.abs((int)(Pderape.getDeg()-P.getRad())) < 30){
-			aderape =false;
+		if(Math.abs((int)(Pderape.getDeg()-P.getRad())) < 10){
+			aderape = false;
 			countderap = 0;
 		}
 
@@ -201,7 +201,7 @@ public class Karting extends Vehicule{
 
 
 		vc = vc/ ((0.5/kderape)+1) ;
-		if(vc<0.1){
+		if(vc<0.0005){
 			vc =0;
 			countderap =0;
 			aderape = false;
@@ -250,12 +250,12 @@ public class Karting extends Vehicule{
 
 		if(av && !ar && normeV >= 0){
 			sensDir =1;
-			normeV += coefprop * a * dt * k / 2.5;
+			normeV += coefprop * a * dt ;
 		}
 
 		if(ar && !av && normeV <= 0 && Math.abs((int)(normeV)) < 25){
 			sensDir =-1;
-			normeV -= coefprop * a  * dt *  k  / 2.5;
+			normeV -= coefprop * a  * dt ;
 		}
 		//quand on freine
 		if(av && !ar && normeV < 0){
@@ -273,9 +273,8 @@ public class Karting extends Vehicule{
 			}
 		}
 		// quand on déscelère
-		if(sensDir == 0){
-			normeV = normeV / F;
-		}
+		normeV = normeV / F;
+
 
 		//normeV += sensDir * 6.22 * a * dt;
 	}
@@ -313,18 +312,18 @@ public class Karting extends Vehicule{
 
 		Position derap = new Position();
 		vc = (Fc - Ff) * kderape / (100 *masse);
-		//System.out.println("vc = " + vc);
+		System.out.println("vc = " + vc);
 
 
 		if (d) {
-			derap.setDeg(76 * vc - 46);
+			derap.setDeg(1187 * vc + 30);
 			P.add(derap);
 		}
 		if (g) {
-			derap.setDeg(76 * vc - 46);
+			derap.setDeg(1187 * vc + 30);
 			P.substract(derap);
 		}
-		//System.out.println("degré = " + derap.getDeg());
+		System.out.println("degré = " + derap.getDeg());
 	}
 
 

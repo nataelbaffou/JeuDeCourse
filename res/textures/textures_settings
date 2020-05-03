@@ -40,7 +40,7 @@ type : classic
 
 [sand.png]
 block : false
-type : grass
+type : sand
 
 [snow.png]
 block : false
