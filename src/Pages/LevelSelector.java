@@ -102,7 +102,6 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
         buttonScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         buttonScrollPane.getVerticalScrollBar().addAdjustmentListener(this);
         buttonScrollPane.getVerticalScrollBar().setBackground(new Color(0, true));
-        buttonScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         buttonScrollPane.setBackground(new Color(0, true));
 
         add(buttonScrollPane);
