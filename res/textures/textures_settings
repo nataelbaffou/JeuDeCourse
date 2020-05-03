@@ -31,13 +31,16 @@ type : classic
 block : true
 type : wall
 
-[newGrass.png]
-block : false
-type : grass
-
 [patternWall.png]
 block : true
-type : wall
+
+[stone.png]
+block : true
+type : classic
+
+[sand.png]
+block : false
+type : grass
 
 [snow.png]
 block : false
