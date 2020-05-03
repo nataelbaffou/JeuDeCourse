@@ -14,6 +14,9 @@ public class Texture{
     private BufferedImage img = null;
     private String name;
     private boolean isBlocking = false;
+    private double k = 0.8; // coefficient de frottement des roues sur la route (perpendiculaire)
+    private double F = 1.05; // force de frottement des roues (parallèle)
+    private double kderape = 1;
 
     public Texture(){
         this(System.getProperty("user.dir")+"/res/textures/grass.png", "default");
@@ -52,7 +55,26 @@ public class Texture{
                                 printSettingError(settings.get("filename"), keyName, keySetting);
                             }
                             break;
-                            // TODO Ajouter des settings en fonction des textures
+
+                        case "type":
+                            if(valSetting.equals("classic")){
+                                System.out.println("A");
+                                k = 2.5;
+                                F = 1.05;
+                                kderape = 1;
+                            }else if(valSetting.equals("grass")){
+                                k = 2;
+                                F = 1.04;
+                                kderape = 1.5;
+                            }else if(valSetting.equals("snow")){
+                                k = 0.8;
+                                F = 1.001;
+                                kderape = 5;
+                            }
+                            break;
+
+
+                             // TODO or not TODO Ajouter des settings en fonction des textures
                     }
                 }
             }
@@ -77,6 +99,16 @@ public class Texture{
         return isBlocking;
     }
 
+    public double getk(){
+        return k;
+    }
+
+    public double getkderape(){
+        return kderape;
+    }
+    public double getF(){
+        return F;
+    }
     public BufferedImage getImg() {
         return img;
     }

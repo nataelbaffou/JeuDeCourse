@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 		import java.awt.image.BufferedImage;
 		import java.io.File;
 		import java.io.IOException;
+import java.util.ArrayList;
 
 public class Karting extends Vehicule{
 
@@ -20,7 +21,6 @@ public class Karting extends Vehicule{
 	private double coefprop;
 	private double Fc; // force centrifuge
 	private double Ff; // force de frottement opoosé à force centrifuge
-	private double k = 0.8; // coefficient de frottement des roues sur la route (perpendiculaire)
 	private double vc = 0; //vitesse du dérapage
 	private boolean aderape = false;
 	private int countderap =0; // compteur de 'combien de fois' il a dérapé
@@ -28,13 +28,19 @@ public class Karting extends Vehicule{
 	private double normeVavant =0; // C'est la vitesse avant que la voiture ne dérape
 	private int gauche = 0;
 	private int droite = 0;
+	private double kderape;
+	private double k; // coefficient de frottement des roues sur la route (perpendiculaire)
+	private double F; // force de frottement des roues (parallèle)
+	private ArrayList<GameObjects.Case>  casesCollision = new ArrayList<>();
+	private int nbcases = 0;
+	private Texture texturecase;
+
 
 
 
 	// caractéristiques du karting
 	private double dt = 0.15;
 	private double masse = 1430;
-	private double F = 1.05; // force de frottement des roues (parallèle)
 	private Roue[] roues;
 
 
@@ -68,18 +74,42 @@ public class Karting extends Vehicule{
 
 	@Override
 	public void avancer(boolean[] keyPressed, Map map) {
+
+		casesCollision = Collision.getCasesInCollision(this, map);
+		for(GameObjects.Case n : casesCollision){
+			nbcases ++;
+			texturecase = n.texture;
+			if(k == 0 || kderape == 0 || F == 0) {
+				k = texturecase.getk();
+				kderape = texturecase.getkderape();
+				F = texturecase.getF();
+			}else{
+				if(texturecase.getk() < k){
+					k = texturecase.getk();
+				}
+				if(texturecase.getkderape() > kderape){
+					kderape = texturecase.getkderape();
+				}
+				if(texturecase.getF() < F){
+					F = texturecase.getF();
+				}
+			}
+
+		}
+
+
 		Position dP = new Position();
 
 		tourner(keyPressed[0], keyPressed[2]);
 		accelerer(keyPressed[3], keyPressed[1]);
 
 		Fc = (masse * normeV * normeV) / (Rc*coefprop);
-		Ff = masse * 9.81 * 2.5;
+		Ff = masse * 9.81 * k;
 
 		//System.out.println("Fc : "+ Fc);
 		//System.out.println("Ff : "+ Ff);
 
-		if(Fc > 4 * Ff && (keyPressed[0] || keyPressed[2]) && countderap == 0 && (gauche>2 ||droite >2)){
+		if(Fc > 4 * Ff && (keyPressed[0] || keyPressed[2]) && countderap == 0 && (gauche> k ||droite >k )){
 			Pderape.x = P.x;
 			Pderape.y = P.y;
 			Pderape.setDeg(P.getDeg());
@@ -98,8 +128,8 @@ public class Karting extends Vehicule{
 			vy += vc * Math.cos(Pderape.getRad());
 
 
-			vx = vx /1.5;
-			vy = vy /1.5;
+			vx = vx /((0.5/kderape)+1);
+			vy = vy /((0.5/kderape)+1);
 		}
 
 
@@ -145,7 +175,7 @@ public class Karting extends Vehicule{
 
 			aderape = false;
 			vc = 0;
-			P.setDeg(Pderape.getDeg());
+			//P.setDeg(Pderape.getDeg());
 			int deg =0;
 			//System.out.println("début");
 			if(keyPressed[0]) {
@@ -170,7 +200,7 @@ public class Karting extends Vehicule{
 		}
 
 
-		vc = vc/1.5;
+		vc = vc/ ((0.5/kderape)+1) ;
 		if(vc<0.1){
 			vc =0;
 			countderap =0;
@@ -193,9 +223,16 @@ public class Karting extends Vehicule{
 			droite = 0;
 		}
 
-		System.out.println("droite :" + droite);
-		System.out.println("gauche :" + gauche);
+		k = 0;
+		kderape = 0;
+		F = 0;
 
+
+		//System.out.println("droite :" + droite);
+		//System.out.println("gauche :" + gauche);
+		//System.out.println("kderape = " + kderape);
+		//System.out.println("k = " + k);
+		//System.out.println("F = " + F);
 
 	}
 
@@ -213,12 +250,12 @@ public class Karting extends Vehicule{
 
 		if(av && !ar && normeV >= 0){
 			sensDir =1;
-			normeV += coefprop * a * dt;
+			normeV += coefprop * a * dt * k / 2.5;
 		}
 
 		if(ar && !av && normeV <= 0 && Math.abs((int)(normeV)) < 25){
 			sensDir =-1;
-			normeV -= coefprop * a  * dt;
+			normeV -= coefprop * a  * dt *  k  / 2.5;
 		}
 		//quand on freine
 		if(av && !ar && normeV < 0){
@@ -275,7 +312,7 @@ public class Karting extends Vehicule{
 
 
 		Position derap = new Position();
-		vc = (Fc - Ff)  / (100 *masse);
+		vc = (Fc - Ff) * kderape / (100 *masse);
 		//System.out.println("vc = " + vc);
 
 

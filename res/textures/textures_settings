@@ -1,29 +1,44 @@
 #Names of the textures
 #Set set settings of each of them
 
+
 [startEnd.png]
 block : false
+type : classic
+
 
 [grass.png]
 block : false
+type : grass
 
 [wall.png]
 block : true
+type : wall
 
 [electric_ground.png]
 block : false
+type : classic
 
 [electric_wall.png]
 block : true
+type : wall
 
 [asphalt.png]
 block : false
+type : classic
 
 [brick.png]
 block : true
+type : wall
 
 [newGrass.png]
 block : false
+type : grass
 
 [patternWall.png]
 block : true
+type : wall
+
+[snow.png]
+block : false
+type : snow

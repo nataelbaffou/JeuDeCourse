@@ -197,7 +197,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         bPanelground = new JPanel();
         bPanelground.setBorder(BorderFactory.createTitledBorder("Ground Tiles"));
         for(String key: mapTexturesTable.keySet()){
-            if(mapTexturesSettings.get(mapTexturesTable.get(key)).equals("block : false")){
+            if(mapTexturesSettings.get(mapTexturesTable.get(key)).contains("block : false")){
                 textures[Integer.parseInt(key)] = new ImageButton(key,"./res/textures/"+mapTexturesTable.get(key), new Dimension(16,16));
                 textures[Integer.parseInt(key)].addActionListener(this);
                 bPanelground.add(textures[Integer.parseInt(key)]);
@@ -209,7 +209,7 @@ public class CoreEditor extends JPanel implements ActionListener, MouseListener{
         bLayout = new GridLayout((int)Math.sqrt(mapTexturesTable.size())+1,(int)Math.sqrt(mapTexturesTable.size()),5,5);
 
         for(String key: mapTexturesTable.keySet()){
-            if(mapTexturesSettings.get(mapTexturesTable.get(key)).equals("block : true")) {
+            if(mapTexturesSettings.get(mapTexturesTable.get(key)).contains("block : true")) {
                 textures[Integer.parseInt(key)] = new ImageButton(key, "./res/textures/" + mapTexturesTable.get(key), new Dimension(16, 16));
                 textures[Integer.parseInt(key)].addActionListener(this);
                 bPanelwall.add(textures[Integer.parseInt(key)]);
