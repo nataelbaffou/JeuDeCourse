@@ -74,28 +74,40 @@ public class Karting extends Vehicule{
 
 	@Override
 	public void avancer(boolean[] keyPressed, Map map) {
+		k = 0;
+		kderape = 0;
+		F = 0;
 
 		casesCollision = Collision.getCasesInCollision(this, map);
-		for(GameObjects.Case n : casesCollision){
-			nbcases ++;
-			texturecase = n.texture;
-			if(k == 0 || kderape == 0 || F == 0) {
-				k = texturecase.getk();
-				kderape = texturecase.getkderape();
-				F = texturecase.getF();
-			}else{
-				if(texturecase.getk() < k){
+		if(casesCollision.size()>0){
+			// On initialise les coefficients en fonction des cases sur lesquelles on est
+			for(GameObjects.Case n : casesCollision){
+				nbcases ++;
+				texturecase = n.texture;
+				if(k == 0 || kderape == 0 || F == 0) {
 					k = texturecase.getk();
-				}
-				if(texturecase.getkderape() > kderape){
 					kderape = texturecase.getkderape();
-				}
-				if(texturecase.getF() > F){
 					F = texturecase.getF();
+				}else{
+					if(texturecase.getk() < k){
+						k = texturecase.getk();
+					}
+					if(texturecase.getkderape() > kderape){
+						kderape = texturecase.getkderape();
+					}
+					if(texturecase.getF() > F){
+						F = texturecase.getF();
+					}
 				}
-			}
 
+			}
+		}else{
+			// Si jamais on sort de la map on met des valeurs par défaut
+			k = 2.5;
+			F = 1.05;
+			kderape = 1;
 		}
+
 
 
 		Position dP = new Position();
@@ -222,11 +234,6 @@ public class Karting extends Vehicule{
 		}else{
 			droite = 0;
 		}
-
-		k = 0;
-		kderape = 0;
-		F = 0;
-
 
 		//System.out.println("droite :" + droite);
 		//System.out.println("gauche :" + gauche);

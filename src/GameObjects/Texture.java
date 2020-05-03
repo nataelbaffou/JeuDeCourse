@@ -37,7 +37,6 @@ public class Texture{
     }
 
     public Texture(String path, String name, Hashtable<String, String> settings){
-        // TODO modifier pour mettre les paramètre au niveau de GameObjects.Case et non de GameObjects.Texture ?
         this.name = name;
         for(String keyName : settings.keySet()){
             if(name.equals(keyName)){
@@ -58,7 +57,6 @@ public class Texture{
 
                         case "type":
                             if(valSetting.equals("classic")){
-                                //System.out.println("A");
                                 k = 2.5;
                                 F = 1.05;
                                 kderape = 1;
@@ -76,9 +74,6 @@ public class Texture{
                                 kderape = 1;
                             }
                             break;
-
-
-                             // TODO or not TODO Ajouter des settings en fonction des textures
                     }
                 }
             }
@@ -87,7 +82,7 @@ public class Texture{
         try {
             img = ImageIO.read(new File(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Can't read file " + path);
         }
     }
 
