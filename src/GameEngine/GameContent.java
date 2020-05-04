@@ -73,37 +73,39 @@ public class GameContent extends JPanel implements ActionListener {
         gameDisplay.startCountdown();
     }
 
-    public void endGame(){
+    public void endGame(int state){
         timer.stop();
-        Hashtable<String, String> h = IOFiles.getInformation("maps", idGame);
-        // ### REFRESH RECORDS ###
-        // time record
-        String timeRecord = h.getOrDefault("time-record", null);
-        if(timeRecord==null || timeRecord.compareTo(game.getTimeElapsed()) > 0){
-            h.put("time-record", game.getTimeElapsed());
-        }
-        // lap record
-        String lapRecord = h.getOrDefault("lap-record", null);
-        HashMap<String, String> minTPL = game.getMinTimePerLap();
-        HashSet<String> TPL = new HashSet<>(minTPL.values());
-        TPL.remove("--:--:--");
-        String thisLapRecord = "";
-        if(TPL.size()>0){
-            thisLapRecord = Collections.min(TPL);
-        }
-        if(lapRecord==null || lapRecord.compareTo(thisLapRecord) > 0){
-            h.put("lap-record", thisLapRecord);
-        }
-        IOFiles.setInformation(h, "maps", h.get("filename"));
 
-        if(joueurs.size()>1)
-            JOptionPane.showMessageDialog(null,"Race is over !\nThe winner is "+winner+" in : "+game.getTimeElapsed() + "\nActual record : " + h.get("time-record"));
-        else
-            JOptionPane.showMessageDialog(null,"Race over\nYour time : "+game.getTimeElapsed() + "\nActual record : " + h.get("time-record"));
+        if(state == 1){
+            Hashtable<String, String> h = IOFiles.getInformation("maps", idGame);
+            // ### REFRESH RECORDS ###
+            // time record
+            String timeRecord = h.getOrDefault("time-record", null);
+            if(timeRecord==null || timeRecord.compareTo(game.getTimeElapsed()) > 0){
+                h.put("time-record", game.getTimeElapsed());
+            }
+            // lap record
+            String lapRecord = h.getOrDefault("lap-record", null);
+            HashMap<String, String> minTPL = game.getMinTimePerLap();
+            HashSet<String> TPL = new HashSet<>(minTPL.values());
+            TPL.remove("--:--:--");
+            String thisLapRecord = "";
+            if(TPL.size()>0){
+                thisLapRecord = Collections.min(TPL);
+                if(lapRecord==null || lapRecord.compareTo(thisLapRecord) > 0){
+                    h.put("lap-record", thisLapRecord);
+                }
+            }
 
+            IOFiles.setInformation(h, "maps", h.get("filename"));
 
-        // Recreate the button
-        f.getLevelSelector().charge(null);
+            if(joueurs.size()>1)
+                JOptionPane.showMessageDialog(null,"Race is over !\nThe winner is "+winner+" in : "+game.getTimeElapsed() + "\nActual record : " + h.get("time-record"));
+            else
+                JOptionPane.showMessageDialog(null,"Race over\nYour time : "+game.getTimeElapsed() + "\nActual record : " + h.get("time-record"));
+            // Recreate the button
+            f.getLevelSelector().charge(null);
+        }
 
         f.getMusiqueFond().playTheme("menu");
     }
@@ -159,7 +161,7 @@ public class GameContent extends JPanel implements ActionListener {
             if(pressedKeys.contains(KeyEvent.VK_ESCAPE)) {
                 timer.stop();
                 if(JOptionPane.showConfirmDialog(null,"Revenir au menu principal ?","Leave ?",JOptionPane.YES_NO_OPTION)==0) {
-                    endGame();
+                    endGame(-1);
                     f.getPanelSelection().show(f.getCardContent(), "menu");
                 }
                 pressedKeys.clear();
@@ -171,7 +173,7 @@ public class GameContent extends JPanel implements ActionListener {
         int a = game.isOver();
         if(a>-1){
             winner = joueurs.get(a).getNom();
-            endGame();
+            endGame(1);
             f.getPanelSelection().show(f.getCardContent(), "menu");
         }
     }
