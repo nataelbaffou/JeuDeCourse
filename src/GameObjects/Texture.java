@@ -61,9 +61,9 @@ public class Texture{
                                 F = 1.05;
                                 kderape = 1;
                             }else if(valSetting.equals("grass")){
-                                k = 2;
-                                F = 1.04;
-                                kderape = 1.5;
+                                k = 0.5;
+                                F = 1.1;
+                                kderape = 3;
                             }else if(valSetting.equals("snow")){
                                 k = 0.4;
                                 F = 1.15;
