@@ -1,7 +1,5 @@
 package GameObjects;
 
-import IOEngine.Binds;
-
 import java.awt.*;
 import java.util.Collection;
 import java.util.LinkedList;

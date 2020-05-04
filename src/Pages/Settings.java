@@ -1,7 +1,7 @@
 package Pages;
 
 import IOEngine.Audio;
-import IOEngine.Binds;
+import GameObjects.Binds;
 import LookAndFeel.CustomButton;
 import LookAndFeel.DesignFont;
 
@@ -14,7 +14,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -39,7 +38,7 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         try {
-            background = ImageIO.read(new File("res/textures/bg/wpSettings2.png"));
+            background = ImageIO.read(new File("res/textures/bg/wpSettings.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -226,13 +225,15 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        // On lance une musique si on clique sur un selector
         if(testingSong){
             f.getMusiqueFond().playTheme("menu");
             testingSong = false;
-        }
+        } // N'importe quel autre clique l'arretera
         if(e.getSource()==back) {
             f.getPanelSelection().show(f.getCardContent(), "menu");
         }else if(e.getSource()==trollLabel){
+            // Si le bandeau du bas est cliqué on lance un petit easter egg qui ne s'arretera que si l'on fait toutes les étapes
             switch (trollState){
                 case 0:
                     trollLabel.setText("you like the music ? click here to stop");
@@ -279,6 +280,7 @@ public class Settings extends JPanel implements ItemListener, MouseListener, Key
 
     @Override
     public void keyPressed(KeyEvent e) {
+        // Suite de l'eater egge
         switch (trollState){
             case 2:
                 if(e.getKeyChar()=='f'){trollState=3;}

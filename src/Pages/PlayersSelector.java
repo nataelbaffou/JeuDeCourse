@@ -29,7 +29,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
     private JLabel[][] binds;
     private int[][] bindsCode;
 
-    private Color[] colors = {Color.RED, Color.GREEN, new Color(183, 0, 255), Color.BLUE, new Color(255, 115, 0), Color.YELLOW};
+    private Color[] colors;
     private Color[] colorsMat;
 
     private boolean waitingKey = false;
@@ -39,8 +39,8 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
 
     private static Border spaceBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 
+    // Init les valeurs des keys pressed to print
     private static final HashMap<Integer, String> VK_FIELDS = new HashMap<Integer, String>();
-
     static {
         Field[] fields = KeyEvent.class.getFields();
         for (Field f : fields) {
@@ -62,20 +62,23 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         f = fenetrePrincipale;
 
         try {
-            background = ImageIO.read(new File("res/textures/bg/wp8.png"));
+            background = ImageIO.read(new File("res/textures/bg/wp3.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        Color bgColor = new Color(255, 255, 255, 140);
+        // init des couleurs utilisées par la suite
+        Color bgColor = new Color(255, 255, 255, 130);
         Border bgBorder = BorderFactory.createLineBorder(Color.BLACK, 2);
         Color transp = new Color(0, true);
 
-        // Definition des couleurs
+        // Définition de la première teinte de couleur pour les joueurs sélectionnés
+        colors = new Color[]{Color.RED, Color.GREEN, new Color(183, 0, 255), Color.BLUE, new Color(255, 115, 0), Color.YELLOW};
+        // Definition de la deuxième teinte de couleur pour les joueurs (lorsque celui-ci n'est pas sélectionné)
+        // couleur à moitié tranparente
         colorsMat = new Color[6];
         for(int i = 0; i < 6; i++){
             colorsMat[i] = new Color(colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue(), 120);
-            //colorsMat[i] = colors[i].darker();
         }
 
 
@@ -141,12 +144,14 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
             }
         }
 
+        // On ajoute les 6 bordures de couleurs correspondantes aux joueurs
         for(int i=0; i<6; i++){
             Border coloredLineBorder = BorderFactory.createLineBorder(colorsMat[i], 4);
             panels[i].setBorder(BorderFactory.createCompoundBorder(spaceBorder, coloredLineBorder));
             choicePanel.add(panels[i]);
         }
 
+        // Bouton validate
         validate = new CustomButton("Validate", bgColor){
             @Override
             public Dimension getPreferredSize(){
@@ -164,6 +169,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         validatePanel.add(validate);
         validatePanel.add(Box.createHorizontalGlue());
 
+        // Bouton bac to menu
         back = new CustomButton("Back to menu", bgColor){
             @Override
             public Dimension getPreferredSize(){
@@ -181,6 +187,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         backPanel.add(back);
         backPanel.add(Box.createHorizontalGlue());
 
+        // Ajout de l'ensemble au panel global (vertical)
         JPanel globalPanel = new JPanel();
         globalPanel.setLayout(new BoxLayout(globalPanel, BoxLayout.Y_AXIS));
         globalPanel.setBackground(transp);
@@ -193,12 +200,16 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         globalPanel.add(backPanel);
         globalPanel.add(Box.createVerticalGlue());
 
+        // Centrage to panel global
         setBackground(transp);
         add(Box.createHorizontalGlue());
         add(globalPanel);
         add(Box.createHorizontalGlue());
     }
 
+
+    // Inversion de la couleur transparente à la couleur non transparente et vice-versa
+    // Appelé lorsque que le joueur est sélectionné ou déselectionné
     private void inverseColor(int i){
         Color c;
         if(names[i].getForeground().getAlpha()==colors[i].getAlpha()){
@@ -217,6 +228,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         }
     }
 
+    // On supprimme les 4 binds correspondants au joueur décidé
     private void resetBind(int iPlayer){
         for(int iBind = 0; iBind<4; iBind++){
             binds[iPlayer][iBind].setText("");
@@ -224,6 +236,8 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         }
     }
 
+
+    // Les deux suivantes permettent de set les différents binds
     private void initSetBind(int i){
         waitingKey = true;
         playerNo = i;
@@ -231,7 +245,6 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
     }
 
     private void setBind(KeyEvent k){
-        System.out.println(getKeyText(k));
         binds[playerNo][currentBind].setText(getKeyText(k));
         bindsCode[playerNo][currentBind] = k.getKeyCode();
         currentBind++;
@@ -251,6 +264,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         return n;
     }
 
+    // On retourne le texte qui sera affiché pour le bind correspondant
     public static String getKeyText(KeyEvent evt) {
         char chr = evt.getKeyChar();
         String chrstr = String.valueOf(chr);
@@ -261,6 +275,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         return ((chr==KeyEvent.CHAR_UNDEFINED || chr < 32) ? fixed : chrstr).toUpperCase();
     }
 
+    // Fixe quelques petits problèmes d'affichages liés au VK_FIELDS
     private static String fixName(String input) {
         char[] ar = new char[input.length()];
         char last = ' ';
@@ -274,6 +289,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
         return new String(ar);
     }
 
+    // Affiche le background
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -286,6 +302,7 @@ public class PlayersSelector extends JPanel implements MouseListener, KeyListene
     }
 
 
+    // On appelle les différentes fonctions en focntion de ce qui est cliqué
     @Override
     public void mouseClicked(MouseEvent e) {
         if(!waitingKey){

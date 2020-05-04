@@ -69,6 +69,7 @@ public class MainMenu extends JPanel implements MouseListener {
         add(Box.createVerticalGlue());
     }
 
+    // draw background
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -80,6 +81,7 @@ public class MainMenu extends JPanel implements MouseListener {
         g.drawImage(background, 0, 0, (int) (w * r), (int) (h * r), null);
     }
 
+    // lance les différents panels créés dans fenetrePrincipale
     @Override
     public void mouseClicked(MouseEvent e){
         if (e.getSource() == solo) {

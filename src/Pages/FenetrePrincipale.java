@@ -43,6 +43,7 @@ public class FenetrePrincipale extends JFrame{
 		levelEditor = new LevelEditor(new Dimension(width,height),this);
 		playersSelector = new PlayersSelector(new Dimension(width,height), this);
 
+		// On génère le cardContent qui sera appelé dans tous les panels pour changer de page
 		cardContent = new JPanel();
 		cardContent.setLayout(panelSelection);
 		cardContent.add(mainMenu, "menu");

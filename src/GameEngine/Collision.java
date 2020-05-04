@@ -22,7 +22,6 @@ public abstract class Collision {
 
     }
 
-
     public static ArrayList<GameObjects.Case> getCasesInCollision(GameObjects.Vehicule V, GameObjects.Map map){
         ArrayList<GameObjects.Case> casesEnCollision = new ArrayList<>();
         for(int iLig=0; iLig<map.getNbCaseY(); iLig++){
@@ -74,6 +73,7 @@ public abstract class Collision {
     }
 
     /*
+    Non fini
     public static int[] getDirectionOfCollision(GameObjects.Karting kart, GameObjects.Case c){
         int[] dir = {1, 1, 1, 1};
         Polygon pKart = kart.getPolygon();

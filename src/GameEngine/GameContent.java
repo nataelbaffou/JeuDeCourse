@@ -95,6 +95,13 @@ public class GameContent extends JPanel implements ActionListener {
             h.put("lap-record", thisLapRecord);
         }
         IOFiles.setInformation(h, "maps", h.get("filename"));
+
+        if(joueurs.size()>1)
+            JOptionPane.showMessageDialog(null,"Race is over !\nThe winner is "+winner+" in : "+game.getTimeElapsed() + "\nActual record : " + h.get("time-record"));
+        else
+            JOptionPane.showMessageDialog(null,"Race over\nYour time : "+game.getTimeElapsed() + "\nActual record : " + h.get("time-record"));
+
+
         // Recreate the button
         f.getLevelSelector().charge(null);
 
@@ -165,10 +172,6 @@ public class GameContent extends JPanel implements ActionListener {
         if(a>-1){
             winner = joueurs.get(a).getNom();
             endGame();
-            if(joueurs.size()>1)
-                JOptionPane.showMessageDialog(null,"Race is over !\nThe winner is "+winner+" in : "+game.getTimeElapsed());
-            else
-                JOptionPane.showMessageDialog(null,"Race over\nYour time : "+game.getTimeElapsed());
             f.getPanelSelection().show(f.getCardContent(), "menu");
         }
     }

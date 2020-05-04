@@ -38,6 +38,8 @@ public class Game {
     private boolean countDown = false;
     private Instant initCountdown;
 
+    // On créé qu'un seul objet game, pour cela l'initialisation de l'ensemble des variables ne se fait pas lors
+    // de la création de cet objet
     public Game(FenetrePrincipale fenetrePrincipale){
         f = fenetrePrincipale;
         map = new Map();
@@ -57,6 +59,7 @@ public class Game {
             }
         }
 
+        // On initialise la map avec les textures correspondantes et à la bonne taille
         map.initMap(w, h, dico);
 
         // initialise le nombre de tours des joueurs
@@ -96,7 +99,9 @@ public class Game {
         }
     }
 
+    // Fonction appelée par le timer à interval régulier
     public void tick(LinkedList<Integer> pressedKeys){
+        // Dès que le countdown est finit on permet à l'utilisateur d'avancer
         if(!countDown) {
             avancer(pressedKeys);
             refreshLaps();
@@ -109,6 +114,13 @@ public class Game {
             players.get(i).avancer(pressedKeys, map);
         }
     }
+
+    /*
+        Calcul si les joueurs ont franchit la ligne dans le bon sens ou pas et actusalise le nombre de tours correspondant
+        Pour cela on utilise 6 booléens, 3 au présents et 3 de l'état précédents qui sont mis à jours à chaque tours.
+        Un tableau avec l'ensenble des possibilités à été de notre côté et nous à permis d'obtenir les équations ci-dessous
+        qui nous disent si la voiture à franchit la ligne ou non
+    */
 
     private void refreshLaps(){
         for(int iPlayer=0; iPlayer<nPlayers; iPlayer++){
@@ -243,6 +255,7 @@ public class Game {
         return time;
     }
 
+    // Retourne si la partie est finie ou non
     public int isOver(){
         for(int i = 0; i< nPlayers; i++){
             if(lapsPerPlayer[i] == nLaps){

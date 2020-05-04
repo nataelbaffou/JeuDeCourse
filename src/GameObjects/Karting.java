@@ -319,7 +319,7 @@ public class Karting extends Vehicule{
 
 		Position derap = new Position();
 		vc = (Fc - Ff) * kderape / (100 *masse);
-		System.out.println("vc = " + vc);
+		//System.out.println("vc = " + vc);
 
 
 		if (d) {
@@ -330,7 +330,7 @@ public class Karting extends Vehicule{
 			derap.setDeg(1187 * vc + 30);
 			P.substract(derap);
 		}
-		System.out.println("degré = " + derap.getDeg());
+		//System.out.println("degré = " + derap.getDeg());
 	}
 
 

@@ -103,6 +103,7 @@ public class IOFiles {
         return dico;
     }
 
+    // On écrit les informations avec les mêmes règles que la lecture
     public static void setInformation(Hashtable<String, String> dico, String path, String name){
         String mainPath = System.getProperty("user.dir");
 
@@ -126,6 +127,7 @@ public class IOFiles {
         }
     }
 
+    // On retourne un set avec la liste des fichiers contenus dans le path donné
     public static Set<String> listFilesUsingJavaIO(String dir) {
         Set<String> set = Stream.of(new File(dir).listFiles())
                 .filter(file -> !file.isDirectory())

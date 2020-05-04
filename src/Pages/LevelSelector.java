@@ -108,6 +108,7 @@ public class LevelSelector extends JPanel implements MouseListener, AdjustmentLi
         repaint();
     }
 
+    // On créé un effet en faisant un fondu d'une couleur vers transparent au centre pour cacher les boutons lorsqu'ils vont vers l'extérieur
     public void paint(Graphics g){
         Color uppercolor = new Color(200, 30, 215, 255);
         Color lowercolor = new Color(200, 30, 215, 255);
