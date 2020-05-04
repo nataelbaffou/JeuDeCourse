@@ -45,3 +45,7 @@ type : sand
 [snow.png]
 block : false
 type : snow
+
+[kerb.png]
+block : false
+type : sand
